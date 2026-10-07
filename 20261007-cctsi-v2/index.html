@@ -342,6 +342,14 @@
   .ask .k { width:84px; height:84px; border-radius:50%; background:#1A73E8; color:#fff; font-size:44px; font-weight:900; display:flex; align-items:center; justify-content:center; }
   .ask .t { font-size:32px; font-weight:800; color:var(--ink); }
   .ask .q { font-size:28px; color:var(--text); margin-top:8px; line-height:1.4; }
+  .wq { display:grid; grid-template-columns: 92px 1fr; gap:26px; align-items:start; border:1px solid var(--divider); border-radius:16px; padding:22px 30px; background:#fff; }
+  .wq .k { width:80px; height:80px; border-radius:50%; background:#1A73E8; color:#fff; font-size:38px; font-weight:900; display:flex; align-items:center; justify-content:center; }
+  .wq .q { font-size:28px; color:var(--ink); line-height:1.42; }
+  .follow { display:inline-block; margin-top:22px; background:#E6F4EA; color:#137333; border-radius:999px; padding:8px 26px; font-size:26px; font-weight:700; }
+  .tmap { display:grid; grid-template-columns: 110px 1fr 200px; align-items:center; gap:24px; border-bottom:1px solid var(--divider); padding:14px 0; }
+  .tmap .l { width:72px; height:72px; border-radius:14px; background:#1A73E8; color:#fff; font-size:38px; font-weight:900; display:flex; align-items:center; justify-content:center; }
+  .tmap .n { font-size:32px; font-weight:700; color:var(--ink); }
+  .tmap .s { font-size:28px; font-weight:800; color:#174ea6; text-align:right; }
 </style>
 </head>
 <body>
@@ -374,7 +382,7 @@
     </div>
   </div>
 
-  <div class="page-num">1 / 10</div>
+  <div class="page-num">1 / 17</div>
   <div class="chrome-bar"><div></div><div></div><div></div><div></div></div>
 </section>
 
@@ -399,7 +407,7 @@
     <div class="punch blue" style="margin-top:34px;">Not one hospital's site visit: we came for a national system that is deciding how to measure its research hubs.</div>
   </div>
 
-  <div class="page-num">2 / 10</div>
+  <div class="page-num">2 / 17</div>
   <div class="chrome-bar"><div></div><div></div><div></div><div></div></div>
 </section>
 
@@ -424,7 +432,7 @@
     <div class="punch blue" style="margin-top:36px; text-align:center;">That is why we chose the CCTSI, and why we wanted to see the CTRC before talking.</div>
   </div>
 
-  <div class="page-num">3 / 10</div>
+  <div class="page-num">3 / 17</div>
   <div class="chrome-bar"><div></div><div></div><div></div><div></div></div>
 </section>
 
@@ -458,7 +466,7 @@
     <div class="punch" style="margin-top:40px; text-align:center; font-size:36px;">The criteria are the whole instrument, so what they count matters.</div>
   </div>
 
-  <div class="page-num">4 / 10</div>
+  <div class="page-num">4 / 17</div>
   <div class="chrome-bar"><div></div><div></div><div></div><div></div></div>
 </section>
 
@@ -484,7 +492,7 @@
     <div style="margin-top:22px; font-size:32px; font-weight:800; color:var(--ink); text-align:center;">The hub function is what the instrument measures least.</div>
   </div>
 
-  <div class="page-num">5 / 10</div>
+  <div class="page-num">5 / 17</div>
   <div class="chrome-bar"><div></div><div></div><div></div><div></div></div>
 </section>
 
@@ -509,7 +517,7 @@
     <div class="punch" style="margin-top:46px;">The Ministry knows this. Its review this year keeps support as a floor, because the effort behind support varies too much to be scored.<div style="font-size:28px; font-weight:500; color:var(--text); margin-top:10px;">That is exactly the problem your funders have had to solve.</div></div>
   </div>
 
-  <div class="page-num">6 / 10</div>
+  <div class="page-num">6 / 17</div>
   <div class="chrome-bar"><div></div><div></div><div></div><div></div></div>
 </section>
 
@@ -539,7 +547,7 @@
     </div>
   </div>
 
-  <div class="page-num">7 / 10</div>
+  <div class="page-num">7 / 17</div>
   <div class="chrome-bar"><div></div><div></div><div></div><div></div></div>
 </section>
 
@@ -559,12 +567,12 @@
     <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:30px; height:430px;">
       <div class="sess" style="padding:26px 30px; gap:16px;"><div class="time" style="font-size:34px;">Value</div><div class="what" style="font-size:28px;">Which numbers NCATS actually reacts to, and how you credit research led at partner institutions</div><div style="margin-top:auto; border-top:1px solid var(--divider); padding-top:14px; font-size:23px; color:var(--mid); line-height:1.4;">Not whether in-house counts are reported: we now know they are not.</div><div class="qs"><span class="qchip">Themes A–C</span></div></div>
       <div class="sess" style="padding:26px 30px; gap:16px;"><div class="time" style="font-size:34px;">People</div><div class="what" style="font-size:28px;">The size of the support workforce, and how you keep trained staff</div><div style="margin-top:auto; border-top:1px solid var(--divider); padding-top:14px; font-size:23px; color:var(--mid); line-height:1.4;">DCRI: culture, and turnover under 6%. What about here?</div><div class="qs"><span class="qchip">Theme D</span></div></div>
-      <div class="sess" style="padding:26px 30px; gap:16px;"><div class="time" style="font-size:34px;">System</div><div class="what" style="font-size:28px;">How a hub relates to the other research organizations around it, and data standards</div><div style="margin-top:auto; border-top:1px solid var(--divider); padding-top:14px; font-size:23px; color:var(--mid); line-height:1.4;">Our colleagues wrote the people and data-standards questions, and will follow up.</div><div class="qs"><span class="qchip">Themes E–G</span></div></div>
+      <div class="sess" style="padding:26px 30px; gap:16px;"><div class="time" style="font-size:34px;">System</div><div class="what" style="font-size:28px;">How a hub relates to the other research organizations around it, and data standards</div><div style="margin-top:auto; border-top:1px solid var(--divider); padding-top:14px; font-size:23px; color:var(--mid); line-height:1.4;">Megumi Kitayama (people) and Akira Soma (data standards) wrote these questions and will follow up.</div><div class="qs"><span class="qchip">Themes E–G</span></div></div>
     </div>
     <div class="punch blue" style="margin-top:36px; text-align:center;">So let me go straight to what we most want to learn.</div>
   </div>
 
-  <div class="page-num">8 / 10</div>
+  <div class="page-num">8 / 17</div>
   <div class="chrome-bar"><div></div><div></div><div></div><div></div></div>
 </section>
 
@@ -588,7 +596,7 @@
     </div>
   </div>
 
-  <div class="page-num">9 / 10</div>
+  <div class="page-num">9 / 17</div>
   <div class="chrome-bar"><div></div><div></div><div></div><div></div></div>
 </section>
 
@@ -608,7 +616,147 @@
     <div style="font-size:36px; color:var(--text); margin-top:28px;">Now I would much rather hear from you.</div>
   </div>
 
-  <div class="page-num">10 / 10</div>
+  <div class="page-num">10 / 17</div>
+  <div class="chrome-bar"><div></div><div></div><div></div><div></div></div>
+</section>
+
+<section data-screen-label="11 Written questions">
+  <div class="chrome-logos">
+    <div class="hd-mark" role="img" aria-label="UTokyo Hospital"></div>
+    <div class="wordmark">
+      <div class="name">The University of Tokyo Hospital</div>
+      <div class="sub">Clinical Research Promotion Center<span class="dot">·</span><span class="meeting">Saito · CCTSI Visit · 7 Oct 2026</span></div>
+    </div>
+  </div>
+
+  <h2 class="slide-title">Our thirteen written questions</h2>
+  <div class="slide-sub">Written questions sent on 24 August · for 10:10–10:20 · in the order we sent them</div>
+
+  <div class="body-region">
+    <div style="display:flex; flex-direction:column; margin-top:-6px;"><div class="tmap"><div class="l">A</div><div class="n">Demonstrating value and attributing outcomes</div><div class="s">Q1–3</div></div><div class="tmap"><div class="l">B</div><div class="n">Governance and decision-making</div><div class="s">Q4</div></div><div class="tmap"><div class="l">C</div><div class="n">Funding and sustainability</div><div class="s">Q5</div></div><div class="tmap"><div class="l">D</div><div class="n">Research support workforce</div><div class="s">Q6–9</div></div><div class="tmap"><div class="l">E</div><div class="n">Evaluating the CTSA program</div><div class="s">Q10</div></div><div class="tmap"><div class="l">F</div><div class="n">Data standards and infrastructure</div><div class="s">Q11–12</div></div><div class="tmap"><div class="l">G</div><div class="n">An integrated ecosystem, and what comes next</div><div class="s">Q13</div></div></div>
+  </div>
+
+  <div class="page-num">11 / 17</div>
+  <div class="chrome-bar"><div></div><div></div><div></div><div></div></div>
+</section>
+
+<section data-screen-label="12 Theme A">
+  <div class="chrome-logos">
+    <div class="hd-mark" role="img" aria-label="UTokyo Hospital"></div>
+    <div class="wordmark">
+      <div class="name">The University of Tokyo Hospital</div>
+      <div class="sub">Clinical Research Promotion Center<span class="dot">·</span><span class="meeting">Saito · CCTSI Visit · 7 Oct 2026</span></div>
+    </div>
+  </div>
+
+  <h2 class="slide-title">A · Demonstrating value and attributing outcomes</h2>
+  <div class="slide-sub">Written questions sent on 24 August · for 10:10–10:20</div>
+
+  <div class="body-region">
+    <div style="display:flex; flex-direction:column; gap:22px;"><div class="wq"><div class="k">1</div><div class="q" style="font-size:32px;">Which indicators do you use to demonstrate the value of the CCTSI in your reporting to NCATS? Are the number of principal investigators based at the hub institution, or the number of first-authored papers from the hub institution, among them — and if so, how much weight do they carry relative to your other indicators?</div></div><div class="wq"><div class="k">2</div><div class="q" style="font-size:32px;">Of the studies the CCTSI supports, what share have a principal investigator based at a partner or external institution? How do you account for the results of the research you support as the hub's own achievement?</div></div><div class="wq"><div class="k">3</div><div class="q" style="font-size:32px;">If hub designation were to place greater emphasis on measures such as a minimum number of trials conducted in-house, or a minimum number of first-authored papers from the hub institution, how do you think the CCTSI's operation and priorities would change?</div></div></div>
+  </div>
+
+  <div class="page-num">12 / 17</div>
+  <div class="chrome-bar"><div></div><div></div><div></div><div></div></div>
+</section>
+
+<section data-screen-label="13 Themes B C">
+  <div class="chrome-logos">
+    <div class="hd-mark" role="img" aria-label="UTokyo Hospital"></div>
+    <div class="wordmark">
+      <div class="name">The University of Tokyo Hospital</div>
+      <div class="sub">Clinical Research Promotion Center<span class="dot">·</span><span class="meeting">Saito · CCTSI Visit · 7 Oct 2026</span></div>
+    </div>
+  </div>
+
+  <h2 class="slide-title">B · Governance  ·  C · Funding and sustainability</h2>
+  <div class="slide-sub">Written questions sent on 24 August · for 10:10–10:20</div>
+
+  <div class="body-region">
+    <div style="display:flex; flex-direction:column; gap:22px;"><div class="wq"><div class="k">4</div><div class="q" style="font-size:38px;">Which body decides what the CCTSI supports and in what priority, and on what criteria? How are competing requests from across your partner institutions reconciled?</div></div><div class="wq"><div class="k">5</div><div class="q" style="font-size:38px;">What is the balance between NCATS funding, institutional funds, and recharge income? How do you think about the financial sustainability of support units such as the CTRC, particularly across award cycles?</div></div></div>
+  </div>
+
+  <div class="page-num">13 / 17</div>
+  <div class="chrome-bar"><div></div><div></div><div></div><div></div></div>
+</section>
+
+<section data-screen-label="14 Theme D 1">
+  <div class="chrome-logos">
+    <div class="hd-mark" role="img" aria-label="UTokyo Hospital"></div>
+    <div class="wordmark">
+      <div class="name">The University of Tokyo Hospital</div>
+      <div class="sub">Clinical Research Promotion Center<span class="dot">·</span><span class="meeting">Saito · CCTSI Visit · 7 Oct 2026</span></div>
+    </div>
+  </div>
+
+  <h2 class="slide-title">D · Research support workforce (1 of 2)</h2>
+  <div class="slide-sub">Written questions sent on 24 August · for 10:10–10:20</div>
+
+  <div class="body-region">
+    <div style="display:flex; flex-direction:column; gap:22px;"><div class="wq"><div class="k">6</div><div class="q" style="font-size:34px;">What is the size and composition of your research support workforce — coordinators, biostatisticians, regulatory staff, data managers, and others?</div></div><div class="wq"><div class="k">7</div><div class="q" style="font-size:34px;">In Japan, obtaining a PhD is one possible career path for experienced research support professionals who want to advance. We noticed that the CCTSI also offers Research Service Professionals the opportunity to pursue master's or doctoral degrees through the Clinical Science Graduate Program. Besides obtaining an advanced degree, what other career pathways are available to Research Service Professionals at the CCTSI?</div></div></div><div class="follow">Follow-up from our side: Megumi Kitayama (Q7–9)</div>
+  </div>
+
+  <div class="page-num">14 / 17</div>
+  <div class="chrome-bar"><div></div><div></div><div></div><div></div></div>
+</section>
+
+<section data-screen-label="15 Theme D 2">
+  <div class="chrome-logos">
+    <div class="hd-mark" role="img" aria-label="UTokyo Hospital"></div>
+    <div class="wordmark">
+      <div class="name">The University of Tokyo Hospital</div>
+      <div class="sub">Clinical Research Promotion Center<span class="dot">·</span><span class="meeting">Saito · CCTSI Visit · 7 Oct 2026</span></div>
+    </div>
+  </div>
+
+  <h2 class="slide-title">D · Research support workforce (2 of 2)</h2>
+  <div class="slide-sub">Written questions sent on 24 August · for 10:10–10:20</div>
+
+  <div class="body-region">
+    <div style="display:flex; flex-direction:column; gap:22px;"><div class="wq"><div class="k">8</div><div class="q" style="font-size:35px;">Approximately what proportion of eligible research professionals actually take up these degree opportunities and the associated tuition support? And once they have completed the program, what strategies do you have in place to retain these highly trained professionals within the CCTSI or its partner institutions?</div></div><div class="wq"><div class="k">9</div><div class="q" style="font-size:35px;">If a data manager or research coordinator identifies a methodological research question through their routine work, how could they develop that idea into a research project at the CCTSI? Are there internal funding schemes, mentorship arrangements, or protected time that support this?</div></div></div><div class="follow">Follow-up from our side: Megumi Kitayama (Q7–9)</div>
+  </div>
+
+  <div class="page-num">15 / 17</div>
+  <div class="chrome-bar"><div></div><div></div><div></div><div></div></div>
+</section>
+
+<section data-screen-label="16 Themes E F">
+  <div class="chrome-logos">
+    <div class="hd-mark" role="img" aria-label="UTokyo Hospital"></div>
+    <div class="wordmark">
+      <div class="name">The University of Tokyo Hospital</div>
+      <div class="sub">Clinical Research Promotion Center<span class="dot">·</span><span class="meeting">Saito · CCTSI Visit · 7 Oct 2026</span></div>
+    </div>
+  </div>
+
+  <h2 class="slide-title">E · CTSA evaluation  ·  F · Data standards and infrastructure</h2>
+  <div class="slide-sub">Written questions sent on 24 August · for 10:10–10:20</div>
+
+  <div class="body-region">
+    <div style="display:flex; flex-direction:column; gap:22px;"><div class="wq"><div class="k">10</div><div class="q" style="font-size:31px;">Is there any independent evaluation showing that the CTSA program has improved clinical research outcomes in your region or nationally? Which findings from such evaluations have you found most useful in practice?</div></div><div class="wq"><div class="k">11</div><div class="q" style="font-size:31px;">How does the CCTSI approach the standardization and interoperability of clinical research data across different studies, systems, and institutions? In particular, how are standards such as CDISC being used, or considered, within your research ecosystem?</div></div><div class="wq"><div class="k">12</div><div class="q" style="font-size:31px;">As clinical and translational research becomes increasingly data-driven, what do you see as the key technical and data-infrastructure challenges — and the key opportunities — in supporting research that spans multiple institutions?</div></div></div><div class="follow">Follow-up from our side: Akira Soma (Q11–12)</div>
+  </div>
+
+  <div class="page-num">16 / 17</div>
+  <div class="chrome-bar"><div></div><div></div><div></div><div></div></div>
+</section>
+
+<section data-screen-label="17 Theme G">
+  <div class="chrome-logos">
+    <div class="hd-mark" role="img" aria-label="UTokyo Hospital"></div>
+    <div class="wordmark">
+      <div class="name">The University of Tokyo Hospital</div>
+      <div class="sub">Clinical Research Promotion Center<span class="dot">·</span><span class="meeting">Saito · CCTSI Visit · 7 Oct 2026</span></div>
+    </div>
+  </div>
+
+  <h2 class="slide-title">G · An integrated ecosystem, and what comes next</h2>
+  <div class="slide-sub">Written questions sent on 24 August · for 10:10–10:20</div>
+
+  <div class="body-region">
+    <div style="display:flex; flex-direction:column; gap:22px;"><div class="wq"><div class="k">13</div><div class="q" style="font-size:40px;">The CCTSI brings together multiple universities, healthcare organizations, and community partners. From your perspective as Director, what are the organizational challenges and opportunities in building an integrated research ecosystem across these partners, and where do you see the greatest opportunities for collaboration in the coming years?</div></div></div>
+  </div>
+
+  <div class="page-num">17 / 17</div>
   <div class="chrome-bar"><div></div><div></div><div></div><div></div></div>
 </section>
 
