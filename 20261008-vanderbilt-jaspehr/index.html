@@ -1,306 +1,700 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="design-system" content="UTokyo CRPC Slide System 1.1.0"><title>From an EHR Form to SDTM (Vanderbilt, 1 pm)</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=M+PLUS+1p:wght@400;500&display=swap"><style>/* Generated from theme.json and src/render.mjs. */
-@font-face{font-family:BIZ;font-weight:400;font-style:normal;font-display:swap;src:local('BIZUDPGothic-Regular'),local('BIZ UDPGothic')}
-@font-face{font-family:BIZ;font-weight:700;font-style:normal;font-display:swap;src:local('BIZUDPGothic-Bold'),local('BIZ UDPGothic Bold')}
-@font-face{font-family:Mplus;font-weight:400;font-style:normal;font-display:swap;src:local('MPLUS1p-Regular'),local('Mplus 1p')}
-@font-face{font-family:Mplus;font-weight:500;font-style:normal;font-display:swap;src:local('MPLUS1p-Medium'),local('Mplus 1p Medium')}
-:root{--crpc-ink:#293E46;--crpc-muted:#64777D;--crpc-blue:#009FB7;--crpc-pale:#EDF8FA;--crpc-rule:#D7E6E9;--crpc-yellow:#F3CE58;--crpc-brandRule:#BAD5DC;--crpc-coverAccent:#D3ECF0;--crpc-headingSurface:#F4FBFC;--crpc-bodySurface:#F1F8FA;--crpc-stageRule:#ABD6DF;--crpc-body-min:22pt;--crpc-height:540pt}
-*{box-sizing:border-box}.crpc-slide{position:relative;width:var(--slide-width);height:var(--crpc-height);background:white;overflow:hidden;transform-origin:top left}.crpc-item{position:absolute;margin:0;white-space:pre-wrap;font-synthesis:none;overflow-wrap:normal}.crpc-line{overflow:visible}
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>From an EHR Form to SDTM</title>
+<!-- UMC 訪問（2026-05-18）の Claude Design のデッキの見た目を、フォントを埋め込まずに書き起こしたもの。書体は Google Fonts から読む。 -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,500;0,600;0,700;0,900;1,400&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
 
-html,body{margin:0;background:#F1F3F2;color:#293E46;font:13px BIZ,'BIZ UDPGothic',sans-serif}header{position:sticky;top:0;z-index:10;background:#fffffff5;padding:14px 24px;border-bottom:1px solid #DAE2E2;display:flex;align-items:center;gap:12px;flex-wrap:wrap}header strong{font-size:14px;font-weight:400;margin-right:auto}button,header a{font:inherit;color:inherit;background:white;border:1px solid #BDCCCE;padding:7px 10px;text-decoration:none;border-radius:3px;cursor:pointer}main{max-width:1400px;margin:auto;padding:24px}.frame{position:relative;margin:0 auto 24px;overflow:hidden;background:white;box-shadow:0 3px 15px #293E460C}.crpc-slide{position:absolute;left:0;top:0;--slide-width:960pt}.present .frame{display:none}.present .frame.current{display:block}.present main{padding:12px}footer{padding:0 24px 24px;color:#64777D;font-size:11px}details{max-width:900px;margin:auto;line-height:1.8}details pre{white-space:pre-wrap}
-@media print{@page{size:960pt 540pt;margin:0}html,body{background:white}header,footer{display:none!important}main{margin:0;padding:0;max-width:none}.frame,.present .frame{display:block!important;width:960pt!important;height:540pt!important;margin:0!important;box-shadow:none;break-after:page}.frame:last-child{break-after:auto}.crpc-slide{transform:none!important}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
-</style></head><body><header><strong>From an EHR Form to SDTM (Vanderbilt, 1 pm) · 16:9</strong><button id="mode">発表表示</button><button id="prev" aria-label="前のスライド">←</button><span id="counter"></span><button id="next" aria-label="次のスライド">→</button><a href="deck-16x9.pptx" download>PowerPoint</a><a href="deck-16x9.pdf" download>PDF</a><button id="print">印刷</button></header><main><div class="frame" id="slide-1"><section class="crpc-slide" data-layout="cover" aria-label="Cover：From an EHR Form to SDTM"><div class="crpc-item crpc-rect" aria-hidden="true" style="left:0pt;top:0pt;width:960pt;height:540pt;background:#FFFFFF"></div>
-<img class="crpc-item" src="data:image/jpeg;base64,/9j/4QDeRXhpZgAATU0AKgAAAAgABwESAAMAAAABAAEAAAEaAAUAAAABAAAAYgEbAAUAAAABAAAAagEoAAMAAAABAAIAAAExAAIAAAAHAAAAcgITAAMAAAABAAEAAIdpAAQAAAABAAAAegAAAAAAAABIAAAAAQAAAEgAAAABR29vZ2xlAAAAB5AAAAcAAAAEMDIyMZEBAAcAAAAEAQIDAKAAAAcAAAAEMDEwMKABAAMAAAABAAEAAKACAAQAAAABAAAAYqADAAQAAAABAAAAYqQGAAMAAAABAAAAAAAAAAAAAP/hCWNodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IlhNUCBDb3JlIDYuMC4wIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bXA6Q3JlYXRvclRvb2w9Ikdvb2dsZSIvPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDw/eHBhY2tldCBlbmQ9InciPz4A/9sAhAABAQEBAQECAQECAwICAgMEAwMDAwQFBAQEBAQFBgUFBQUFBQYGBgYGBgYGBwcHBwcHCAgICAgJCQkJCQkJCQkJ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" alt="病院ロゴ" style="left:48pt;top:39pt;width:35pt;height:35pt;">
-<svg class="crpc-item crpc-line" style="left:99pt;top:39pt" width="1.3333333333333333" height="48" aria-hidden="true"><line x1="0" y1="0" x2="0" y2="48" stroke="#BAD5DC" stroke-width="0.9333333333333332"/></svg>
-<div class="crpc-item crpc-text" data-role="brand" style="left:113pt;top:37pt;width:420pt;height:20pt;font-family:'Helvetica Neue',Arial,sans-serif;font-size:12pt;font-weight:400;color:#293E46;line-height:1.35;letter-spacing:0.3pt;text-align:left">The University of Tokyo Hospital</div>
-<div class="crpc-item crpc-text" data-role="brand" style="left:113pt;top:56pt;width:460pt;height:26pt;font-family:'Helvetica Neue',Arial,sans-serif;font-size:16pt;font-weight:500;color:#293E46;line-height:1.35;letter-spacing:0.3pt;text-align:left">Clinical Research Promotion Center</div>
-<div class="crpc-item crpc-rect" aria-hidden="true" style="left:48pt;top:136pt;width:864pt;height:260pt;background:#EDF8FA"></div>
-<div class="crpc-item crpc-rect" aria-hidden="true" style="left:48pt;top:136pt;width:3pt;height:260pt;background:#009FB7"></div>
-<h2 class="crpc-item crpc-text" data-role="coverTitle" data-slot="title" style="left:80pt;top:210pt;width:800pt;height:58pt;font-family:'Helvetica Neue',Arial,sans-serif;font-size:38pt;font-weight:700;color:#293E46;line-height:1.2;letter-spacing:0pt;text-align:left">From an EHR Form to SDTM</h2>
-<div class="crpc-item crpc-text" data-role="body" data-slot="subtitle" style="left:81pt;top:286pt;width:798pt;height:36pt;font-family:'Helvetica Neue',Arial,sans-serif;font-size:22pt;font-weight:400;color:#293E46;line-height:1.35;letter-spacing:0pt;text-align:left">JASPEHR, FHIR and CDISC: a year on</div>
-<div class="crpc-item crpc-rect" aria-hidden="true" style="left:844pt;top:392pt;width:68pt;height:4pt;background:#D3ECF0"></div>
-<div class="crpc-item crpc-rect" aria-hidden="true" style="left:886pt;top:392pt;width:26pt;height:4pt;background:#F3CE58"></div>
-<div class="crpc-item crpc-text" data-role="metadata" data-slot="presenter" style="left:48pt;top:428pt;width:300pt;height:26pt;font-family:'Helvetica Neue',Arial,sans-serif;font-size:17pt;font-weight:700;color:#293E46;line-height:1.35;letter-spacing:0pt;text-align:left">Toshiki Saito, MD, PhD</div>
-<div class="crpc-item crpc-text" data-role="metadata" data-slot="affiliation" style="left:48pt;top:456pt;width:630pt;height:22pt;font-family:'Helvetica Neue',Arial,sans-serif;font-size:12pt;font-weight:400;color:#64777D;line-height:1.35;letter-spacing:0pt;text-align:left">Director, Clinical Research Promotion Center, The University of Tokyo Hospital</div>
-<div class="crpc-item crpc-text" data-role="metadata" data-slot="date" style="left:702pt;top:432pt;width:210pt;height:24pt;font-family:'Helvetica Neue',Arial,sans-serif;font-size:12pt;font-weight:400;color:#64777D;line-height:1.35;letter-spacing:0pt;text-align:right">October 8, 2026 · Nashville</div>
-<div class="crpc-item crpc-text" data-role="footer" style="left:48pt;top:510pt;width:560pt;height:15pt;font-family:Arial,sans-serif;font-size:8pt;font-weight:400;color:#64777D;line-height:1.35;letter-spacing:1.2pt;text-align:left">THE UNIVERSITY OF TOKYO HOSPITAL  /  CLINICAL RESEARCH PROMOTION CENTER</div>
-<div class="crpc-item crpc-text" data-role="pageNumber" style="left:876pt;top:508pt;width:36pt;height:20pt;font-family:Arial,sans-serif;font-size:10pt;font-weight:400;color:#64777D;line-height:1.35;letter-spacing:0pt;text-align:right">01</div></section></div>
-<div class="frame" id="slide-2"><section class="crpc-slide" data-layout="rows" aria-label="Body：JASPEHR in one slide"><div class="crpc-item crpc-rect" aria-hidden="true" style="left:0pt;top:0pt;width:960pt;height:540pt;background:#FFFFFF"></div>
-<div class="crpc-item crpc-rect" aria-hidden="true" style="left:0pt;top:0pt;width:960pt;height:83pt;background:#F4FBFC"></div>
-<h2 class="crpc-item crpc-text" data-role="title" data-slot="title" style="left:48pt;top:25pt;width:864pt;height:48pt;font-family:'Helvetica Neue',Arial,sans-serif;font-size:26pt;font-weight:700;color:#293E46;line-height:1.3;letter-spacing:0pt;text-align:left">JASPEHR in one slide</h2>
-<svg class="crpc-item crpc-line" style="left:48pt;top:85pt" width="1152" height="1.3333333333333333" aria-hidden="true"><line x1="0" y1="0" x2="1152" y2="0" stroke="#D7E6E9" stroke-width="0.9333333333333332"/></svg>
-<div class="crpc-item crpc-rect" aria-hidden="true" style="left:48pt;top:84pt;width:33pt;height:2pt;background:#009FB7"></div>
-<div class="crpc-item crpc-text" data-role="footer" style="left:48pt;top:510pt;width:560pt;height:15pt;font-family:Arial,sans-serif;font-size:8pt;font-weight:400;color:#64777D;line-height:1.35;letter-spacing:1.2pt;text-align:left">THE UNIVERSITY OF TOKYO HOSPITAL  /  CLINICAL RESEARCH PROMOTION CENTER</div>
-<div class="crpc-item crpc-text" data-role="pageNumber" style="left:876pt;top:508pt;width:36pt;height:20pt;font-family:Arial,sans-serif;font-size:10pt;font-weight:400;color:#64777D;line-height:1.35;letter-spacing:0pt;text-align:right">02</div>
-<div class="crpc-item crpc-text" data-role="body" data-slot="lead" style="left:48pt;top:108pt;width:864pt;height:60pt;font-family:'Helvetica Neue',Arial,sans-serif;font-size:20pt;font-weight:400;color:#64777D;line-height:1.35;letter-spacing:0pt;text-align:left">A publicly funded, vendor-neutral form format for Japanese EHRs, started by Prof. Kengo Miyo.</div>
-<div class="crpc-item crpc-rect" aria-hidden="true" style="left:48pt;top:174pt;width:864pt;height:100pt;background:#F1F8FA"></div>
-<div class="crpc-item crpc-text" data-role="index" style="left:68pt;top:196pt;width:25pt;height:22pt;font-family:Arial,sans-serif;font-size:12pt;font-weight:400;color:#009FB7;line-height:1.35;letter-spacing:1pt;text-align:left">01</div>
-<div class="crpc-item crpc-text" data-role="body" data-slot="item0label" style="left:100pt;top:192pt;width:170pt;height:30pt;font-family:'Helvetica Neue',Arial,sans-serif;font-size:20pt;font-weight:700;color:#293E46;line-height:1.35;letter-spacing:0pt;text-align:left">Common forms</div>
-<div class="crpc-item crpc-text" data-role="body" data-slot="item0text" style="left:290pt;top:192pt;width:602pt;height:64pt;font-family:'Helvetica Neue',Arial,sans-serif;font-size:20pt;font-weight:400;color:#293E46;line-height:1.35;letter-spacing:0pt;text-align:left">One common form master. Each EHR vendor converts it into its own template engine.</div>
-<div class="crpc-item crpc-rect" aria-hidden="true" style="left:48pt;top:282pt;width:864pt;height:100pt;background:#F1F8FA"></div>
-<div class="crpc-item crpc-text" data-role="index" style="left:68pt;top:304pt;width:25pt;height:22pt;font-family:Arial,sans-serif;font-size:12pt;font-weight:400;color:#009FB7;line-height:1.35;letter-spacing:1pt;text-align:left">02</div>
-<div class="crpc-item crpc-text" data-role="body" data-slot="item1label" style="left:100pt;top:300pt;width:170pt;height:30pt;font-family:'Helvetica Neue',Arial,sans-serif;font-size:20pt;font-weight:700;color:#293E46;line-height:1.35;letter-spacing:0pt;text-align:left">FHIR</div>
-<div class="crpc-item crpc-text" data-role="body" data-slot="item1text" style="left:290pt;top:300pt;width:602pt;height:64pt;font-family:'Helvetica Neue',Arial,sans-serif;font-size:20pt;font-weight:400;color:#293E46;line-height:1.35;letter-spacing:0pt;text-align:left">Built on FHIR Questionnaire and QuestionnaireResponse.</div>
-<div class="crpc-item crpc-rect" aria-hidden="true" style="left:48pt;top:390pt;width:864pt;height:100pt;background:#F1F8FA"></div>
-<div class="crpc-item crpc-text" data-role="index" style="left:68pt;top:412pt;width:25pt;height:22pt;font-family:Arial,sans-serif;font-size:12pt;font-weight:400;color:#009FB7;line-height:1.35;letter-spacing:1pt;text-align:left">03</div>
-<div class="crpc-item crpc-text" data-role="body" data-slot="item2label" style="left:100pt;top:408pt;width:170pt;height:30pt;font-family:'Helvetica Neue',Arial,sans-serif;font-size:20pt;font-weight:700;color:#293E46;line-height:1.35;letter-spacing:0pt;text-align:left">Vendors</div>
-<div class="crpc-item crpc-text" data-role="body" data-slot="item2text" style="left:290pt;top:408pt;width:602pt;height:64pt;font-family:'Helvetica Neue',Arial,sans-serif;font-size:20pt;font-weight:400;color:#293E46;line-height:1.35;letter-spacing:0pt;text-align:left">NEC, Fujitsu, IBM and FINDEX take part. Our working group adds CDISC to it.</div></section></div>
-<div class="frame" id="slide-3"><section class="crpc-slide" data-layout="rows" aria-label="Body：Four kinds of metadata in each item"><div class="crpc-item crpc-rect" aria-hidden="true" style="left:0pt;top:0pt;width:960pt;height:540pt;background:#FFFFFF"></div>
-<div class="crpc-item crpc-rect" aria-hidden="true" style="left:0pt;top:0pt;width:960pt;height:83pt;background:#F4FBFC"></div>
-<h2 class="crpc-item crpc-text" data-role="title" data-slot="title" style="left:48pt;top:25pt;width:864pt;height:48pt;font-family:'Helvetica Neue',Arial,sans-serif;font-size:26pt;font-weight:700;color:#293E46;line-height:1.3;letter-spacing:0pt;text-align:left">Four kinds of metadata in each item</h2>
-<svg class="crpc-item crpc-line" style="left:48pt;top:85pt" width="1152" height="1.3333333333333333" aria-hidden="true"><line x1="0" y1="0" x2="1152" y2="0" stroke="#D7E6E9" stroke-width="0.9333333333333332"/></svg>
-<div class="crpc-item crpc-rect" aria-hidden="true" style="left:48pt;top:84pt;width:33pt;height:2pt;background:#009FB7"></div>
-<div class="crpc-item crpc-text" data-role="footer" style="left:48pt;top:510pt;width:560pt;height:15pt;font-family:Arial,sans-serif;font-size:8pt;font-weight:400;color:#64777D;line-height:1.35;letter-spacing:1.2pt;text-align:left">THE UNIVERSITY OF TOKYO HOSPITAL  /  CLINICAL RESEARCH PROMOTION CENTER</div>
-<div class="crpc-item crpc-text" data-role="pageNumber" style="left:876pt;top:508pt;width:36pt;height:20pt;font-family:Arial,sans-serif;font-size:10pt;font-weight:400;color:#64777D;line-height:1.35;letter-spacing:0pt;text-align:right">03</div>
-<div class="crpc-item crpc-text" data-role="body" data-slot="lead" style="left:48pt;top:108pt;width:864pt;height:60pt;font-family:'Helvetica Neue',Arial,sans-serif;font-size:20pt;font-weight:400;color:#64777D;line-height:1.35;letter-spacing:0pt;text-align:left">Each form item names the SDTM variable it fills, such as AE.AESER, and takes its answers from three terminologies.</div>
-<div class="crpc-item crpc-rect" aria-hidden="true" style="left:48pt;top:174pt;width:864pt;height:100pt;background:#F1F8FA"></div>
-<div class="crpc-item crpc-text" data-role="index" style="left:68pt;top:196pt;width:25pt;height:22pt;font-family:Arial,sans-serif;font-size:12pt;font-weight:400;color:#009FB7;line-height:1.35;letter-spacing:1pt;text-align:left">01</div>
-<div class="crpc-item crpc-text" data-role="body" data-slot="item0label" style="left:100pt;top:192pt;width:170pt;height:30pt;font-family:'Helvetica Neue',Arial,sans-serif;font-size:20pt;font-weight:700;color:#293E46;line-height:1.35;letter-spacing:0pt;text-align:left">CDISC CT</div>
-<div class="crpc-item crpc-text" data-role="body" data-slot="item0text" style="left:290pt;top:192pt;width:602pt;height:64pt;font-family:'Helvetica Neue',Arial,sans-serif;font-size:20pt;font-weight:400;color:#293E46;line-height:1.35;letter-spacing:0pt;text-align:left">About 1,180 controlled terminologies, each as a FHIR CodeSystem.</div>
-<div class="crpc-item crpc-rect" aria-hidden="true" style="left:48pt;top:282pt;width:864pt;height:100pt;background:#F1F8FA"></div>
-<div class="crpc-item crpc-text" data-role="index" style="left:68pt;top:304pt;width:25pt;height:22pt;font-family:Arial,sans-serif;font-size:12pt;font-weight:400;color:#009FB7;line-height:1.35;letter-spacing:1pt;text-align:left">02</div>
-<div class="crpc-item crpc-text" data-role="body" data-slot="item1label" style="left:100pt;top:300pt;width:170pt;height:30pt;font-family:'Helvetica Neue',Arial,sans-serif;font-size:20pt;font-weight:700;color:#293E46;line-height:1.35;letter-spacing:0pt;text-align:left">MedDRA</div>
-<div class="crpc-item crpc-text" data-role="body" data-slot="item1text" style="left:290pt;top:300pt;width:602pt;height:64pt;font-family:'Helvetica Neue',Arial,sans-serif;font-size:20pt;font-weight:400;color:#293E46;line-height:1.35;letter-spacing:0pt;text-align:left">Adverse events: about 90,000 lowest level terms.</div>
-<div class="crpc-item crpc-rect" aria-hidden="true" style="left:48pt;top:390pt;width:864pt;height:100pt;background:#F1F8FA"></div>
-<div class="crpc-item crpc-text" data-role="index" style="left:68pt;top:412pt;width:25pt;height:22pt;font-family:Arial,sans-serif;font-size:12pt;font-weight:400;color:#009FB7;line-height:1.35;letter-spacing:1pt;text-align:left">03</div>
-<div class="crpc-item crpc-text" data-role="body" data-slot="item2label" style="left:100pt;top:408pt;width:170pt;height:30pt;font-family:'Helvetica Neue',Arial,sans-serif;font-size:20pt;font-weight:700;color:#293E46;line-height:1.35;letter-spacing:0pt;text-align:left">WHODrug</div>
-<div class="crpc-item crpc-text" data-role="body" data-slot="item2text" style="left:290pt;top:408pt;width:602pt;height:64pt;font-family:'Helvetica Neue',Arial,sans-serif;font-size:20pt;font-weight:400;color:#293E46;line-height:1.35;letter-spacing:0pt;text-align:left">Drugs, linked to the Japanese drug master used in EHRs.</div></section></div>
-<div class="frame" id="slide-4"><section class="crpc-slide" data-layout="flow" aria-label="Diagram：The demo"><div class="crpc-item crpc-rect" aria-hidden="true" style="left:0pt;top:0pt;width:960pt;height:540pt;background:#FFFFFF"></div>
-<div class="crpc-item crpc-rect" aria-hidden="true" style="left:0pt;top:0pt;width:960pt;height:83pt;background:#F4FBFC"></div>
-<h2 class="crpc-item crpc-text" data-role="title" data-slot="title" style="left:48pt;top:25pt;width:864pt;height:48pt;font-family:'Helvetica Neue',Arial,sans-serif;font-size:26pt;font-weight:700;color:#293E46;line-height:1.3;letter-spacing:0pt;text-align:left">The demo</h2>
-<svg class="crpc-item crpc-line" style="left:48pt;top:85pt" width="1152" height="1.3333333333333333" aria-hidden="true"><line x1="0" y1="0" x2="1152" y2="0" stroke="#D7E6E9" stroke-width="0.9333333333333332"/></svg>
-<div class="crpc-item crpc-rect" aria-hidden="true" style="left:48pt;top:84pt;width:33pt;height:2pt;background:#009FB7"></div>
-<div class="crpc-item crpc-text" data-role="footer" style="left:48pt;top:510pt;width:560pt;height:15pt;font-family:Arial,sans-serif;font-size:8pt;font-weight:400;color:#64777D;line-height:1.35;letter-spacing:1.2pt;text-align:left">THE UNIVERSITY OF TOKYO HOSPITAL  /  CLINICAL RESEARCH PROMOTION CENTER</div>
-<div class="crpc-item crpc-text" data-role="pageNumber" style="left:876pt;top:508pt;width:36pt;height:20pt;font-family:Arial,sans-serif;font-size:10pt;font-weight:400;color:#64777D;line-height:1.35;letter-spacing:0pt;text-align:right">04</div>
-<div class="crpc-item crpc-text" data-role="body" data-slot="lead" style="left:48pt;top:108pt;width:864pt;height:60pt;font-family:'Helvetica Neue',Arial,sans-serif;font-size:20pt;font-weight:400;color:#64777D;line-height:1.35;letter-spacing:0pt;text-align:left">All four sit on one terminology server, running as a pilot. The form reads them at the point of entry.</div>
-<div class="crpc-item crpc-rect" aria-hidden="true" style="left:48pt;top:195pt;width:272pt;height:220pt;background:#EDF8FA"></div>
-<div class="crpc-item crpc-text" data-role="index" style="left:68pt;top:216pt;width:232pt;height:24pt;font-family:Arial,sans-serif;font-size:11pt;font-weight:400;color:#009FB7;line-height:1.35;letter-spacing:1.2pt;text-align:left">01</div>
-<div class="crpc-item crpc-text" data-role="body" data-slot="item0label" style="left:68pt;top:250pt;width:232pt;height:40pt;font-family:'Helvetica Neue',Arial,sans-serif;font-size:26pt;font-weight:700;color:#293E46;line-height:1.35;letter-spacing:0pt;text-align:left">Server</div>
-<svg class="crpc-item crpc-line" style="left:68pt;top:302pt" width="309.3333333333333" height="1.3333333333333333" aria-hidden="true"><line x1="0" y1="0" x2="309.3333333333333" y2="0" stroke="#ABD6DF" stroke-width="1.5999999999999999"/></svg>
-<div class="crpc-item crpc-text" data-role="body" data-slot="item0text" style="left:68pt;top:320pt;width:232pt;height:72pt;font-family:'Helvetica Neue',Arial,sans-serif;font-size:20pt;font-weight:400;color:#293E46;line-height:1.35;letter-spacing:0pt;text-align:left">HAPI FHIR holds
-the four terminologies.</div>
-<div class="crpc-item crpc-text" data-role="body" style="left:321pt;top:280pt;width:22pt;height:36pt;font-family:Arial,sans-serif;font-size:22pt;font-weight:400;color:#009FB7;line-height:1.35;letter-spacing:0pt;text-align:center">→</div>
-<div class="crpc-item crpc-rect" aria-hidden="true" style="left:344pt;top:195pt;width:272pt;height:220pt;background:#EDF8FA"></div>
-<div class="crpc-item crpc-text" data-role="index" style="left:364pt;top:216pt;width:232pt;height:24pt;font-family:Arial,sans-serif;font-size:11pt;font-weight:400;color:#009FB7;line-height:1.35;letter-spacing:1.2pt;text-align:left">02</div>
-<div class="crpc-item crpc-text" data-role="body" data-slot="item1label" style="left:364pt;top:250pt;width:232pt;height:40pt;font-family:'Helvetica Neue',Arial,sans-serif;font-size:26pt;font-weight:700;color:#293E46;line-height:1.35;letter-spacing:0pt;text-align:left">Form</div>
-<svg class="crpc-item crpc-line" style="left:364pt;top:302pt" width="309.3333333333333" height="1.3333333333333333" aria-hidden="true"><line x1="0" y1="0" x2="309.3333333333333" y2="0" stroke="#ABD6DF" stroke-width="1.5999999999999999"/></svg>
-<div class="crpc-item crpc-text" data-role="body" data-slot="item1text" style="left:364pt;top:320pt;width:232pt;height:72pt;font-family:'Helvetica Neue',Arial,sans-serif;font-size:20pt;font-weight:400;color:#293E46;line-height:1.35;letter-spacing:0pt;text-align:left">The EHR form saves
-FHIR answers.</div>
-<div class="crpc-item crpc-text" data-role="body" style="left:617pt;top:280pt;width:22pt;height:36pt;font-family:Arial,sans-serif;font-size:22pt;font-weight:400;color:#009FB7;line-height:1.35;letter-spacing:0pt;text-align:center">→</div>
-<div class="crpc-item crpc-rect" aria-hidden="true" style="left:640pt;top:195pt;width:272pt;height:220pt;background:#EDF8FA"></div>
-<div class="crpc-item crpc-text" data-role="index" style="left:660pt;top:216pt;width:232pt;height:24pt;font-family:Arial,sans-serif;font-size:11pt;font-weight:400;color:#009FB7;line-height:1.35;letter-spacing:1.2pt;text-align:left">03</div>
-<div class="crpc-item crpc-text" data-role="body" data-slot="item2label" style="left:660pt;top:250pt;width:232pt;height:40pt;font-family:'Helvetica Neue',Arial,sans-serif;font-size:26pt;font-weight:700;color:#293E46;line-height:1.35;letter-spacing:0pt;text-align:left">SDTM</div>
-<svg class="crpc-item crpc-line" style="left:660pt;top:302pt" width="309.3333333333333" height="1.3333333333333333" aria-hidden="true"><line x1="0" y1="0" x2="309.3333333333333" y2="0" stroke="#ABD6DF" stroke-width="1.5999999999999999"/></svg>
-<div class="crpc-item crpc-text" data-role="body" data-slot="item2text" style="left:660pt;top:320pt;width:232pt;height:72pt;font-family:'Helvetica Neue',Arial,sans-serif;font-size:20pt;font-weight:400;color:#293E46;line-height:1.35;letter-spacing:0pt;text-align:left">One script builds
-the AE dataset.</div>
-<svg class="crpc-item crpc-line" style="left:48pt;top:443pt" width="1152" height="1.3333333333333333" aria-hidden="true"><line x1="0" y1="0" x2="1152" y2="0" stroke="#D7E6E9" stroke-width="0.9333333333333332"/></svg>
-<div class="crpc-item crpc-rect" aria-hidden="true" style="left:48pt;top:442pt;width:26pt;height:2pt;background:#F3CE58"></div>
-<div class="crpc-item crpc-text" data-role="body" data-slot="takeaway" style="left:48pt;top:456pt;width:864pt;height:37pt;font-family:'Helvetica Neue',Arial,sans-serif;font-size:20pt;font-weight:700;color:#293E46;line-height:1.35;letter-spacing:0pt;text-align:left">Standard codes at entry. No mapping step afterwards.</div></section></div>
-<div class="frame" id="slide-5"><section class="crpc-slide" data-layout="rows" aria-label="Body：What comes next"><div class="crpc-item crpc-rect" aria-hidden="true" style="left:0pt;top:0pt;width:960pt;height:540pt;background:#FFFFFF"></div>
-<div class="crpc-item crpc-rect" aria-hidden="true" style="left:0pt;top:0pt;width:960pt;height:83pt;background:#F4FBFC"></div>
-<h2 class="crpc-item crpc-text" data-role="title" data-slot="title" style="left:48pt;top:25pt;width:864pt;height:48pt;font-family:'Helvetica Neue',Arial,sans-serif;font-size:26pt;font-weight:700;color:#293E46;line-height:1.3;letter-spacing:0pt;text-align:left">What comes next</h2>
-<svg class="crpc-item crpc-line" style="left:48pt;top:85pt" width="1152" height="1.3333333333333333" aria-hidden="true"><line x1="0" y1="0" x2="1152" y2="0" stroke="#D7E6E9" stroke-width="0.9333333333333332"/></svg>
-<div class="crpc-item crpc-rect" aria-hidden="true" style="left:48pt;top:84pt;width:33pt;height:2pt;background:#009FB7"></div>
-<div class="crpc-item crpc-text" data-role="footer" style="left:48pt;top:510pt;width:560pt;height:15pt;font-family:Arial,sans-serif;font-size:8pt;font-weight:400;color:#64777D;line-height:1.35;letter-spacing:1.2pt;text-align:left">THE UNIVERSITY OF TOKYO HOSPITAL  /  CLINICAL RESEARCH PROMOTION CENTER</div>
-<div class="crpc-item crpc-text" data-role="pageNumber" style="left:876pt;top:508pt;width:36pt;height:20pt;font-family:Arial,sans-serif;font-size:10pt;font-weight:400;color:#64777D;line-height:1.35;letter-spacing:0pt;text-align:right">05</div>
-<div class="crpc-item crpc-text" data-role="body" data-slot="lead" style="left:48pt;top:108pt;width:864pt;height:60pt;font-family:'Helvetica Neue',Arial,sans-serif;font-size:20pt;font-weight:400;color:#64777D;line-height:1.35;letter-spacing:0pt;text-align:left">The specification follows once CDISC's identifiers are set.</div>
-<div class="crpc-item crpc-rect" aria-hidden="true" style="left:48pt;top:174pt;width:864pt;height:100pt;background:#F1F8FA"></div>
-<div class="crpc-item crpc-text" data-role="index" style="left:68pt;top:196pt;width:25pt;height:22pt;font-family:Arial,sans-serif;font-size:12pt;font-weight:400;color:#009FB7;line-height:1.35;letter-spacing:1pt;text-align:left">01</div>
-<div class="crpc-item crpc-text" data-role="body" data-slot="item0label" style="left:100pt;top:192pt;width:170pt;height:30pt;font-family:'Helvetica Neue',Arial,sans-serif;font-size:20pt;font-weight:700;color:#293E46;line-height:1.35;letter-spacing:0pt;text-align:left">Oct 19</div>
-<div class="crpc-item crpc-text" data-role="body" data-slot="item0text" style="left:290pt;top:192pt;width:602pt;height:64pt;font-family:'Helvetica Neue',Arial,sans-serif;font-size:20pt;font-weight:400;color:#293E46;line-height:1.35;letter-spacing:0pt;text-align:left">Our working group meets the JASPEHR vendors. NEC is turning this into version 1.2 of the specification with us.</div>
-<div class="crpc-item crpc-rect" aria-hidden="true" style="left:48pt;top:282pt;width:864pt;height:100pt;background:#F1F8FA"></div>
-<div class="crpc-item crpc-text" data-role="index" style="left:68pt;top:304pt;width:25pt;height:22pt;font-family:Arial,sans-serif;font-size:12pt;font-weight:400;color:#009FB7;line-height:1.35;letter-spacing:1pt;text-align:left">02</div>
-<div class="crpc-item crpc-text" data-role="body" data-slot="item1label" style="left:100pt;top:300pt;width:170pt;height:30pt;font-family:'Helvetica Neue',Arial,sans-serif;font-size:20pt;font-weight:700;color:#293E46;line-height:1.35;letter-spacing:0pt;text-align:left">CDISC</div>
-<div class="crpc-item crpc-text" data-role="body" data-slot="item1text" style="left:290pt;top:300pt;width:602pt;height:64pt;font-family:'Helvetica Neue',Arial,sans-serif;font-size:20pt;font-weight:400;color:#293E46;line-height:1.35;letter-spacing:0pt;text-align:left">On Oct 2 CDISC decided to use persistent identifiers. The details are still under discussion.</div>
-<div class="crpc-item crpc-rect" aria-hidden="true" style="left:48pt;top:390pt;width:864pt;height:100pt;background:#F1F8FA"></div>
-<div class="crpc-item crpc-text" data-role="index" style="left:68pt;top:412pt;width:25pt;height:22pt;font-family:Arial,sans-serif;font-size:12pt;font-weight:400;color:#009FB7;line-height:1.35;letter-spacing:1pt;text-align:left">03</div>
-<div class="crpc-item crpc-text" data-role="body" data-slot="item2label" style="left:100pt;top:408pt;width:170pt;height:30pt;font-family:'Helvetica Neue',Arial,sans-serif;font-size:20pt;font-weight:700;color:#293E46;line-height:1.35;letter-spacing:0pt;text-align:left">To you</div>
-<div class="crpc-item crpc-text" data-role="body" data-slot="item2text" style="left:290pt;top:408pt;width:602pt;height:64pt;font-family:'Helvetica Neue',Arial,sans-serif;font-size:20pt;font-weight:400;color:#293E46;line-height:1.35;letter-spacing:0pt;text-align:left">Once they are set, we send you the spec and the FHIR code systems.</div></section></div></main><footer><details><summary>デザインシステムとフォントのライセンス</summary><p>UTokyo CRPC Slide System 1.1.0。本文の正本は制作元のcontent.jsonです。</p><pre>Copyright 2022 The BIZ UDGothic Project Authors (https://github.com/googlefonts/morisawa-biz-ud-mincho)
+  
 
-This Font Software is licensed under the SIL Open Font License, Version 1.1.
-This license is copied below, and is also available with a FAQ at:
-https://scripts.sil.org/OFL
+  :root {
+    --ink: #212121;
+    --text: #434343;
+    --mid: #595959;
+    --cool: #78909C;
+    --surface: #FAFAFA;
+    --divider: #EEEEEE;
+    --g-blue:   #1A73E8;
+    --g-green:  #34A853;
+    --g-yellow: #FBBC04;
+    --g-red:    #EA4335;
+    --hi: #FFAB40;
+  }
+
+  html, body {
+    margin: 0; padding: 0;
+    background: #111;
+    font-family: "Noto Sans", "Noto Sans JP", Arial, "Helvetica Neue", sans-serif;
+    color: var(--text);
+  }
+
+  /* Each slide = white background, bottom Google bar, top-left logo block */
+  .deck > section {
+    background: #FFFFFF;
+    position: relative;
+    overflow: hidden;
+    font-family: "Noto Sans", "Noto Sans JP", Arial, sans-serif;
+    color: var(--text);
+  }
+
+  /* === Master chrome === */
+  .chrome-logos {
+    position: absolute;
+    left: 60px;
+    top: 36px;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .chrome-logos .hd-mark {
+    display: block;
+    width: 64px;
+    height: 64px;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+  .chrome-logos .wordmark {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    line-height: 1.15;
+  }
+  .chrome-logos .wordmark .name {
+    font-size: 25px;
+    font-weight: 700;
+    color: #00A6CC;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+  }
+  .chrome-logos .wordmark .sub {
+    font-size: 16px;
+    color: #00A6CC;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+  .chrome-logos .wordmark .sub .meeting {
+    color: #78909C;
+    font-weight: 500;
+  }
+  .chrome-logos .wordmark .sub .dot {
+    color: #C7D0D6;
+    margin: 0 8px;
+    font-weight: 400;
+  }
+
+  /* Bottom Google bar */
+  .chrome-bar {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    height: 12px;
+    display: flex;
+    z-index: 4;
+  }
+  .chrome-bar > div { flex: 1; }
+  .chrome-bar > div:nth-child(1) { background: var(--g-blue); }
+  .chrome-bar > div:nth-child(2) { background: var(--g-green); }
+  .chrome-bar > div:nth-child(3) { background: var(--g-yellow); }
+  .chrome-bar > div:nth-child(4) { background: var(--g-red); }
+
+  /* Page number */
+  .page-num {
+    position: absolute; right: 60px; bottom: 36px;
+    font-size: 22px; color: #595959; font-weight: 500;
+    z-index: 5;
+  }
+
+  /* Section heading & body containers used across content slides */
+  .slide-title {
+    position: absolute;
+    left: 90px; right: 90px; top: 150px;
+    font-size: 58px; font-weight: 700; color: var(--ink);
+    line-height: 1.1;
+    margin: 0;
+    letter-spacing: -0.005em;
+  }
+  .slide-sub {
+    position: absolute;
+    left: 90px; right: 90px; top: 238px;
+    font-size: 28px; color: var(--mid); font-weight: 400;
+    line-height: 1.3;
+  }
+  .body-region { position: absolute; left: 90px; top: 300px; right: 90px; bottom: 90px; }
+
+  /* Generic */
+  .col2 { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+  .col5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; }
+
+  .mono { font-family: "JetBrains Mono", "SFMono-Regular", Menlo, Consolas, monospace; }
+
+  /* Card */
+  .card {
+    background: #fff;
+    border: 1px solid var(--divider);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 2px 0 rgba(0,0,0,0.02);
+  }
+  .card-head {
+    padding: 22px 32px;
+    color: #fff;
+    font-size: 36px; font-weight: 700;
+    letter-spacing: 0.005em;
+  }
+  .card-body { padding: 30px 36px; }
+
+  /* Pill-style accent header (used inside cards) */
+  .pill-row {
+    display: flex; align-items: baseline; gap: 16px;
+    font-size: 30px; line-height: 1.4; color: var(--ink);
+    padding: 14px 0;
+  }
+  .pill-row .lbl { font-weight: 700; color: var(--ink); min-width: 170px; }
+
+  /* Check / cross icons */
+  .ico-circle {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 48px; height: 48px; border-radius: 50%;
+    color: #fff; font-weight: 900; font-size: 24px;
+    flex-shrink: 0;
+  }
+  .ico-circle.ok  { background: var(--g-green); }
+  .ico-circle.no  { background: var(--g-red); }
+  .ico-circle.eq  { background: var(--g-yellow); color: #212121; }
+
+  /* Big pipeline box */
+  .pipe-box {
+    background: #fff;
+    border: 3px solid var(--cool);
+    border-radius: 18px;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center;
+    color: var(--ink);
+    font-weight: 700;
+    line-height: 1.2;
+    padding: 24px;
+  }
+  .pipe-box.accent { border-color: var(--g-blue); background: #E8F0FE; color: #174ea6; }
+  .pipe-box.focus { background: var(--g-blue); color: #fff; border-color: var(--g-blue); }
+  .pipe-arrow {
+    color: var(--g-blue);
+    font-size: 72px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 300;
+  }
+
+  /* Table */
+  table.meta {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    font-size: 28px;
+    background: #fff;
+  }
+  table.meta th {
+    background: #f2f4f8;
+    color: #212121;
+    font-weight: 700;
+    padding: 22px 24px;
+    text-align: left;
+    border-bottom: 3px solid #1A73E8;
+    font-size: 28px;
+  }
+  table.meta td {
+    padding: 22px 24px;
+    border-bottom: 1px solid var(--divider);
+    color: var(--text);
+    vertical-align: middle;
+    line-height: 1.4;
+  }
+  table.meta tr.alt td { background: #fafbfd; }
+  table.meta tr.hilite td {
+    background: #FFF8E1;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  table.meta tr.hilite td:first-child { border-left: 8px solid #FBBC04; }
+
+  /* Timeline */
+  .tl-row {
+    position: relative;
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 28px;
+    align-items: start;
+    padding-top: 60px;
+  }
+  .tl-line {
+    position: absolute;
+    left: 0; right: 0; top: 32px;
+    height: 6px;
+    background: linear-gradient(to right, #34A853 0%, #34A853 12%, #FBBC04 12%, #FBBC04 60%, #EA4335 60%, #EA4335 100%);
+    border-radius: 3px;
+  }
+  .tl-dot {
+    position: absolute;
+    top: 16px;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: #fff;
+    border: 6px solid var(--g-blue);
+    transform: translateX(-50%);
+  }
+
+  /* Bullets */
+  .bigbul {
+    display: flex; gap: 24px; align-items: flex-start;
+    font-size: 34px;
+    line-height: 1.4;
+    color: var(--ink);
+    margin: 0 0 32px 0;
+  }
+  .bigbul .b {
+    flex-shrink: 0; margin-top: 8px;
+    width: 14px; height: 14px; border-radius: 50%;
+    background: var(--g-blue);
+  }
+  .bigbul .b.alt { background: var(--g-green); }
+  .bigbul .b.warn { background: var(--g-red); }
+
+  /* Slide 1 */
+  .s1-block { position: absolute; left: 0; right: 0; top: 320px; text-align: center; padding: 0 100px; }
+  .s1-eyebrow { font-size: 30px; color: var(--g-blue); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+  .s1-h1 { font-size: 96px; font-weight: 900; color: var(--ink); margin: 32px 0 16px; letter-spacing: -0.01em; line-height: 1.05; }
+  .s1-h2 { font-size: 46px; font-weight: 400; color: var(--text); font-style: italic; margin: 0; }
+  .s1-rule {
+    width: 320px; height: 8px; margin: 56px auto 0;
+    background: linear-gradient(to right, #1A73E8 0%, #1A73E8 25%, #34A853 25%, #34A853 50%, #FBBC04 50%, #FBBC04 75%, #EA4335 75%, #EA4335 100%);
+    border-radius: 4px;
+  }
+  .s1-meta { font-size: 32px; color: var(--mid); margin-top: 40px; font-weight: 500; }
+  .s1-authors { position: absolute; left: 90px; bottom: 110px; right: 90px; display: flex; justify-content: space-between; align-items: flex-end; }
+  .s1-authors .who .name { font-size: 36px; font-weight: 700; color: var(--ink); }
+  .s1-authors .who .role { font-size: 26px; color: var(--text); margin-top: 8px; line-height: 1.35; }
+  .s1-authors .when { text-align: right; font-size: 26px; color: var(--mid); }
+  .s1-authors .when strong { display:block; font-size: 32px; color: var(--ink); font-weight: 700; }
+
+  /* Slide 9 closer */
+  .s9-thanks { font-size: 132px; font-weight: 900; color: var(--ink); text-align: center; margin: 0; letter-spacing: -0.02em; }
+  .s9-thanks .accent {
+    background: linear-gradient(120deg, #1A73E8 0%, #34A853 33%, #FBBC04 66%, #EA4335 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
 
 
------------------------------------------------------------
-SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007
------------------------------------------------------------
 
-PREAMBLE
-The goals of the Open Font License (OFL) are to stimulate worldwide
-development of collaborative font projects, to support the font creation
-efforts of academic and linguistic communities, and to provide a free and
-open framework in which fonts may be shared and improved in partnership
-with others.
+  .hd-mark { width:64px; height:64px; border-radius:4px; flex-shrink:0; background:url(data:image/jpeg;base64,/9j/4QDeRXhpZgAATU0AKgAAAAgABwESAAMAAAABAAEAAAEaAAUAAAABAAAAYgEbAAUAAAABAAAAagEoAAMAAAABAAIAAAExAAIAAAAHAAAAcgITAAMAAAABAAEAAIdpAAQAAAABAAAAegAAAAAAAABIAAAAAQAAAEgAAAABR29vZ2xlAAAAB5AAAAcAAAAEMDIyMZEBAAcAAAAEAQIDAKAAAAcAAAAEMDEwMKABAAMAAAABAAEAAKACAAQAAAABAAAAYqADAAQAAAABAAAAYqQGAAMAAAABAAAAAAAAAAAAAP/hCWNodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IlhNUCBDb3JlIDYuMC4wIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bXA6Q3JlYXRvclRvb2w9Ikdvb2dsZSIvPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDw/eHBhY2tldCBlbmQ9InciPz4A/9sAhAABAQEBAQECAQECAwICAgMEAwMDAwQFBAQEBAQFBgUFBQUFBQYGBgYGBgYGBwcHBwcHCAgICAgJCQkJCQkJCQkJ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) center/cover no-repeat; }
+  .deck > section { width:1920px; height:1080px; box-sizing:border-box; }
+  @media screen {
+    html, body { height:100%; overflow:hidden; }
+    .deck { position:fixed; left:50%; top:50%; width:1920px; height:1080px; transform-origin:0 0; }
+    .deck > section { position:absolute; left:0; top:0; display:none; }
+    .deck > section.active { display:block; }
+    .nav { position:fixed; bottom:10px; left:50%; transform:translateX(-50%); color:#bbb; font:14px "Noto Sans", Arial, sans-serif; opacity:.6; user-select:none; }
+  }
+  @page { size:1920px 1080px; margin:0; }
+  @media print {
+    html, body { margin:0 !important; padding:0 !important; background:none !important; overflow:visible !important; height:auto !important; }
+    * { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    .deck { position:static !important; transform:none !important; width:auto !important; height:auto !important; }
+    .deck > section { display:block; position:relative; page-break-after:always; break-after:page; }
+    .nav { display:none; }
+  }
 
-The OFL allows the licensed fonts to be used, studied, modified and
-redistributed freely as long as they are not sold by themselves. The
-fonts, including any derivative works, can be bundled, embedded, 
-redistributed and/or sold with any software provided that any reserved
-names are not used by derivative works. The fonts and derivatives,
-however, cannot be released under any other type of license. The
-requirement for fonts to remain under this license does not apply
-to any document created using the fonts or their derivatives.
+</style>
+</head>
+<body>
+<div class="deck">
 
-DEFINITIONS
-&quot;Font Software&quot; refers to the set of files released by the Copyright
-Holder(s) under this license and clearly marked as such. This may
-include source files, build scripts and documentation.
+<section data-screen-label="01 Title">
 
-&quot;Reserved Font Name&quot; refers to any names specified as such after the
-copyright statement(s).
+  <div class="chrome-logos">
+    <div class="hd-mark" role="img" aria-label="UTokyo Hospital"></div>
+    <div class="wordmark">
+      <div class="name">The University of Tokyo Hospital</div>
+      <div class="sub">Clinical Research Promotion Center</div>
+    </div>
+  </div>
 
-&quot;Original Version&quot; refers to the collection of Font Software components as
-distributed by the Copyright Holder(s).
+  <div class="s1-block">
+    <div class="s1-eyebrow">Visit · VICTR, Vanderbilt University Medical Center · 8 October 2026</div>
+    <h1 class="s1-h1">From an EHR Form to SDTM</h1>
+    <div class="s1-h2">JASPEHR, FHIR and CDISC — a year on</div>
+    <div class="s1-rule"></div>
+  </div>
 
-&quot;Modified Version&quot; refers to any derivative made by adding to, deleting,
-or substituting -- in part or in whole -- any of the components of the
-Original Version, by changing formats or by porting the Font Software to a
-new environment.
+  <div class="s1-authors">
+    <div class="who">
+      <div class="name">Toshiki Saito, MD, PhD</div>
+      <div class="role">Professor / Director, Clinical Research Promotion Center<br>The University of Tokyo Hospital</div>
+    </div>
+    <div class="when">
+      <strong>VICTR, Nashville</strong>
+      8 October 2026
+    </div>
+  </div>
 
-&quot;Author&quot; refers to any designer, engineer, programmer, technical
-writer or other person who contributed to the Font Software.
+  <div class="page-num">1 / 6</div>
+  <div class="chrome-bar"><div></div><div></div><div></div><div></div></div>
+</section>
 
-PERMISSION &amp; CONDITIONS
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of the Font Software, to use, study, copy, merge, embed, modify,
-redistribute, and sell modified and unmodified copies of the Font
-Software, subject to the following conditions:
+<section data-screen-label="02 National project">
+  <div class="chrome-logos">
+    <div class="hd-mark" role="img" aria-label="UTokyo Hospital"></div>
+    <div class="wordmark">
+      <div class="name">The University of Tokyo Hospital</div>
+      <div class="sub">Clinical Research Promotion Center<span class="dot">·</span><span class="meeting">Saito · VICTR Visit · 8 Oct 2026</span></div>
+    </div>
+  </div>
 
-1) Neither the Font Software nor any of its individual components,
-in Original or Modified Versions, may be sold by itself.
+  <h2 class="slide-title">National Project on Data Standardization</h2>
+  <div class="slide-sub">Japan AMED-funded project (2025–2027)</div>
 
-2) Original or Modified Versions of the Font Software may be bundled,
-redistributed and/or sold with any software, provided that each copy
-contains the above copyright notice and this license. These can be
-included either as stand-alone text files, human-readable headers or
-in the appropriate machine-readable metadata fields within text or
-binary files as long as those fields can be easily viewed by the user.
+  <div class="body-region">
+    <div style="background:#E8F0FE; border-left:10px solid #1A73E8; border-radius:14px; padding:26px 40px; font-size:32px; font-weight:700; color:#174ea6; line-height:1.35;">
+      “Implementation Research on Standardized RWD Infrastructure for Post-Marketing Safety Measures through FHIR, CDISC, and SS-MIX2 Integration.”
+    </div>
 
-3) No Modified Version of the Font Software may use the Reserved Font
-Name(s) unless explicit written permission is granted by the corresponding
-Copyright Holder. This restriction only applies to the primary font name as
-presented to the users.
+    <div style="margin-top:36px;">
+      <p class="bigbul" style="font-size:30px; margin-bottom:18px;"><span class="b"></span><span>Creating a seamless pipeline between healthcare data (<strong>FHIR</strong> format) and regulatory research data (<strong>CDISC</strong> format)</span></p>
+      <p class="bigbul" style="font-size:30px; margin-bottom:18px;"><span class="b"></span><span>Leveraging Japan's existing <strong>SS-MIX2</strong> standard for EHR data exchange</span></p>
+      <p class="bigbul" style="font-size:30px; margin-bottom:18px;"><span class="b"></span><span>Establishing national standards for real-world data (RWD) in post-marketing safety surveillance</span></p>
+      <p class="bigbul" style="font-size:30px; margin-bottom:18px;"><span class="b"></span><span>Developing a framework for automated data transformation between clinical care and research</span></p>
+    </div>
 
-4) The name(s) of the Copyright Holder(s) or the Author(s) of the Font
-Software shall not be used to promote, endorse or advertise any
-Modified Version, except to acknowledge the contribution(s) of the
-Copyright Holder(s) and the Author(s) or with their explicit written
-permission.
+    <div style="margin-top:30px; background:#f7f9fc; border-radius:14px; padding:26px 36px; display:flex; align-items:center; gap:28px;">
+      <div class="ico-circle ok" style="background:#1A73E8; width:56px; height:56px; font-size:28px;">PI</div>
+      <div style="flex:1;">
+        <div style="font-size:30px; font-weight:700; color:var(--ink);">I serve as the Principal Investigator of this project</div>
+        <div style="font-size:24px; color:var(--mid); margin-top:6px;">Leading CDISC adoption in academia through three consecutive AMED-funded projects</div>
+      </div>
+      <div style="display:flex; gap:18px; align-items:center;">
+        <div style="text-align:center;"><div style="background:#fff; border:2px solid #1A73E8; color:#1A73E8; border-radius:999px; padding:8px 22px; font-size:24px; font-weight:700;">2019–2021</div><div style="font-size:22px; color:var(--mid); margin-top:6px;">Phase 1</div></div>
+        <div style="text-align:center;"><div style="background:#fff; border:2px solid #1A73E8; color:#1A73E8; border-radius:999px; padding:8px 22px; font-size:24px; font-weight:700;">2022–2024</div><div style="font-size:22px; color:var(--mid); margin-top:6px;">Phase 2</div></div>
+        <div style="text-align:center;"><div style="background:#1A73E8; border:2px solid #1A73E8; color:#fff; border-radius:999px; padding:8px 22px; font-size:24px; font-weight:700;">2025–2027</div><div style="font-size:22px; color:#174ea6; font-weight:700; margin-top:6px;">Current phase</div></div>
+      </div>
+    </div>
+  </div>
 
-5) The Font Software, modified or unmodified, in part or in whole,
-must be distributed entirely under this license, and must not be
-distributed under any other license. The requirement for fonts to
-remain under this license does not apply to any document created
-using the Font Software.
+  <div class="page-num">2 / 6</div>
+  <div class="chrome-bar"><div></div><div></div><div></div><div></div></div>
+</section>
 
-TERMINATION
-This license becomes null and void if any of the above conditions are
-not met.
+<section data-screen-label="03 PMS landscape">
+  <div class="chrome-logos">
+    <div class="hd-mark" role="img" aria-label="UTokyo Hospital"></div>
+    <div class="wordmark">
+      <div class="name">The University of Tokyo Hospital</div>
+      <div class="sub">Clinical Research Promotion Center<span class="dot">·</span><span class="meeting">Saito · VICTR Visit · 8 Oct 2026</span></div>
+    </div>
+  </div>
 
-DISCLAIMER
-THE FONT SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT
-OF COPYRIGHT, PATENT, TRADEMARK, OR OTHER RIGHT. IN NO EVENT SHALL THE
-COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-INCLUDING ANY GENERAL, SPECIAL, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL
-DAMAGES, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-FROM, OUT OF THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM
-OTHER DEALINGS IN THE FONT SOFTWARE.
+  <h2 class="slide-title">Japan's PMS landscape — and our scope</h2>
+  <div class="slide-sub">EHR → CDISC SDTM, directly, for PMS use.</div>
 
-Copyright 2016 The M+ Project Authors.
+  <div class="body-region">
+    <!-- Three-status row -->
+    <div style="display:flex; flex-direction:column; gap:22px; margin-bottom:48px;">
+      <div style="display:flex; align-items:center; gap:24px;">
+        <div class="ico-circle ok">✓</div>
+        <div style="font-size:32px; color:var(--ink);"><strong>EHR penetration</strong> — high; FHIR R4 / SS-MIX2 widely adopted</div>
+      </div>
+      <div style="display:flex; align-items:center; gap:24px;">
+        <div class="ico-circle ok">✓</div>
+        <div style="font-size:32px; color:var(--ink);"><strong>Regulatory PMS frameworks</strong> (GPSP, re-examination, re-evaluation) generate substantial RWD obligations</div>
+      </div>
+      <div style="display:flex; align-items:center; gap:24px;">
+        <div class="ico-circle no">✕</div>
+        <div style="font-size:32px; color:var(--ink);"><strong>PMS data collection is still mostly proprietary</strong>, not natively in CDISC standards</div>
+      </div>
+    </div>
 
-This Font Software is licensed under the SIL Open Font License, Version 1.1.
-This license is copied below, and is also available with a FAQ at:
-https://scripts.sil.org/OFL
+    <!-- Pipeline -->
+    <div style="display:grid; grid-template-columns: 1fr 80px 1.3fr 80px 1fr; gap:0; align-items:center; height: 200px;">
+      <div class="pipe-box" style="height:160px; font-size:42px;">EHR</div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-box accent" style="height:160px; font-size:28px;">FHIR Questionnaire<br><span style="font-size:24px; font-weight:400; color:#174ea6;">+ embedded CDISC metadata</span></div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-box" style="height:160px; font-size:42px;">CDISC SDTM</div>
+    </div>
 
+    <!-- Punchline -->
+    <div style="background:#FFF8E1; border-radius:14px; padding:36px 44px; border-left:10px solid #FBBC04; margin-top:50px;">
+      <div style="font-size:26px; color:var(--mid); font-style:italic; margin-bottom:14px;">Arithmetic of why input-time encoding matters</div>
+      <div style="font-size:34px; color:var(--ink); font-weight:500; line-height:1.4;">
+        Mapping after the fact ≈ 2,000 vars × 1,000,000 records = <strong style="font-weight:900;">2 billion decisions per study</strong>.<br>
+        Encoding at input ≈ <strong style="font-weight:900;">2,000 template-design decisions, once</strong>.
+      </div>
+    </div>
+  </div>
 
------------------------------------------------------------
-SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007
------------------------------------------------------------
+  <div class="page-num">3 / 6</div>
+  <div class="chrome-bar"><div></div><div></div><div></div><div></div></div>
+</section>
 
-PREAMBLE
-The goals of the Open Font License (OFL) are to stimulate worldwide
-development of collaborative font projects, to support the font creation
-efforts of academic and linguistic communities, and to provide a free and
-open framework in which fonts may be shared and improved in partnership
-with others.
+<section data-screen-label="04 JASPEHR">
+  <div class="chrome-logos">
+    <div class="hd-mark" role="img" aria-label="UTokyo Hospital"></div>
+    <div class="wordmark">
+      <div class="name">The University of Tokyo Hospital</div>
+      <div class="sub">Clinical Research Promotion Center<span class="dot">·</span><span class="meeting">Saito · VICTR Visit · 8 Oct 2026</span></div>
+    </div>
+  </div>
 
-The OFL allows the licensed fonts to be used, studied, modified and
-redistributed freely as long as they are not sold by themselves. The
-fonts, including any derivative works, can be bundled, embedded, 
-redistributed and/or sold with any software provided that any reserved
-names are not used by derivative works. The fonts and derivatives,
-however, cannot be released under any other type of license. The
-requirement for fonts to remain under this license does not apply
-to any document created using the fonts or their derivatives.
+  <h2 class="slide-title">JASPEHR in one slide</h2>
+  <div class="slide-sub"><strong style="color:var(--ink);">JApanese Standard Platform for EHRs</strong> — AMED-funded, launched by Prof. Kengo Miyo at JIHS (formerly NCGM).</div>
 
-DEFINITIONS
-&quot;Font Software&quot; refers to the set of files released by the Copyright
-Holder(s) under this license and clearly marked as such. This may
-include source files, build scripts and documentation.
+  <div class="body-region">
+    <div class="col2" style="height:100%; gap:60px;">
+      <!-- Left bullets -->
+      <div style="padding-top:14px;">
+        <p class="bigbul"><span class="b"></span><span><strong>Vendor-independent EHR template spec</strong> — distributed as a "common template master"</span></p>
+        <p class="bigbul"><span class="b"></span><span>Each EHR vendor <strong>auto-converts</strong> it into its own template engine</span></p>
+        <p class="bigbul"><span class="b"></span><span><strong>FHIR-native</strong> — based on Questionnaire / QuestionnaireResponse</span></p>
+        <p class="bigbul"><span class="b alt"></span><span><strong>In active use</strong> across multiple Japanese research projects</span></p>
 
-&quot;Reserved Font Name&quot; refers to any names specified as such after the
-copyright statement(s).
+        <div style="margin-top:48px; padding:24px 30px; background:#f7f9fc; border-radius:12px;">
+          <div style="font-size:30px; color:var(--ink); font-weight:700;">This is the platform our CDISC extension builds on.</div>
+        </div>
+      </div>
 
-&quot;Original Version&quot; refers to the collection of Font Software components as
-distributed by the Copyright Holder(s).
+      <!-- Right hub -->
+      <div style="position:relative; height:520px;">
+        <svg style="position:absolute; inset:0; width:100%; height:100%;" viewBox="0 0 600 520" preserveAspectRatio="none">
+          <g stroke="#1A73E8" stroke-width="2.5" stroke-dasharray="8 8" fill="none" opacity="0.7">
+            <line x1="300" y1="260" x2="80" y2="80"></line>
+            <line x1="300" y1="260" x2="520" y2="80"></line>
+            <line x1="300" y1="260" x2="50" y2="260"></line>
+            <line x1="300" y1="260" x2="550" y2="260"></line>
+            <line x1="300" y1="260" x2="80" y2="440"></line>
+            <line x1="300" y1="260" x2="520" y2="440"></line>
+          </g>
+        </svg>
+        <!-- vendor cards -->
+        <div style="position:absolute; left:30px;  top:50px; width:140px; height:80px; background:#fff; border:2px solid #1A73E8; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:26px; font-weight:700; color:#1A73E8;">NEC</div>
+        <div style="position:absolute; right:30px; top:50px; width:140px; height:80px; background:#fff; border:2px solid #1A73E8; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:26px; font-weight:700; color:#1A73E8;">Fujitsu</div>
+        <div style="position:absolute; left:0;     top:220px; width:140px; height:80px; background:#fff; border:2px solid #1A73E8; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:26px; font-weight:700; color:#1A73E8;">IBM</div>
+        <div style="position:absolute; right:0;    top:220px; width:140px; height:80px; background:#fff; border:2px solid #1A73E8; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:24px; font-weight:700; color:#1A73E8;">FINDEX</div>
+        <div style="position:absolute; left:30px;  bottom:50px; width:140px; height:80px; background:#fff; border:2px dashed #78909C; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:30px; color:#78909C;">…</div>
+        <div style="position:absolute; right:30px; bottom:50px; width:140px; height:80px; background:#fff; border:2px dashed #78909C; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:30px; color:#78909C;">…</div>
 
-&quot;Modified Version&quot; refers to any derivative made by adding to, deleting,
-or substituting -- in part or in whole -- any of the components of the
-Original Version, by changing formats or by porting the Font Software to a
-new environment.
+        <!-- center hub -->
+        <div style="position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:280px; height:180px; background:#1A73E8; color:#fff; border-radius:16px; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:24px; font-weight:700; text-align:center; line-height:1.2; box-shadow:0 12px 36px rgba(26,115,232,0.35);">
+          <div style="font-size:30px; font-weight:900;">JASPEHR</div>
+          <div style="font-size:24px; font-weight:500; margin-top:8px; opacity:0.95;">Common Template Master</div>
+          <div style="font-size:18px; font-style:italic; margin-top:12px; opacity:0.85;">FHIR-conformant output</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-&quot;Author&quot; refers to any designer, engineer, programmer, technical
-writer or other person who contributed to the Font Software.
+  <div class="page-num">4 / 6</div>
+  <div class="chrome-bar"><div></div><div></div><div></div><div></div></div>
+</section>
 
-PERMISSION &amp; CONDITIONS
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of the Font Software, to use, study, copy, merge, embed, modify,
-redistribute, and sell modified and unmodified copies of the Font
-Software, subject to the following conditions:
+<section data-screen-label="05 Four metadata">
+  <div class="chrome-logos">
+    <div class="hd-mark" role="img" aria-label="UTokyo Hospital"></div>
+    <div class="wordmark">
+      <div class="name">The University of Tokyo Hospital</div>
+      <div class="sub">Clinical Research Promotion Center<span class="dot">·</span><span class="meeting">Saito · VICTR Visit · 8 Oct 2026</span></div>
+    </div>
+  </div>
 
-1) Neither the Font Software nor any of its individual components,
-in Original or Modified Versions, may be sold by itself.
+  <h2 class="slide-title">Embedding CDISC into FHIR — four metadata</h2>
+  <div class="slide-sub">Goal: make EHR input natively CDISC-conformant.</div>
 
-2) Original or Modified Versions of the Font Software may be bundled,
-redistributed and/or sold with any software, provided that each copy
-contains the above copyright notice and this license. These can be
-included either as stand-alone text files, human-readable headers or
-in the appropriate machine-readable metadata fields within text or
-binary files as long as those fields can be easily viewed by the user.
+  <div class="body-region">
+    <table class="meta">
+      <colgroup>
+        <col style="width:90px"><col style="width:380px"><col style="width:380px"><col style="width:520px"><col>
+      </colgroup>
+      <thead><tr><th>#</th><th>CDISC metadata</th><th>Scale</th><th>FHIR realisation</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr>
+          <td style="font-weight:900; color:#1A73E8;">1</td>
+          <td><strong>SDTM variable names</strong></td>
+          <td>~70 domains · 2–3K variables</td>
+          <td><span class="mono" style="font-size:24px;">item.code</span> on Questionnaire</td>
+          <td><span style="color:var(--g-green); font-weight:900;">✓</span> JSON sample delivered</td>
+        </tr>
+        <tr class="alt">
+          <td style="font-weight:900; color:#1A73E8;">2</td>
+          <td><strong>Controlled Terminology</strong></td>
+          <td>1,181 ValueSets · ~50K choices</td>
+          <td>FHIR CodeSystem + ValueSet</td>
+          <td>CDISC chose persistent IDs (2 Oct 2026)</td>
+        </tr>
+        <tr>
+          <td style="font-weight:900; color:#1A73E8;">3</td>
+          <td><strong>MedDRA</strong></td>
+          <td>90K LLT terms · 48.6 MB</td>
+          <td>FHIR CodeSystem</td>
+          <td><span style="color:var(--g-green); font-weight:900;">✓</span> JSON sample delivered</td>
+        </tr>
+        <tr class="hilite">
+          <td style="font-weight:900; color:#F9AB00;">4</td>
+          <td><strong>IDF, WHODrug</strong><div style="font-size:22px; color:var(--mid); font-weight:400; margin-top:6px;">WHODrug optional — sites without a licence stop at IDF</div></td>
+          <td>IDF (JP drug master)<br>+ WHODrug 30K terms · 5.7 MB</td>
+          <td>FHIR CodeSystem (IDF-linked)</td>
+          <td>✓ JSON sample&nbsp;
+delivered</td>
+        </tr>
+      </tbody>
+    </table>
 
-3) No Modified Version of the Font Software may use the Reserved Font
-Name(s) unless explicit written permission is granted by the corresponding
-Copyright Holder. This restriction only applies to the primary font name as
-presented to the users.
+  </div>
 
-4) The name(s) of the Copyright Holder(s) or the Author(s) of the Font
-Software shall not be used to promote, endorse or advertise any
-Modified Version, except to acknowledge the contribution(s) of the
-Copyright Holder(s) and the Author(s) or with their explicit written
-permission.
+  <div class="page-num">5 / 6</div>
+  <div class="chrome-bar"><div></div><div></div><div></div><div></div></div>
+</section>
 
-5) The Font Software, modified or unmodified, in part or in whole,
-must be distributed entirely under this license, and must not be
-distributed under any other license. The requirement for fonts to
-remain under this license does not apply to any document created
-using the Font Software.
+<section data-screen-label="06 Verification environment">
+  <div class="chrome-logos">
+    <div class="hd-mark" role="img" aria-label="UTokyo Hospital"></div>
+    <div class="wordmark">
+      <div class="name">The University of Tokyo Hospital</div>
+      <div class="sub">Clinical Research Promotion Center<span class="dot">·</span><span class="meeting">Saito · VICTR Visit · 8 Oct 2026</span></div>
+    </div>
+  </div>
 
-TERMINATION
-This license becomes null and void if any of the above conditions are
-not met.
+  <h2 class="slide-title">Verification environment</h2>
+  <div class="slide-sub">How we author and validate CDISC-extended FHIR Questionnaires before vendor hand-off.</div>
 
-DISCLAIMER
-THE FONT SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT
-OF COPYRIGHT, PATENT, TRADEMARK, OR OTHER RIGHT. IN NO EVENT SHALL THE
-COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-INCLUDING ANY GENERAL, SPECIAL, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL
-DAMAGES, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-FROM, OUT OF THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM
-OTHER DEALINGS IN THE FONT SOFTWARE.
-</pre></details></footer><script>
-const frames=[...document.querySelectorAll('.frame')];let current=0;const $=s=>document.querySelector(s);function fit(){let scale=($('main').clientWidth-(document.body.classList.contains('present')?24:48))/(960*4/3);if(document.body.classList.contains('present'))scale=Math.min(scale,(innerHeight-$('header').offsetHeight-28)/720);frames.forEach((f,i)=>{f.style.width=960*4/3*scale+'px';f.style.height=720*scale+'px';f.firstElementChild.style.transform='scale('+scale+')';f.classList.toggle('current',i===current)});$('#counter').textContent=(current+1)+' / '+frames.length;}function go(d){current=Math.max(0,Math.min(frames.length-1,current+d));fit();if(!document.body.classList.contains('present'))frames[current].scrollIntoView({behavior:'smooth',block:'center'});}$('#mode').onclick=()=>{document.body.classList.toggle('present');$('#mode').textContent=document.body.classList.contains('present')?'一覧表示':'発表表示';fit()};$('#prev').onclick=()=>go(-1);$('#next').onclick=()=>go(1);$('#print').onclick=()=>print();addEventListener('resize',fit);addEventListener('keydown',e=>{if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();go(1)}if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();go(-1)}if(e.key==='Escape'){document.body.classList.remove('present');$('#mode').textContent='発表表示';fit()}});fit();document.fonts.ready.then(fit);
-</script></body></html>
+  <div class="body-region">
+    <div style="position:relative; width:100%; height:100%;">
+
+      <!-- LEFT column: NLM Form Builder + output -->
+      <div style="position:absolute; left:0; top:20px; width:520px; display:flex; flex-direction:column; align-items:center; gap:20px;">
+        <div style="text-align:center;">
+          <div style="font-size:38px; font-weight:700; color:#212121;"><span style="color:#1A73E8;">1.</span> NLM Form Builder</div>
+          <div class="mono" style="font-size:26px; color:#595959; margin-top:8px;">localhost:9030 <span style="font-family: 'Noto Sans', Arial, sans-serif; color:var(--cool); font-size:20px;">· BSD</span></div>
+        </div>
+        <svg width="170" height="220" viewBox="0 0 140 180">
+          <rect x="14" y="6" width="112" height="38" rx="6" fill="#3a3f48" stroke="#212121" stroke-width="2"></rect>
+          <rect x="14" y="50" width="112" height="38" rx="6" fill="#3a3f48" stroke="#212121" stroke-width="2"></rect>
+          <rect x="14" y="94" width="112" height="38" rx="6" fill="#3a3f48" stroke="#212121" stroke-width="2"></rect>
+          <rect x="14" y="138" width="112" height="38" rx="6" fill="#3a3f48" stroke="#212121" stroke-width="2"></rect>
+          <circle cx="26" cy="25" r="4" fill="#34A853"></circle><circle cx="40" cy="25" r="4" fill="#34A853"></circle>
+          <circle cx="26" cy="69" r="4" fill="#34A853"></circle><circle cx="40" cy="69" r="4" fill="#34A853"></circle>
+          <circle cx="26" cy="113" r="4" fill="#34A853"></circle><circle cx="40" cy="113" r="4" fill="#34A853"></circle>
+          <line x1="54" y1="155" x2="116" y2="155" stroke="#888" stroke-width="2"></line>
+          <line x1="54" y1="161" x2="116" y2="161" stroke="#888" stroke-width="2"></line>
+        </svg>
+        <svg width="68" height="68" viewBox="0 0 60 60">
+          <polygon points="20,4 40,4 40,38 52,38 30,58 8,38 20,38" fill="#E0E0E0" stroke="#888" stroke-width="2"></polygon>
+        </svg>
+        <div style="padding:20px 36px; background:#fff; border:3px solid #34A853; border-radius:14px; font-size:28px; font-weight:700; color:#212121; text-align:center; line-height:1.3;">
+          Create &amp; export<br>FHIR Questionnaire
+        </div>
+      </div>
+
+      <!-- MIDDLE: arrows -->
+      <div style="position:absolute; left:520px; right:780px; top:120px; display:flex; flex-direction:column; gap:54px; padding: 0 8px;">
+        <div style="text-align:center;">
+          <div style="font-size:30px; font-weight:700; color:#212121; margin-bottom:14px;">Set answer choices</div>
+          <svg width="100%" height="40" viewBox="0 0 320 40" preserveAspectRatio="none">
+            <defs><marker id="ar1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#212121"></path></marker></defs>
+            <line x1="6" y1="20" x2="300" y2="20" stroke="#212121" stroke-width="8" marker-end="url(#ar1)"></line>
+          </svg>
+        </div>
+        <div style="text-align:center;">
+          <svg width="100%" height="40" viewBox="0 0 320 40" preserveAspectRatio="none">
+            <defs><marker id="ar2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#212121"></path></marker></defs>
+            <line x1="314" y1="20" x2="20" y2="20" stroke="#212121" stroke-width="8" marker-end="url(#ar2)"></line>
+          </svg>
+          <div style="font-size:30px; font-weight:700; color:#212121; margin-top:14px;">Returns matching metadata</div>
+        </div>
+      </div>
+
+      <!-- RIGHT: HAPI FHIR Server + metadata box -->
+      <div style="position:absolute; right:0; top:20px; width:760px; display:flex; flex-direction:column; align-items:center; gap:20px;">
+        <div style="text-align:center;">
+          <div style="font-size:38px; font-weight:700; color:#212121;"><span style="color:#1A73E8;">2.</span> HAPI FHIR Server</div>
+          <div class="mono" style="font-size:26px; color:#595959; margin-top:8px;">localhost:8080 <span style="font-family: 'Noto Sans', Arial, sans-serif; color:var(--cool); font-size:20px;">· Apache 2.0</span></div>
+        </div>
+        <div style="display:flex; align-items:center; gap:18px; margin-top:6px;">
+          <svg width="170" height="220" viewBox="0 0 140 180">
+            <rect x="14" y="6" width="112" height="38" rx="6" fill="#3a3f48" stroke="#212121" stroke-width="2"></rect>
+            <rect x="14" y="50" width="112" height="38" rx="6" fill="#3a3f48" stroke="#212121" stroke-width="2"></rect>
+            <rect x="14" y="94" width="112" height="38" rx="6" fill="#3a3f48" stroke="#212121" stroke-width="2"></rect>
+            <rect x="14" y="138" width="112" height="38" rx="6" fill="#3a3f48" stroke="#212121" stroke-width="2"></rect>
+            <circle cx="26" cy="25" r="4" fill="#34A853"></circle><circle cx="40" cy="25" r="4" fill="#34A853"></circle>
+            <circle cx="26" cy="69" r="4" fill="#34A853"></circle><circle cx="40" cy="69" r="4" fill="#34A853"></circle>
+            <circle cx="26" cy="113" r="4" fill="#34A853"></circle><circle cx="40" cy="113" r="4" fill="#34A853"></circle>
+            <line x1="54" y1="155" x2="116" y2="155" stroke="#888" stroke-width="2"></line>
+            <line x1="54" y1="161" x2="116" y2="161" stroke="#888" stroke-width="2"></line>
+          </svg>
+          <div style="display:flex; flex-direction:column; align-items:center;">
+            <div style="font-size:24px; font-weight:700; color:#212121; margin-bottom:6px;">Load</div>
+            <svg width="70" height="36" viewBox="0 0 50 28">
+              <defs><marker id="arL" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#212121"></path></marker></defs>
+              <line x1="44" y1="14" x2="6" y2="14" stroke="#212121" stroke-width="6" marker-end="url(#arL)"></line>
+            </svg>
+          </div>
+          <div style="background:#fff; border:3px solid #212121; border-radius:14px; padding:22px 28px;">
+            <div style="font-size:26px; line-height:1.6; color:#212121; font-weight:500;">
+              • SDTM variables<br>
+              • CT<br>
+              • MedDRA<br>
+              • IDF, WHODrug
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Validation note (bottom-left) -->
+      <div style="position:absolute; left:0; bottom:0; font-size:22px; color:var(--mid); font-style:italic; line-height:1.5;">
+        Autocomplete responsiveness validated<br>against MedDRA (90K) and WHODrug (30K).
+      </div>
+
+      <!-- Developer's local environment label (bottom-right) -->
+      <div style="position:absolute; right:0; bottom:0; font-size:22px; font-weight:600; color:#174ea6; letter-spacing:0.05em;">
+        — Developer's local environment
+      </div>
+    </div>
+  </div>
+
+  <div class="page-num">6 / 6</div>
+  <div class="chrome-bar"><div></div><div></div><div></div><div></div></div>
+</section>
+
+</div>
+<div class="nav"></div>
+<script>
+(function () {
+  var deck = document.querySelector('.deck');
+  var slides = Array.prototype.slice.call(deck.children);
+  var nav = document.querySelector('.nav');
+  var i = Math.max(0, Math.min(slides.length - 1, (parseInt(location.hash.slice(1), 10) || 1) - 1));
+  function fit() {
+    var s = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+    deck.style.transform = 'scale(' + s + ') translate(-50%, -50%)';
+  }
+  function show(n) {
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach(function (el, k) { el.classList.toggle('active', k === i); });
+    nav.textContent = (i + 1) + ' / ' + slides.length + '   ← → で移動';
+    history.replaceState(null, '', '#' + (i + 1));
+  }
+  document.addEventListener('keydown', function (e) {
+    if (['ArrowRight', 'PageDown', ' ', 'Enter'].indexOf(e.key) >= 0) { show(i + 1); e.preventDefault(); }
+    if (['ArrowLeft', 'PageUp', 'Backspace'].indexOf(e.key) >= 0) { show(i - 1); e.preventDefault(); }
+    if (e.key === 'Home') show(0);
+    if (e.key === 'End') show(slides.length - 1);
+  });
+  document.addEventListener('click', function (e) { show(e.clientX < window.innerWidth / 3 ? i - 1 : i + 1); });
+  window.addEventListener('resize', fit);
+  fit(); show(i);
+})();
+</script>
+</body>
+</html>
