@@ -4,6 +4,7 @@
 
 - `20260928-jaspehr/` — FHIRとCDISCによる電子カルテの標準化とAI活用（2026-09-28）
 - `20261007-cctsi/` — Valuing the Hub Function: Crediting Support for Other Institutions' Research（CCTSI、2026-10-07）
+- `20261007-cctsi-v2/` — 同じ発表を Vanderbilt の版（UMC 訪問のデッキの見た目）に準じて作り直した版（CCTSI、2026-10-07）
 - `20261008-vanderbilt/` — Valuing the Hub Function: Crediting Support for Other Institutions' Research（VICTR、2026-10-08）
 - `20261008-vanderbilt-v2/` — 同じ発表を UMC 訪問のデッキの見た目で作り直した版（VICTR、2026-10-08）
 - `20261008-vanderbilt-jaspehr/` — From an EHR Form to SDTM: JASPEHR, FHIR and CDISC（VICTR の 13 時の枠、2026-10-08）

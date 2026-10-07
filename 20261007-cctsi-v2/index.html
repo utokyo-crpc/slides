@@ -1,0 +1,645 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Valuing the Hub Function</title>
+<!-- CCTSI の 20 分の発表を、Vanderbilt の版（UMC 訪問 2026-05-18 のデッキの見た目）に準じて書き起こした版。書体は Google Fonts から読み、埋め込まない。 -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+
+  
+
+  :root {
+    --ink: #212121;
+    --text: #434343;
+    --mid: #595959;
+    --cool: #78909C;
+    --surface: #FAFAFA;
+    --divider: #EEEEEE;
+    --g-blue:   #1A73E8;
+    --g-green:  #34A853;
+    --g-yellow: #FBBC04;
+    --g-red:    #EA4335;
+    --hi: #FFAB40;
+  }
+
+  html, body {
+    margin: 0; padding: 0;
+    background: #111;
+    font-family: "Noto Sans", "Noto Sans JP", Arial, "Helvetica Neue", sans-serif;
+    color: var(--text);
+  }
+
+  /* Each slide = white background, bottom Google bar, top-left logo block */
+  .deck > section {
+    background: #FFFFFF;
+    position: relative;
+    overflow: hidden;
+    font-family: "Noto Sans", "Noto Sans JP", Arial, sans-serif;
+    color: var(--text);
+  }
+
+  /* === Master chrome === */
+  .chrome-logos {
+    position: absolute;
+    left: 60px;
+    top: 36px;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .chrome-logos .hd-mark {
+    display: block;
+    width: 64px;
+    height: 64px;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+  .chrome-logos .wordmark {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    line-height: 1.15;
+  }
+  .chrome-logos .wordmark .name {
+    font-size: 25px;
+    font-weight: 700;
+    color: #00A6CC;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+  }
+  .chrome-logos .wordmark .sub {
+    font-size: 16px;
+    color: #00A6CC;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+  .chrome-logos .wordmark .sub .meeting {
+    color: #78909C;
+    font-weight: 500;
+  }
+  .chrome-logos .wordmark .sub .dot {
+    color: #C7D0D6;
+    margin: 0 8px;
+    font-weight: 400;
+  }
+
+  /* Bottom Google bar */
+  .chrome-bar {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    height: 12px;
+    display: flex;
+    z-index: 4;
+  }
+  .chrome-bar > div { flex: 1; }
+  .chrome-bar > div:nth-child(1) { background: var(--g-blue); }
+  .chrome-bar > div:nth-child(2) { background: var(--g-green); }
+  .chrome-bar > div:nth-child(3) { background: var(--g-yellow); }
+  .chrome-bar > div:nth-child(4) { background: var(--g-red); }
+
+  /* Page number */
+  .page-num {
+    position: absolute; right: 60px; bottom: 36px;
+    font-size: 22px; color: #595959; font-weight: 500;
+    z-index: 5;
+  }
+
+  /* Section heading & body containers used across content slides */
+  .slide-title {
+    position: absolute;
+    left: 90px; right: 90px; top: 150px;
+    font-size: 58px; font-weight: 700; color: var(--ink);
+    line-height: 1.1;
+    margin: 0;
+    letter-spacing: -0.005em;
+  }
+  .slide-sub {
+    position: absolute;
+    left: 90px; right: 90px; top: 238px;
+    font-size: 28px; color: var(--mid); font-weight: 400;
+    line-height: 1.3;
+  }
+  .body-region { position: absolute; left: 90px; top: 300px; right: 90px; bottom: 90px; }
+
+  /* Generic */
+  .col2 { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+  .col5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; }
+
+  .mono { font-family: "JetBrains Mono", "SFMono-Regular", Menlo, Consolas, monospace; }
+
+  /* Card */
+  .card {
+    background: #fff;
+    border: 1px solid var(--divider);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 2px 0 rgba(0,0,0,0.02);
+  }
+  .card-head {
+    padding: 22px 32px;
+    color: #fff;
+    font-size: 36px; font-weight: 700;
+    letter-spacing: 0.005em;
+  }
+  .card-body { padding: 30px 36px; }
+
+  /* Pill-style accent header (used inside cards) */
+  .pill-row {
+    display: flex; align-items: baseline; gap: 16px;
+    font-size: 30px; line-height: 1.4; color: var(--ink);
+    padding: 14px 0;
+  }
+  .pill-row .lbl { font-weight: 700; color: var(--ink); min-width: 170px; }
+
+  /* Check / cross icons */
+  .ico-circle {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 48px; height: 48px; border-radius: 50%;
+    color: #fff; font-weight: 900; font-size: 24px;
+    flex-shrink: 0;
+  }
+  .ico-circle.ok  { background: var(--g-green); }
+  .ico-circle.no  { background: var(--g-red); }
+  .ico-circle.eq  { background: var(--g-yellow); color: #212121; }
+
+  /* Big pipeline box */
+  .pipe-box {
+    background: #fff;
+    border: 3px solid var(--cool);
+    border-radius: 18px;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center;
+    color: var(--ink);
+    font-weight: 700;
+    line-height: 1.2;
+    padding: 24px;
+  }
+  .pipe-box.accent { border-color: var(--g-blue); background: #E8F0FE; color: #174ea6; }
+  .pipe-box.focus { background: var(--g-blue); color: #fff; border-color: var(--g-blue); }
+  .pipe-arrow {
+    color: var(--g-blue);
+    font-size: 72px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 300;
+  }
+
+  /* Table */
+  table.meta {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    font-size: 28px;
+    background: #fff;
+  }
+  table.meta th {
+    background: #f2f4f8;
+    color: #212121;
+    font-weight: 700;
+    padding: 22px 24px;
+    text-align: left;
+    border-bottom: 3px solid #1A73E8;
+    font-size: 28px;
+  }
+  table.meta td {
+    padding: 22px 24px;
+    border-bottom: 1px solid var(--divider);
+    color: var(--text);
+    vertical-align: middle;
+    line-height: 1.4;
+  }
+  table.meta tr.alt td { background: #fafbfd; }
+  table.meta tr.hilite td {
+    background: #FFF8E1;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  table.meta tr.hilite td:first-child { border-left: 8px solid #FBBC04; }
+
+  /* Timeline */
+  .tl-row {
+    position: relative;
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 28px;
+    align-items: start;
+    padding-top: 60px;
+  }
+  .tl-line {
+    position: absolute;
+    left: 0; right: 0; top: 32px;
+    height: 6px;
+    background: linear-gradient(to right, #34A853 0%, #34A853 12%, #FBBC04 12%, #FBBC04 60%, #EA4335 60%, #EA4335 100%);
+    border-radius: 3px;
+  }
+  .tl-dot {
+    position: absolute;
+    top: 16px;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: #fff;
+    border: 6px solid var(--g-blue);
+    transform: translateX(-50%);
+  }
+
+  /* Bullets */
+  .bigbul {
+    display: flex; gap: 24px; align-items: flex-start;
+    font-size: 34px;
+    line-height: 1.4;
+    color: var(--ink);
+    margin: 0 0 32px 0;
+  }
+  .bigbul .b {
+    flex-shrink: 0; margin-top: 8px;
+    width: 14px; height: 14px; border-radius: 50%;
+    background: var(--g-blue);
+  }
+  .bigbul .b.alt { background: var(--g-green); }
+  .bigbul .b.warn { background: var(--g-red); }
+
+  /* Slide 1 */
+  .s1-block { position: absolute; left: 0; right: 0; top: 320px; text-align: center; padding: 0 100px; }
+  .s1-eyebrow { font-size: 30px; color: var(--g-blue); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+  .s1-h1 { font-size: 96px; font-weight: 900; color: var(--ink); margin: 32px 0 16px; letter-spacing: -0.01em; line-height: 1.05; }
+  .s1-h2 { font-size: 46px; font-weight: 400; color: var(--text); font-style: italic; margin: 0; }
+  .s1-rule {
+    width: 320px; height: 8px; margin: 56px auto 0;
+    background: linear-gradient(to right, #1A73E8 0%, #1A73E8 25%, #34A853 25%, #34A853 50%, #FBBC04 50%, #FBBC04 75%, #EA4335 75%, #EA4335 100%);
+    border-radius: 4px;
+  }
+  .s1-meta { font-size: 32px; color: var(--mid); margin-top: 40px; font-weight: 500; }
+  .s1-authors { position: absolute; left: 90px; bottom: 110px; right: 90px; display: flex; justify-content: space-between; align-items: flex-end; }
+  .s1-authors .who .name { font-size: 36px; font-weight: 700; color: var(--ink); }
+  .s1-authors .who .role { font-size: 26px; color: var(--text); margin-top: 8px; line-height: 1.35; }
+  .s1-authors .when { text-align: right; font-size: 26px; color: var(--mid); }
+  .s1-authors .when strong { display:block; font-size: 32px; color: var(--ink); font-weight: 700; }
+
+  /* Slide 9 closer */
+  .s9-thanks { font-size: 132px; font-weight: 900; color: var(--ink); text-align: center; margin: 0; letter-spacing: -0.02em; }
+  .s9-thanks .accent {
+    background: linear-gradient(120deg, #1A73E8 0%, #34A853 33%, #FBBC04 66%, #EA4335 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+
+
+  .hd-mark { width:64px; height:64px; border-radius:4px; flex-shrink:0; background:url(data:image/jpeg;base64,/9j/4QDeRXhpZgAATU0AKgAAAAgABwESAAMAAAABAAEAAAEaAAUAAAABAAAAYgEbAAUAAAABAAAAagEoAAMAAAABAAIAAAExAAIAAAAHAAAAcgITAAMAAAABAAEAAIdpAAQAAAABAAAAegAAAAAAAABIAAAAAQAAAEgAAAABR29vZ2xlAAAAB5AAAAcAAAAEMDIyMZEBAAcAAAAEAQIDAKAAAAcAAAAEMDEwMKABAAMAAAABAAEAAKACAAQAAAABAAAAYqADAAQAAAABAAAAYqQGAAMAAAABAAAAAAAAAAAAAP/hCWNodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IlhNUCBDb3JlIDYuMC4wIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bXA6Q3JlYXRvclRvb2w9Ikdvb2dsZSIvPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDw/eHBhY2tldCBlbmQ9InciPz4A/9sAhAABAQEBAQECAQECAwICAgMEAwMDAwQFBAQEBAQFBgUFBQUFBQYGBgYGBgYGBwcHBwcHCAgICAgJCQkJCQkJCQkJ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) center/cover no-repeat; }
+  .deck > section { width:1920px; height:1080px; box-sizing:border-box; }
+  @media screen {
+    html, body { height:100%; overflow:hidden; }
+    .deck { position:fixed; left:50%; top:50%; width:1920px; height:1080px; transform-origin:0 0; }
+    .deck > section { position:absolute; left:0; top:0; display:none; }
+    .deck > section.active { display:block; }
+    .nav { position:fixed; bottom:10px; left:50%; transform:translateX(-50%); color:#bbb; font:14px "Noto Sans", Arial, sans-serif; opacity:.6; user-select:none; }
+  }
+  @page { size:1920px 1080px; margin:0; }
+  @media print {
+    html, body { margin:0 !important; padding:0 !important; background:none !important; overflow:visible !important; height:auto !important; }
+    * { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    .deck { position:static !important; transform:none !important; width:auto !important; height:auto !important; }
+    .deck > section { display:block; position:relative; page-break-after:always; break-after:page; }
+    .nav { display:none; }
+  }
+
+
+  .layer { display:flex; align-items:stretch; border:1px solid var(--divider); border-radius:14px; overflow:hidden; background:#fff; }
+  .layer .tag { width:230px; flex-shrink:0; color:#fff; font-size:30px; font-weight:800; display:flex; align-items:center; justify-content:center; letter-spacing:0.02em; }
+  .layer .txt { padding:22px 34px; font-size:30px; line-height:1.38; color:var(--ink); }
+  .layer .txt .who { font-weight:700; }
+  .layer .txt .what { color:var(--text); font-size:27px; }
+  .punch { background:#FFF8E1; border-left:10px solid #FBBC04; border-radius:14px; padding:26px 40px; font-size:32px; color:var(--ink); font-weight:600; line-height:1.4; }
+  .punch.blue { background:#E8F0FE; border-left-color:#1A73E8; color:#174ea6; }
+  .tile { border-radius:16px; border:1px solid var(--divider); background:#fff; padding:26px 30px; display:flex; flex-direction:column; }
+  .tile .num { font-size:120px; font-weight:900; line-height:1; color:#1A73E8; letter-spacing:-0.02em; }
+  .tile .lbl { font-size:34px; font-weight:800; color:var(--ink); margin-top:10px; }
+  .tile .desc { font-size:25px; color:var(--text); margin-top:12px; line-height:1.4; }
+  .tile .note { margin-top:auto; padding-top:16px; font-size:24px; font-weight:700; }
+  .row-ico { display:flex; align-items:flex-start; gap:24px; font-size:31px; line-height:1.38; color:var(--ink); }
+  .row-ico .ico-circle { width:46px; height:46px; font-size:22px; margin-top:2px; }
+  .shift { border-radius:16px; border:2px solid #1A73E8; background:#fff; overflow:hidden; display:flex; flex-direction:column; }
+  .shift .hd { background:#1A73E8; color:#fff; padding:16px 26px; font-size:30px; font-weight:800; }
+  .shift .hd .n { opacity:.8; margin-right:12px; }
+  .shift .bd { padding:18px 26px; font-size:25px; line-height:1.4; color:var(--ink); }
+  .bar-row { display:grid; grid-template-columns: 430px 1fr; align-items:center; gap:24px; }
+  .bar-row .name { font-size:25px; color:var(--ink); font-weight:700; line-height:1.25; }
+  .bar-row .name span { display:block; font-weight:400; font-size:21px; color:var(--mid); }
+  .bar { height:58px; border-radius:10px; display:flex; align-items:center; padding:0 22px; color:#fff; font-size:25px; font-weight:800; white-space:nowrap; }
+  .sess { border-radius:14px; border:1px solid var(--divider); background:#fff; padding:22px 24px; display:flex; flex-direction:column; gap:12px; }
+  .sess .time { font-size:26px; font-weight:800; color:#1A73E8; }
+  .sess .what { font-size:27px; font-weight:700; color:var(--ink); line-height:1.3; }
+  .sess .who { font-size:22px; color:var(--mid); }
+  .sess .qs { margin-top:auto; display:flex; flex-wrap:wrap; gap:8px; }
+  .qchip { background:#E8F0FE; color:#174ea6; border-radius:999px; padding:4px 14px; font-size:22px; font-weight:800; }
+  .ask { display:grid; grid-template-columns: 96px 1fr; gap:28px; align-items:start; border:1px solid var(--divider); border-radius:16px; padding:26px 32px; background:#fff; }
+  .ask .k { width:84px; height:84px; border-radius:50%; background:#1A73E8; color:#fff; font-size:44px; font-weight:900; display:flex; align-items:center; justify-content:center; }
+  .ask .t { font-size:32px; font-weight:800; color:var(--ink); }
+  .ask .q { font-size:28px; color:var(--text); margin-top:8px; line-height:1.4; }
+</style>
+</head>
+<body>
+<div class="deck">
+
+<section data-screen-label="01 Title">
+  <div class="chrome-logos">
+    <div class="hd-mark" role="img" aria-label="UTokyo Hospital"></div>
+    <div class="wordmark">
+      <div class="name">The University of Tokyo Hospital</div>
+      <div class="sub">Clinical Research Promotion Center</div>
+    </div>
+  </div>
+
+  <div class="s1-block">
+    <div class="s1-eyebrow">Visit · CCTSI, University of Colorado Anschutz Medical Campus · 7 October 2026</div>
+    <h1 class="s1-h1">Valuing the Hub Function</h1>
+    <div class="s1-h2">Crediting support for other institutions' research</div>
+    <div class="s1-rule"></div>
+  </div>
+
+  <div class="s1-authors">
+    <div class="who">
+      <div class="name">Toshiki Saito, MD, PhD</div>
+      <div class="role">Professor / Director, Clinical Research Promotion Center<br>The University of Tokyo Hospital</div>
+    </div>
+    <div class="when">
+      <strong>CCTSI, Aurora</strong>
+      7 October 2026
+    </div>
+  </div>
+
+  <div class="page-num">1 / 10</div>
+  <div class="chrome-bar"><div></div><div></div><div></div><div></div></div>
+</section>
+
+<section data-screen-label="02 Where we stand">
+  <div class="chrome-logos">
+    <div class="hd-mark" role="img" aria-label="UTokyo Hospital"></div>
+    <div class="wordmark">
+      <div class="name">The University of Tokyo Hospital</div>
+      <div class="sub">Clinical Research Promotion Center<span class="dot">·</span><span class="meeting">Saito · CCTSI Visit · 7 Oct 2026</span></div>
+    </div>
+  </div>
+
+  <h2 class="slide-title">Where we stand</h2>
+  <div class="slide-sub">It shapes what we hope to learn.</div>
+
+  <div class="body-region">
+    <div style="display:flex; flex-direction:column; gap:22px;">
+      <div class="layer"><div class="tag" style="background:#1A73E8;">Hospital</div><div class="txt"><span class="who">The University of Tokyo Hospital</span> is one of Japan's 16 Core Clinical Research Hospitals.<br><span class="what">The criteria I describe today apply to the center I run.</span></div></div>
+      <div class="layer"><div class="tag" style="background:#34A853;">National</div><div class="txt"><span class="who">Representative Secretary, NUH-CRPI</span><br><span class="what">The council of all national university hospitals: 42 universities, 44 hospitals.</span></div></div>
+      <div class="layer"><div class="tag" style="background:#F9AB00;">Data</div><div class="txt"><span class="who">Vice Chair, Japan CDISC Coordinating Committee · AMED principal investigator</span><br><span class="what">Clinical data standards. This layer comes next.</span></div></div>
+    </div>
+    <div class="punch blue" style="margin-top:34px;">Not one hospital's site visit: we came for a national system that is deciding how to measure its research hubs.</div>
+  </div>
+
+  <div class="page-num">2 / 10</div>
+  <div class="chrome-bar"><div></div><div></div><div></div><div></div></div>
+</section>
+
+<section data-screen-label="03 Japan's networks">
+  <div class="chrome-logos">
+    <div class="hd-mark" role="img" aria-label="UTokyo Hospital"></div>
+    <div class="wordmark">
+      <div class="name">The University of Tokyo Hospital</div>
+      <div class="sub">Clinical Research Promotion Center<span class="dot">·</span><span class="meeting">Saito · CCTSI Visit · 7 Oct 2026</span></div>
+    </div>
+  </div>
+
+  <h2 class="slide-title">Japan's networks, and why a CTSA hub</h2>
+  <div class="slide-sub">Japan has national hospital networks, but no hub program.</div>
+
+  <div class="body-region">
+    <div style="display:grid; grid-template-columns: 1fr 1fr 1.1fr; gap:30px; height:570px;">
+      <div class="card" style="display:flex; flex-direction:column; "><div class="card-head" style="background:#78909C; font-size:30px; padding:16px 30px;">42 + 44</div><div class="card-body" style="padding:26px 32px; display:flex; flex-direction:column; gap:18px; flex:1;"><div style="font-size:34px; font-weight:800; color:var(--ink); line-height:1.3;">National university hospitals</div><div style="font-size:28px; color:var(--text); line-height:1.4;">A council: 42 universities, 44 hospitals.</div><div style="font-size:28px; color:var(--text); line-height:1.4;">It shares practice and speaks with one voice.</div><div class="row-ico" style="font-size:28px; font-weight:700; margin-top:auto; border-top:1px solid var(--divider); padding-top:18px;"><div class="ico-circle no">✕</div><div>Not a funded hub for its members' studies</div></div></div></div>
+      <div class="card" style="display:flex; flex-direction:column; "><div class="card-head" style="background:#78909C; font-size:30px; padding:16px 30px;">NHO 140</div><div class="card-body" style="padding:26px 32px; display:flex; flex-direction:column; gap:18px; flex:1;"><div style="font-size:34px; font-weight:800; color:var(--ink); line-height:1.3;">National Hospital Organization</div><div style="font-size:28px; color:var(--text); line-height:1.4;">140 hospitals, with its own ARO and data center.</div><div style="font-size:28px; color:var(--text); line-height:1.4;">A network with a center.</div><div class="row-ico" style="font-size:28px; font-weight:700; margin-top:auto; border-top:1px solid var(--divider); padding-top:18px;"><div class="ico-circle eq">…</div><div>But inside one organization</div></div></div></div>
+      <div class="card" style="display:flex; flex-direction:column; border:2px solid #1A73E8;"><div class="card-head" style="background:#1A73E8; font-size:30px; padding:16px 30px;">CCTSI</div><div class="card-body" style="padding:26px 32px; display:flex; flex-direction:column; gap:18px; flex:1;"><div style="font-size:34px; font-weight:800; color:var(--ink); line-height:1.3;">One hub, a whole state</div><div style="font-size:28px; color:var(--text); line-height:1.4;">Funded to serve several universities, hospital systems and community partners.</div><div class="row-ico" style="font-size:28px; font-weight:700; margin-top:auto; border-top:1px solid var(--divider); padding-top:18px;"><div class="ico-circle ok">✓</div><div>What Japan does not have</div></div></div></div>
+    </div>
+    <div class="punch blue" style="margin-top:36px; text-align:center;">That is why we chose the CCTSI, and why we wanted to see the CTRC before talking.</div>
+  </div>
+
+  <div class="page-num">3 / 10</div>
+  <div class="chrome-bar"><div></div><div></div><div></div><div></div></div>
+</section>
+
+<section data-screen-label="04 Core Clinical Research Hospitals">
+  <div class="chrome-logos">
+    <div class="hd-mark" role="img" aria-label="UTokyo Hospital"></div>
+    <div class="wordmark">
+      <div class="name">The University of Tokyo Hospital</div>
+      <div class="sub">Clinical Research Promotion Center<span class="dot">·</span><span class="meeting">Saito · CCTSI Visit · 7 Oct 2026</span></div>
+    </div>
+  </div>
+
+  <h2 class="slide-title">Japan's Core Clinical Research Hospitals</h2>
+  <div class="slide-sub">Created by law in 2015. The Minister approves hospitals that meet published criteria; 16 hold the designation today.</div>
+
+  <div class="body-region">
+    <div class="col2" style="gap:48px;">
+      <div class="card"><div class="card-head" style="background:#78909C;">CTSA award <span style="font-weight:500; font-size:26px; opacity:.9;">(US)</span></div><div class="card-body" style="padding:22px 36px;">
+        <div class="pill-row" style="font-size:28px; padding:10px 0;"><div class="lbl" style="min-width:160px;">Nature</div><div>A grant</div></div>
+        <div class="pill-row" style="font-size:28px; padding:10px 0;"><div class="lbl" style="min-width:160px;">Entry</div><div>Compete and win</div></div>
+        <div class="pill-row" style="font-size:28px; padding:10px 0;"><div class="lbl" style="min-width:160px;">Review</div><div>Periodic; the award can end</div></div>
+        <div class="pill-row" style="font-size:28px; padding:10px 0;"><div class="lbl" style="min-width:160px;">Steering</div><div>A national program office</div></div>
+      </div></div>
+      <div class="card" style="border:2px solid #1A73E8;"><div class="card-head" style="background:#1A73E8;">Core hospital <span style="font-weight:500; font-size:26px; opacity:.9;">(Japan)</span></div><div class="card-body" style="padding:22px 36px;">
+        <div class="pill-row" style="font-size:28px; padding:10px 0;"><div class="lbl" style="min-width:160px;">Nature</div><div>A legal status</div></div>
+        <div class="pill-row" style="font-size:28px; padding:10px 0;"><div class="lbl" style="min-width:160px;">Entry</div><div>Meet the published criteria</div></div>
+        <div class="pill-row" style="font-size:28px; padding:10px 0;"><div class="lbl" style="min-width:160px;">Review</div><div>Kept until it fails the criteria</div></div>
+        <div class="pill-row" style="font-size:28px; padding:10px 0;"><div class="lbl" style="min-width:160px;">Steering</div><div>No program office, no peer competition</div></div>
+      </div></div>
+    </div>
+    <div class="punch" style="margin-top:40px; text-align:center; font-size:36px;">The criteria are the whole instrument, so what they count matters.</div>
+  </div>
+
+  <div class="page-num">4 / 10</div>
+  <div class="chrome-bar"><div></div><div></div><div></div><div></div></div>
+</section>
+
+<section data-screen-label="05 What the criteria count">
+  <div class="chrome-logos">
+    <div class="hd-mark" role="img" aria-label="UTokyo Hospital"></div>
+    <div class="wordmark">
+      <div class="name">The University of Tokyo Hospital</div>
+      <div class="sub">Clinical Research Promotion Center<span class="dot">·</span><span class="meeting">Saito · CCTSI Visit · 7 Oct 2026</span></div>
+    </div>
+  </div>
+
+  <h2 class="slide-title">What the criteria count</h2>
+  <div class="slide-sub">Three things, measured over the previous three years.</div>
+
+  <div class="body-region">
+    <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:34px; height:390px;">
+      <div class="tile"><div class="num">8</div><div class="lbl">Trials</div><div class="desc">Investigator-initiated trials for drug approval, or 4 of them plus 40 other trials</div><div class="note" style="color:#174ea6;">In principle, led by the hospital's own investigator</div></div>
+      <div class="tile"><div class="num">45</div><div class="lbl">Papers</div><div class="desc">Peer-reviewed English papers</div><div class="note" style="color:#174ea6;">In principle, the first author is from the hospital</div></div>
+      <div class="tile" style="background:#FFF8E1; border-color:#FBBC04;"><div class="num" style="color:#F9AB00;">15</div><div class="lbl">Supports</div><div class="desc">Studies supported at other institutions, per year. Mandatory, but a floor</div><div class="note" style="color:#B06000;">15 and 50 score the same</div></div>
+    </div>
+    <div class="punch blue" style="margin-top:30px; font-size:28px; font-weight:500;">A study led from outside counts only if the hospital's ARO takes on <strong>the whole package</strong>: protocol, data management and monitoring.</div>
+    <div style="margin-top:22px; font-size:32px; font-weight:800; color:var(--ink); text-align:center;">The hub function is what the instrument measures least.</div>
+  </div>
+
+  <div class="page-num">5 / 10</div>
+  <div class="chrome-bar"><div></div><div></div><div></div><div></div></div>
+</section>
+
+<section data-screen-label="06 What happens">
+  <div class="chrome-logos">
+    <div class="hd-mark" role="img" aria-label="UTokyo Hospital"></div>
+    <div class="wordmark">
+      <div class="name">The University of Tokyo Hospital</div>
+      <div class="sub">Clinical Research Promotion Center<span class="dot">·</span><span class="meeting">Saito · CCTSI Visit · 7 Oct 2026</span></div>
+    </div>
+  </div>
+
+  <h2 class="slide-title">What happens as a result</h2>
+  <div class="slide-sub">What we see from inside the Core Hospitals: our observation, not yet a quantified study.</div>
+
+  <div class="body-region">
+    <div style="display:flex; flex-direction:column; gap:30px; padding-top:6px;">
+      <div class="row-ico"><div class="ico-circle no">✕</div><div><strong>Small, easy-to-start trials.</strong> Eight in three years is a hard number, and a small trial counts the same as a large one.</div></div>
+      <div class="row-ico"><div class="ico-circle no">✕</div><div><strong>More papers.</strong> Forty-five is a hard number too.</div></div>
+      <div class="row-ico"><div class="ico-circle no">✕</div><div><strong>Support is penalized.</strong> Every statistician, data manager and dollar moved to another institution's study is not spent on the hospital's own count.</div></div>
+    </div>
+    <div class="punch" style="margin-top:46px;">The Ministry knows this. Its review this year keeps support as a floor, because the effort behind support varies too much to be scored.<div style="font-size:28px; font-weight:500; color:var(--text); margin-top:10px;">That is exactly the problem your funders have had to solve.</div></div>
+  </div>
+
+  <div class="page-num">6 / 10</div>
+  <div class="chrome-bar"><div></div><div></div><div></div><div></div></div>
+</section>
+
+<section data-screen-label="07 Three shifts">
+  <div class="chrome-logos">
+    <div class="hd-mark" role="img" aria-label="UTokyo Hospital"></div>
+    <div class="wordmark">
+      <div class="name">The University of Tokyo Hospital</div>
+      <div class="sub">Clinical Research Promotion Center<span class="dot">·</span><span class="meeting">Saito · CCTSI Visit · 7 Oct 2026</span></div>
+    </div>
+  </div>
+
+  <h2 class="slide-title">Three shifts we propose</h2>
+  <div class="slide-sub">Re-weight counting, do not abolish it. Each shift has a working counterpart in how NIH funds research infrastructure.</div>
+
+  <div class="body-region">
+    <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:28px;">
+      <div class="shift"><div class="hd"><span class="n">1</span>Input → outcome</div><div class="bd">Count trials that finish and report. Judge approvals and guideline changes case by case, over a longer period.</div></div>
+      <div class="shift"><div class="hd"><span class="n">2</span>In-house → support</div><div class="bd">Credit research the hub enabled at other institutions as the hub's own achievement.</div></div>
+      <div class="shift"><div class="hd"><span class="n">3</span>Single site → network</div><div class="bd">Cross-cutting infrastructure at the core; disease-specific networks carry the rest.</div></div>
+    </div>
+    <div style="margin-top:22px; font-size:24px; color:var(--text); line-height:1.45;"><strong style="color:var(--ink);">NIH review, in the funding announcements we read</strong> (CTSA hubs, TIN, coordinating centers of Duke, the CCTSI and Vanderbilt): no in-house trial counts, no first-author papers, no points or weights. Reviewers judge coordination, data and statistics, consortium contribution and dissemination.</div>
+    <div style="margin-top:22px; display:flex; flex-direction:column; gap:16px;">
+      <div style="font-size:24px; color:var(--mid); font-style:italic;">Two layers of NIH money, FY2025</div>
+      <div class="bar-row"><div class="name">Base layer: CTSA hubs<span>$7–11M (¥1.1–1.8B) per hub, small differences</span></div><div><div class="bar" style="width:57%; background:#78909C;">$0.57B <span style="font-weight:500; margin-left:10px; opacity:.9;">(¥91B)</span></div></div></div>
+      <div class="bar-row"><div class="name">Competitive layer<span>coordinating, data and statistical centers</span></div><div><div class="bar" style="width:100%; background:#1A73E8;">$1.0B <span style="font-weight:500; margin-left:10px; opacity:.9;">(¥160B) · where institutions differ · what Japan lacks</span></div></div></div>
+    </div>
+  </div>
+
+  <div class="page-num">7 / 10</div>
+  <div class="chrome-bar"><div></div><div></div><div></div><div></div></div>
+</section>
+
+<section data-screen-label="08 What we came to ask">
+  <div class="chrome-logos">
+    <div class="hd-mark" role="img" aria-label="UTokyo Hospital"></div>
+    <div class="wordmark">
+      <div class="name">The University of Tokyo Hospital</div>
+      <div class="sub">Clinical Research Promotion Center<span class="dot">·</span><span class="meeting">Saito · CCTSI Visit · 7 Oct 2026</span></div>
+    </div>
+  </div>
+
+  <h2 class="slide-title">What we came to ask</h2>
+  <div class="slide-sub">Thirteen written questions in seven themes; you have grouped the answers for 10:10. DCRI sharpened three.</div>
+
+  <div class="body-region">
+    <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:30px; height:430px;">
+      <div class="sess" style="padding:26px 30px; gap:16px;"><div class="time" style="font-size:34px;">Value</div><div class="what" style="font-size:28px;">Which numbers NCATS actually reacts to, and how you credit research led at partner institutions</div><div style="margin-top:auto; border-top:1px solid var(--divider); padding-top:14px; font-size:23px; color:var(--mid); line-height:1.4;">Not whether in-house counts are reported: we now know they are not.</div><div class="qs"><span class="qchip">Themes A–C</span></div></div>
+      <div class="sess" style="padding:26px 30px; gap:16px;"><div class="time" style="font-size:34px;">People</div><div class="what" style="font-size:28px;">The size of the support workforce, and how you keep trained staff</div><div style="margin-top:auto; border-top:1px solid var(--divider); padding-top:14px; font-size:23px; color:var(--mid); line-height:1.4;">DCRI: culture, and turnover under 6%. What about here?</div><div class="qs"><span class="qchip">Theme D</span></div></div>
+      <div class="sess" style="padding:26px 30px; gap:16px;"><div class="time" style="font-size:34px;">System</div><div class="what" style="font-size:28px;">How a hub relates to the other research organizations around it, and data standards</div><div style="margin-top:auto; border-top:1px solid var(--divider); padding-top:14px; font-size:23px; color:var(--mid); line-height:1.4;">Our colleagues wrote the people and data-standards questions, and will follow up.</div><div class="qs"><span class="qchip">Themes E–G</span></div></div>
+    </div>
+    <div class="punch blue" style="margin-top:36px; text-align:center;">So let me go straight to what we most want to learn.</div>
+  </div>
+
+  <div class="page-num">8 / 10</div>
+  <div class="chrome-bar"><div></div><div></div><div></div><div></div></div>
+</section>
+
+<section data-screen-label="09 Most want to learn">
+  <div class="chrome-logos">
+    <div class="hd-mark" role="img" aria-label="UTokyo Hospital"></div>
+    <div class="wordmark">
+      <div class="name">The University of Tokyo Hospital</div>
+      <div class="sub">Clinical Research Promotion Center<span class="dot">·</span><span class="meeting">Saito · CCTSI Visit · 7 Oct 2026</span></div>
+    </div>
+  </div>
+
+  <h2 class="slide-title">What we most want to learn</h2>
+  <div class="slide-sub">One question is about the review; two are specific to you.</div>
+
+  <div class="body-region">
+    <div style="display:flex; flex-direction:column; gap:24px;">
+      <div class="ask"><div class="k">1</div><div><div class="t">The review itself</div><div class="q">Your UM1 was renewed in 2023 under the current structure. What actually decided it? Since then, which numbers in your annual reports has NCATS ever acted on?</div></div></div>
+      <div class="ask"><div class="k">2</div><div><div class="t">Our question three</div><div class="q">If hub designation required a minimum number of in-house trials or first-authored papers, how would the CCTSI and its statewide partners change?</div></div></div>
+      <div class="ask"><div class="k">3</div><div><div class="t">The hub and the ARO</div><div class="q">At Duke, the CTSA hub and DCRI barely meet. How do the CCTSI and CPC Clinical Research relate: shared faculty, shared services, or separate worlds?</div></div></div>
+    </div>
+  </div>
+
+  <div class="page-num">9 / 10</div>
+  <div class="chrome-bar"><div></div><div></div><div></div><div></div></div>
+</section>
+
+<section data-screen-label="10 Thank you">
+  <div class="chrome-logos">
+    <div class="hd-mark" role="img" aria-label="UTokyo Hospital"></div>
+    <div class="wordmark">
+      <div class="name">The University of Tokyo Hospital</div>
+      <div class="sub">Clinical Research Promotion Center<span class="dot">·</span><span class="meeting">Saito · CCTSI Visit · 7 Oct 2026</span></div>
+    </div>
+  </div>
+
+  <div style="position:absolute; left:0; right:0; top:330px; text-align:center;">
+    <div style="font-size:28px; color:var(--mid); letter-spacing:0.1em; text-transform:uppercase; font-weight:600;">CCTSI, University of Colorado Anschutz · 7 October 2026</div>
+    <h1 class="s9-thanks" style="margin-top:36px;">Thank you</h1>
+    <div class="s1-rule" style="margin-top:30px;"></div>
+    <div style="font-size:36px; color:var(--text); margin-top:28px;">Now I would much rather hear from you.</div>
+  </div>
+
+  <div class="page-num">10 / 10</div>
+  <div class="chrome-bar"><div></div><div></div><div></div><div></div></div>
+</section>
+
+</div>
+<div class="nav"></div>
+<script>
+(function () {
+  var deck = document.querySelector('.deck');
+  var slides = Array.prototype.slice.call(deck.children);
+  var nav = document.querySelector('.nav');
+  var i = Math.max(0, Math.min(slides.length - 1, (parseInt(location.hash.slice(1), 10) || 1) - 1));
+  function fit() {
+    var s = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+    deck.style.transform = 'scale(' + s + ') translate(-50%, -50%)';
+  }
+  function show(n) {
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach(function (el, k) { el.classList.toggle('active', k === i); });
+    nav.textContent = (i + 1) + ' / ' + slides.length + '   ← → で移動';
+    history.replaceState(null, '', '#' + (i + 1));
+  }
+  document.addEventListener('keydown', function (e) {
+    if (['ArrowRight', 'PageDown', ' ', 'Enter'].indexOf(e.key) >= 0) { show(i + 1); e.preventDefault(); }
+    if (['ArrowLeft', 'PageUp', 'Backspace'].indexOf(e.key) >= 0) { show(i - 1); e.preventDefault(); }
+    if (e.key === 'Home') show(0);
+    if (e.key === 'End') show(slides.length - 1);
+  });
+  document.addEventListener('click', function (e) { show(e.clientX < window.innerWidth / 3 ? i - 1 : i + 1); });
+  window.addEventListener('resize', fit);
+  fit(); show(i);
+})();
+</script>
+</body>
+</html>
