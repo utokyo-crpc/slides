@@ -5,5 +5,6 @@
 - `20260928-jaspehr/` — FHIRとCDISCによる電子カルテの標準化とAI活用（2026-09-28）
 - `20261007-cctsi/` — Valuing the Hub Function: Crediting Support for Other Institutions' Research（CCTSI、2026-10-07）
 - `20261008-vanderbilt/` — Valuing the Hub Function: Crediting Support for Other Institutions' Research（VICTR、2026-10-08）
+- `20261008-vanderbilt-jaspehr/` — From an EHR Form to SDTM: JASPEHR, FHIR and CDISC（VICTR の 13 時の枠、2026-10-08）
 
 スライドの原稿と生成スクリプトは作成者の手元にあり、このリポジトリには生成した HTML と PDF だけを置く。
