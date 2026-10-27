@@ -8,5 +8,6 @@
 - `20261008-vanderbilt-v2/` — Valuing the Hub Function: Crediting Support for Other Institutions' Research（VICTR、2026-10-08）
 - `20261008-vanderbilt-jaspehr/` — From an EHR Form to SDTM: JASPEHR, FHIR and CDISC（VICTR の 13 時の枠、2026-10-08）
 - `20261021-m1-pharmacology/` — 臨床研究入門：薬理学から臨床研究へ（東大医学科 M1 薬理学、2026-10-21。73枚、← → で送る、f で全画面）
+- `20261027-ganpro-clinical-trials/` — 臨床試験（医学共通講義GP「臨床腫瘍学概論」、2026-10-27。61枚、← → で送る、f で全画面）
 
 スライドの原稿と生成スクリプトは作成者の手元にあり、このリポジトリには生成した HTML と PDF だけを置く。
