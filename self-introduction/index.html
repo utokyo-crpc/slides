@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>自己紹介 齋藤俊樹</title>
+<meta name="description" content="東京大学医学部附属病院 臨床研究推進センター 齋藤俊樹の自己紹介スライド">
+<style>
+:root { --bg:#eef0f3; --fg:#1f2430; --muted:#5b6170; --card:#ffffff; --line:#d7dbe2; }
+@media (prefers-color-scheme: dark) { :root { --bg:#16181d; --fg:#e8eaee; --muted:#a3a9b5; --card:#22252c; --line:#353a44; } }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--fg); font-family:"Hiragino Sans","Noto Sans JP",system-ui,sans-serif; }
+header { max-width:1100px; margin:0 auto; padding:28px 16px 8px; display:flex; flex-wrap:wrap; gap:8px 16px; align-items:baseline; justify-content:space-between; }
+h1 { font-size:20px; margin:0; font-weight:600; }
+.meta { color:var(--muted); font-size:13px; }
+.btn { font:inherit; font-size:13px; padding:6px 12px; border:1px solid var(--line); border-radius:6px; background:var(--card); color:var(--fg); cursor:pointer; }
+main { max-width:1100px; margin:0 auto; padding:8px 16px 48px; display:grid; gap:20px; }
+.slide { margin:0; background:var(--card); border:1px solid var(--line); border-radius:8px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,.06); }
+.slide img { display:block; width:100%; height:auto; }
+.sr { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+footer { max-width:1100px; margin:0 auto; padding:0 16px 40px; color:var(--muted); font-size:12px; }
+/* presentation mode */
+body.present { background:#000; overflow:hidden; }
+body.present header, body.present footer { display:none; }
+body.present main { max-width:none; padding:0; height:100vh; display:block; }
+body.present .slide { display:none; border:0; border-radius:0; box-shadow:none; background:#000; height:100vh; }
+body.present .slide.on { display:flex; align-items:center; justify-content:center; }
+body.present .slide img { width:auto; max-width:100vw; max-height:100vh; }
+#count { position:fixed; right:14px; bottom:10px; color:#aaa; font-size:12px; display:none; }
+body.present #count { display:block; }
+</style>
+</head>
+<body>
+<header>
+  <div><h1>自己紹介</h1><div class="meta">齋藤 俊樹　東京大学医学部附属病院 臨床研究推進センター</div></div>
+  <button class="btn" id="go" type="button">発表表示（← → で送る、Esc で戻る）</button>
+</header>
+<main>
+<section class="slide" id="s1"><img src="img/s01.webp" alt="スライド 1" loading="eager" width="1920" height="1080"><p class="sr">自己紹介 齋藤 俊樹 1</p></section>
+<section class="slide" id="s2"><img src="img/s02.webp" alt="スライド 2" loading="eager" width="1920" height="1080"><p class="sr">2 臨床医および研究者として 1</p></section>
+<section class="slide" id="s3"><img src="img/s03.webp" alt="スライド 3" loading="lazy" width="1920" height="1080"><p class="sr">3 ◆骨髄移植が通常医療になり始めたタイミングで、血液内科医として化学療法、骨髄移 植等の臨床経験（血液内科専門医） ◆基礎研究・病態研究 ●大学院にてNotch遺伝子を中心に免疫学を研究。Notch2 cKOマウスを作成・解析。 ●その際、複数の他の研究室の技術を組み合わせ、コンディショナルノックアウト(cKO)マウスの 作成系を いちから立上げ。 ●この技術基盤は、その後の東大血液・腫瘍内科の研究発展に貢献。 ○Notch2 cKOマウス：Immunity, Nature Immunology, PNAS ○AML-1 cKOマウス：Nature Medicine ●骨髄移植の病態研究をできる場所を求め渡米 ○骨髄移植マウスモデル ○In vivo imaging 臨床経験、基礎研究経験</p></section>
+<section class="slide" id="s4"><img src="img/s04.webp" alt="スライド 4" loading="lazy" width="1920" height="1080"><p class="sr">4 遺伝子欠損マウス 骨髄移植モデル in vivo imaging</p></section>
+<section class="slide" id="s5"><img src="img/s05.webp" alt="スライド 5" loading="lazy" width="1920" height="1080"><p class="sr">5 TRリサーチ ◆TRリサーチ ●マウスモデルでの結果を元にFIH(First in Human)臨床試験のグラント申請書執筆補助 ●先進医療BでのNKT細胞療法に関する第II相ランダム化比較試験のため 細胞加工センター（CPC; Cell Processing Center）の立上げを行った ◆ふりかえると ●これらの臨床経験、基礎研究経験があることが、臨床研究を推進する際に研究者の先生方 の思考に寄り添うことができる強みであること</p></section>
+<section class="slide" id="s6"><img src="img/s06.webp" alt="スライド 6" loading="lazy" width="1920" height="1080"><p class="sr">6 臨床研究支援ITシステム開発 2</p></section>
+<section class="slide" id="s7"><img src="img/s07.webp" alt="スライド 7" loading="lazy" width="1920" height="1080"><p class="sr">7 臨床研究支援ITシステム Ptoshの実績 ◆試験数：202試験 ●医師主導治験：13試験（5品目で薬事承認取得） ◆症例報告、登録・割付、安全性情報管理、利益相 反管理、関連文書管理、QOL調査が可能な包括的 IT支援システムとして稼働。 ◆全ての試験支援について、Ptoshを含むITシステム を導入することにより、データセンターの大幅な 業務効率化 ◆臨床研究とITの両分野に深く精通している、プロ グラマである私が主導していたことが、IT開発と 導入における成功の鍵 Ptosh 状態 （2026 年4月1日現在） 合計 Total 診療科数 3,400 施設数 2,490 ユーザ数 14,129 疾患登録数 723,286 試験数 202</p></section>
+<section class="slide" id="s8"><img src="img/s08.webp" alt="スライド 8" loading="lazy" width="1920" height="1080"><p class="sr">8 医療情報の標準化 3</p></section>
+<section class="slide" id="s9"><img src="img/s09.webp" alt="スライド 9" loading="lazy" width="1920" height="1080"><p class="sr">9 CDISC関連活動 ◆CDISC Japan User Group (CJUG) ●2012年より毎月会合にて活動 ◆Japanese CDISC Coordinating Committee (J3C) ●2018〜 J3C member：CDISCボードメンバー2名、アカデミア 4名、製薬メーカー 4名、CRO 3名、ITベンダー 1名の計14より構成 ●2021〜 J3C vice chair ◆AMED齋藤班「医薬品等規制調和・評価研究事業」にて研究開発代表者 ●2019年度 「アカデミアにおけるCDISC標準利用推進のための施設間連携に関する研究」 ●2022年度「アカデミアにおけるCDISC標準利用促進に関する研究開発」 ●2025年度「市販後安全対策のためのFHIR・CDISC・SS-MIX2連携による標準化RWD基盤構築と 実装研究」</p></section>
+<section class="slide" id="s10"><img src="img/s10.webp" alt="スライド 10" loading="lazy" width="1920" height="1080"><p class="sr">10 ◆CDISC標準の定着 ●現在では新規試験は例外を除いて全てCDISC標準でのDB構築が定着 ◆治験・臨床研究データの標準化 ●包括的支援実施中の試験：医師主導治験 5件中5件（100%）、特定臨床研究 41件中25 件（61%）、観察・レジストリ 27件中6件（22%）にてCDISC準拠のDBを構築・運用 ●業務効率化とともに高品質なデータ管理や統合解析を可能に NHO-AROデータセンターにおけるデータ標準化</p></section>
+<section class="slide" id="s11"><img src="img/s11.webp" alt="スライド 11" loading="lazy" width="1920" height="1080"><p class="sr">臨床情報(CDISC標準)以外のデータとの統合データ基盤構築経験 11 CDISC標準化された診療情報 ゲノム・遺伝子の変異情報 統合システムの開発 AMED臨床ゲノム情報統合データベース整備事業採択課題</p></section>
+<section class="slide" id="s12"><img src="img/s12.webp" alt="スライド 12" loading="lazy" width="1920" height="1080"><p class="sr">12 臨床研究中核病院とARO構築 4</p></section>
+<section class="slide" id="s13"><img src="img/s13.webp" alt="スライド 13" loading="lazy" width="1920" height="1080"><p class="sr">13 AROのニーズ調査：研究相談 ◆NHO名古屋医療センターは2013年に臨床研究中核病院整備事業に採択</p></section>
+<section class="slide" id="s14"><img src="img/s14.webp" alt="スライド 14" loading="lazy" width="1920" height="1080"><p class="sr">15 必要とされるARO機能 この3つの能力以外に研究代表医師でなくても実施可能な下記業務が、実際には大きな負 担としてのしかかっている。これらはAROにて代替可能。 ◆研究計画書執筆 ●規制要件、IRBの反応、調整事務、データマネジメント等の科学的本質以外の多くの考慮が必要 ◆資金獲得 ◆契約交渉・締結を含む事務処理 ◆PMDA・IRB対応 ◆安全性管理、品質管理（主に、データマネジメント、モニタリング能力） ◆統計解析 ◆などなど → AROとして「研究代表医師等が臨床研究の核心に専念できるためのインフラ」を 整備・提供すべし。</p></section>
+<section class="slide" id="s15"><img src="img/s15.webp" alt="スライド 15" loading="lazy" width="1920" height="1080"><p class="sr">◆PMDA勤務経験者数 0→2人、PMDA相談同行・支援数 0→12試験 ◆試験調整事務局メンバー人数 0→6人、担当試験数 0→17試験 ◆データマネージャ数 9→19人、準備・実施中のみで常時80試験前後を支援 ◆専任モニター数 0→2人、試験数 0→16試験、外部CROとの協業体制を確立 ◆生物統計家人数 1→5人、専任プログラマ 1人、解析責任者担当 5→94試験 16 人材が全て：ARO専門職チームの構築 2012年→2021年</p></section>
+<section class="slide" id="s16"><img src="img/s16.webp" alt="スライド 16" loading="lazy" width="1920" height="1080"><p class="sr">17 多施設共同 医師主導治験 包括支援の実績</p></section>
+<section class="slide" id="s17"><img src="img/s17.webp" alt="スライド 17" loading="lazy" width="1920" height="1080"><p class="sr">18 NHO本部 臨床研究支援部の立上げ 5</p></section>
+<section class="slide" id="s18"><img src="img/s18.webp" alt="スライド 18" loading="lazy" width="1920" height="1080"><p class="sr">19 NHO-AROの枠組み 2021年新設</p></section>
+<section class="slide" id="s19"><img src="img/s19.webp" alt="スライド 19" loading="lazy" width="1920" height="1080"><p class="sr">◆ニーズの把握 ●NHO全体方針に最も大きい影響を及ぼすのは病院長の総意 ●就任した2021年度末より毎年、臨床研究に関する短いアンケート調査を 140の病院長に直接に送付し、支援部の目標、プロセスKPIを設定 ◆支援会議、研究相談 ●NHO共同研究の研究代表者(PI)が抱える問題点をTV会議にてヒアリングし、問題点の拾 い上げと効果的な対応を推進。2025年6月まで103課題を実施。 ◆PI育成研究枠 ●支援会議・研究相談にて、臨床研究経験不足の医師がPIになることにより、完遂が困難に なるリスクが明らかとなり、研究者養成目的のPI育成研究枠を整備。 ◆NHOの140病院統合レセプト／電子カルテ情報統合DBの研究利用推進に着手 20 NHO本部総研臨床研究支援部の活動</p></section>
+<section class="slide" id="s20"><img src="img/s20.webp" alt="スライド 20" loading="lazy" width="1920" height="1080"><p class="sr">21 JAMBO：100万人ゲノム基盤の臨床情報標準化 ◆JAMBO（Japan Mega Biobank and Cohort Consortium） ●バイオバンク・ジャパン（BBJ）を中心に、病院付随バイオバンクと疫学コホートのゲノム・臨 床情報を統合する100万人規模の基盤（2026年6月設立、議長 松田浩一 東京大学医科学研究所 教授） ●29のバイオバンク・コホートが参加（2026年10月時点）。個別データは施設から動かさず、統 計量を共有する分散型メタ解析 ◆臨床情報標準化WG 世話人（荻島創一 東北大と共同）、2026年度から研究開発分担者 ●病名・検体検査・調査票の3領域を、CDISC と OMOP-CDM の両方に対応する形で標準化 ●用語は ICD-10・MedDRA・LOINC・WHODrug・CDISC Controlled Terminology に対応付け ●治験・臨床研究で培った CDISC の経験を、ゲノム研究の臨床情報へ展開</p></section>
+</main>
+<footer>全20枚</footer>
+<div id="count"></div>
+<script>
+(function(){
+  var s = Array.prototype.slice.call(document.querySelectorAll('.slide')), i = 0;
+  var cnt = document.getElementById('count');
+  function show(k){ i = Math.max(0, Math.min(s.length-1, k)); s.forEach(function(e,j){ e.classList.toggle('on', j===i); }); cnt.textContent = (i+1)+' / '+s.length; }
+  function start(){ document.body.classList.add('present'); show(i); if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(function(){}); }
+  function stop(){ document.body.classList.remove('present'); if (document.fullscreenElement) document.exitFullscreen(); s[i].scrollIntoView(); }
+  document.getElementById('go').addEventListener('click', start);
+  document.addEventListener('keydown', function(e){
+    if (!document.body.classList.contains('present')) { if (e.key==='f') start(); return; }
+    if (e.key==='ArrowRight'||e.key===' '||e.key==='PageDown') show(i+1);
+    else if (e.key==='ArrowLeft'||e.key==='PageUp') show(i-1);
+    else if (e.key==='Escape') stop();
+  });
+  document.addEventListener('fullscreenchange', function(){ if (!document.fullscreenElement && document.body.classList.contains('present')) { document.body.classList.remove('present'); s[i].scrollIntoView(); } });
+  document.querySelector('main').addEventListener('click', function(e){ if (document.body.classList.contains('present')) show(e.clientX > window.innerWidth/2 ? i+1 : i-1); });
+})();
+</script>
+</body>
+</html>
