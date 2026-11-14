@@ -609,7 +609,7 @@ FHIR は、診療情報をやり取りするための標準で、JSON などの�
 </section>
 
 <section data-unit="aim" data-screen-label="05 aim">
-  <div class="hd"><h2 class="slide-title">目的：入力した時点で SDTM になる</h2><div class="rule"></div>
+  <div class="hd"><h2 class="slide-title">目的：入力した時点で CDISC になる</h2><div class="rule"></div>
     <p class="sub">ベンダー非依存の記録テンプレート JASPEHR に、世界標準のメタデータをあらかじめ組み込む</p></div>
   <div class="body">
     <div class="flow">
@@ -681,13 +681,13 @@ FHIR は、診療情報をやり取りするための標準で、JSON などの�
     <p class="sub">目標：カルテへの入力が、そのまま CDISC に準拠する</p></div>
   <div class="body">
     <table class="t meta4">
-      <colgroup><col style="width:150px"><col style="width:400px"><col style="width:380px"><col style="width:360px"><col></colgroup>
-      <thead><tr><th></th><th>メタデータ</th><th>規模</th><th>FHIR での持たせ方</th><th>状態</th></tr></thead>
+      <colgroup><col style="width:150px"><col style="width:560px"><col style="width:470px"><col></colgroup>
+      <thead><tr><th></th><th>メタデータ</th><th>規模</th><th>FHIR での持たせ方</th></tr></thead>
       <tbody>
-        <tr class="lv1"><td class="lvl">変数</td><td><b>1. SDTM のドメイン・変数名</b></td><td>63ドメイン・1,523変数</td><td>group と各項目の <span class="mono">extension</span></td><td><span class="ok">✓</span> JSON のサンプルを提供</td></tr>
-        <tr class="lv2"><td class="lvl" rowspan="3">用語</td><td><b>2. 統制用語（CT）</b></td><td>1,181種類・44,830語</td><td>CodeSystem ＋ ValueSet</td><td><span class="ok">✓</span> 1,181の CodeSystem を読み込み</td></tr>
-        <tr><td><b>3. MedDRA</b></td><td>1種類・90,471語</td><td>CodeSystem</td><td><span class="ok">✓</span> JSON のサンプルを提供</td></tr>
-        <tr><td><b>4. IDF・WHODrug</b><p class="sm">WHODrug は任意。ライセンスの無い施設は IDF で止める</p></td><td>1種類・19,415語</td><td>CodeSystem（IDF）</td><td><span class="ok">✓</span> JSON のサンプルを提供</td></tr>
+        <tr class="lv1"><td class="lvl">変数</td><td><b>1. SDTM のドメイン・変数名</b></td><td>63ドメイン・1,523変数</td><td>group と各項目の <span class="mono">extension</span></td></tr>
+        <tr class="lv2"><td class="lvl" rowspan="3">用語</td><td><b>2. 統制用語（CT）</b></td><td>1,181種類・44,830語</td><td>CodeSystem ＋ ValueSet</td></tr>
+        <tr><td><b>3. MedDRA</b></td><td>1種類・90,471語</td><td>CodeSystem</td></tr>
+        <tr><td><b>4. IDF・WHODrug</b><p class="sm">WHODrug は任意。ライセンスの無い施設は IDF で止める</p></td><td>1種類・19,415語</td><td>CodeSystem（IDF）</td></tr>
       </tbody>
     </table>
   </div>
@@ -726,7 +726,7 @@ WHODrug は、日本語の医薬品マスターである IDF で入力し、対�
         <tr><td>DIABP</td><td>Diastolic Blood Pressure</td><td class="in">82</td><td>mmHg</td><td class="in">2026-10-15</td></tr>
       </table>
     </div>
-    <div class="key">規則は1つだけ：group の回答1つが SDTM の1行になる</div>
+    <div class="key">規則は1つだけ：group の回答1つが CDISC SDTM の1行になる</div>
   </div>
   <aside class="notes">
 （7:00）設計の要は、SDTM の1レコードを、テンプレートの group 1つに当てることです。
