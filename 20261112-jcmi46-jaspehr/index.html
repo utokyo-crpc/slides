@@ -1105,28 +1105,28 @@ MedDRA 9万語、WHODrug 3万語という規模でも、autocomplete の応答�
   <div class="body">
     <div class="sn3">
       <div class="col done"><p class="ch">済</p>
-        <div class="it"><b>サンプルをベンダーに提供</b><span>4つのメタデータ</span></div>
-        <div class="it"><b>HAPI FHIR の検証でエラー0</b><span>サンプル一式</span></div>
-        <div class="it"><b>テンプレートの形を合意</b><span>SDTM の1レコード＝group 1つ</span></div>
+        <div class="it"><b>初期サンプルをベンダーに提供</b><span>4つのメタデータ</span></div>
+        <div class="it"><b>HAPI FHIR の検証でエラー0</b><span>初期サンプル一式</span></div>
       </div>
       <div class="ar">➜</div>
       <div class="col wip"><p class="ch">作業中</p>
-        <div class="it"><b>仕様の案を連絡会議へ</b><span>VS・AE・LB・CM の FHIR サンプル（11/30）</span></div>
+        <div class="it"><b>最終サンプルおよび仕様案を連絡会議へ</b><span>VS・AE・LB・CM（11/30）</span></div>
         <div class="it"><b>CDISC 本部で正式な検討課題に</b><span>用語の変わらない識別子（PID）</span></div>
       </div>
       <div class="ar">➜</div>
       <div class="col next"><p class="ch">今後</p>
+        <div class="it"><b>仕様の最終確定</b></div>
         <div class="it"><b>ベンダーの実装</b></div>
         <div class="it"><b>辞書のライセンスの整理</b><span>MedDRA・WHODrug など</span></div>
       </div>
     </div>
   </div>
   <aside class="notes">
-（14:20）現在地です。4つのメタデータのサンプルはベンダーに提供し、作り直したサンプル一式は、HAPI FHIR の検証でエラーがありませんでした。SDTM の1レコードをテンプレートの group 1つにする形も、合意しました。
+（14:20）現在地です。4つのメタデータの初期サンプルはベンダーに提供し、初期サンプル一式は、HAPI FHIR の検証でエラーがありませんでした。
 
-いま進めているのは2つです。VS・AE・LB・CM の FHIR のサンプルと仕様の案を作り、11月30日の連絡会議に諮ります。また、CDISC 本部では、用語に変わらない識別子、PID を付けることが正式な検討課題になり、協議を続けています。
+いま進めているのは2つです。VS・AE・LB・CM の最終サンプルと仕様の案を作り、11月30日の連絡会議に諮ります。また、CDISC 本部では、用語に変わらない識別子、PID を付けることが正式な検討課題になり、協議を続けています。
 
-今後は、ベンダーによる実装と、MedDRA や WHODrug などの辞書のライセンスの整理です。
+今後は、仕様の最終確定、ベンダーによる実装、そしてMedDRA や WHODrug などの辞書のライセンスの整理です。
   </aside>
   <div class="bar"></div><div class="strip"></div>
   <div class="credit">齋藤 俊樹　｜　東京大学病院 臨床研究推進センター　｜　第46回医療情報学連合大会 2026-11-15</div>
@@ -1145,7 +1145,7 @@ MedDRA 9万語、WHODrug 3万語という規模でも、autocomplete の応答�
     <div class="ack"><b>謝辞</b>本研究は日本医療研究開発機構（AMED）医薬品等規制調和・評価研究事業「市販後安全対策のためのFHIR・CDISC・SS-MIX2連携による標準化RWD基盤構築と実装研究」（課題番号 26mk0121327h0002）の支援を受けて実施した。JASPEHR 基盤の提供にあたり、東京大学大学院医学系研究科 医療AI・デジタルツイン開発学 美代賢吾特任教授に感謝する。</div>
   </div>
   <aside class="notes">
-（15:30）まとめます。JASPEHR のテンプレートに、4つのメタデータを組み込みました。SDTM の1レコードを group 1つにし、ドメインと変数を extension に持たせる、という1つの規則で、入力した時点で SDTM になり、同じテンプレートから OMOP も出せます。
+（15:25）まとめます。JASPEHR のテンプレートに、4つのメタデータを組み込みました。SDTM の1レコードを group 1つにし、ドメインと変数を extension に持たせる、という1つの規則で、入力した時点で SDTM になり、同じテンプレートから OMOP も出せます。
 
 標準化の判断を、収集した後から、テンプレートを作る時へ移すことで、日常診療のデータを、後からのマッピング無しに国際標準のエビデンスや、医療 AI の教師データにつなげたいと考えています。
 
