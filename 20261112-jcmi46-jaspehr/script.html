@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>読み原稿 | 第46回医療情報学連合大会 2026-11-15</title>
+<!-- speaker_script.py が読み原稿の md から組む、読み原稿と残り時間のタイマーの画面（iPad 向け）。読み原稿 | 第46回医療情報学連合大会 2026-11-15・[{"n": 1, "title": "表紙", "start": 0, "text": "東京大学病院 臨床研究推進センターの齋藤です。JASPEHR の診療記録テンプレートに CDISC の標準を組み込み、カルテに入力した時点で国際標準のデータになる仕組みについて報告します。"}, {"n": 2, "title": "COI開示", "start": 20, "text": "開示すべき COI はありません。"}, {"n": 3, "title": "背景", "start": 30, "text": "私はこれまで、CDISC に準拠した臨床研究のシステム Ptosh を作り、運用してきました。2025年3月の時点で194試験を支援し、医師主導治験では5品目の薬事承認につながっています。\n\nただ、EDC は、カルテとは別に入力するものです。日常診療で生まれたデータを、そのまま標準の形で集めることはできません。カルテは施設やベンダーごとに形式が違い、研究に使うには、二重に入力するか、集めた後で変換するしかありませんでした。"}, {"n": 4, "title": "課題", "start": 85, "text": "標準化の判断を、いつ、何回するのか、という問題です。\n\n収集した後でマッピングする場合、試験ごとに、数千の項目と数十万件のレコードについて、どの値をどこへ写すかを判断することになります。判断の数は数十億件の規模になり得ます。\n\n一方、テンプレートを作る時点で標準化すれば、判断はテンプレートの項目1つにつき1回、数千件の規模で済みます。入力した時点で標準になっていれば、後段のマッピングそのものが要らなくなります。\n\n実際、ある白血病の臨床試験の帳票では、入力欄が1,335に対して、テンプレートが決める固定値が4,494ありました。SDTM の値の多くは、入力ではなくテンプレートで決まります。"}, {"n": 5, "title": "目的", "start": 160, "text": "そこで、前の演者の先生方が紹介されたベンダー非依存の記録テンプレート JASPEHR に、CDISC のメタデータをあらかじめ組み込みました。\n\n医師がテンプレートに入力すると、回答が QuestionnaireResponse として保存されます。その回答には、どの標準の、どの変数・用語かという情報が付いているので、SDTM への変換は機械的な写しだけになります。\n\nこの仕様を作り、検証環境での試験実装で、実現できることを確かめました。組み込んだ標準のサンプルは、参加する電子カルテベンダーに提供しています。"}, {"n": 6, "title": "4層のメタデータ", "start": 225, "text": "組み込んだのは4つの層です。\n\n1つ目は SDTM の変数で、SDTMIG 3.4 の1,523変数です。テンプレートの項目がどの変数を埋めるかを表します。2つ目は CDISC の統制用語、CT で、1,181のコードリスト、約4万5千語の選択肢です。コードリストごとに1つの CodeSystem にしました。3つ目は有害事象の MedDRA で、下層語が約9万件。4つ目は薬剤で、日本の医薬品マスタの IDF に、WHODrug のコードを併せて持たせています。\n\nいずれも FHIR の CodeSystem と ValueSet として持ち、テンプレートから参照します。なお、jaspehr.example で始まる識別子は仮のもので、CDISC の承認を得たものではありません。"}, {"n": 7, "title": "設計1", "start": 310, "text": "設計の要は、SDTM の1レコードを、テンプレートの group 1つに当てることです。\n\n収縮期血圧の例です。入力するのは測定日と結果の2項目だけです。検査の短縮名、検査名、単位は、画面に出ない固定値の項目として、同じ group の中に持たせます。\n\nこうすると、group の回答1つが、そのまま SDTM の1行になります。身長、収縮期血圧、拡張期血圧の3つの group から、右の3行ができます。規則はこの1つだけで、ドメインごとの変換規則も、後からのマッピングも要りません。\n\nなぜ CDISC の Biomedical Concept や CDASH ではなく、SDTM のレコードを単位にするのか。Biomedical Concept は、検査ではレコードに、有害事象では変数に対応するなど、SDTM との対応がドメインによって違います。CDASH を単位にすると、試験ごとに SDTM へのマッピングが残ります。SDTM のレコードを単位にすれば、どのドメインでも同じ1つの規則で済みます。Ptosh では2011年からこの形で、約50試験を運用してきました。\n\nこの形は、11月11日に PRiME-R の岡田先生と議論し、合意したものです。"}, {"n": 8, "title": "設計2", "start": 440, "text": "有害事象の「重篤」の項目を例に、JSON を見ます。SDTM の変数は extension で持たせます。文字列ではなく Coding で、system・version・code を書くので、SDTMIG 3.4 の AESER だということが、回答と一緒に残ります。\n\nitem.code には、概念の C コードや LOINC など、臨床的な意味だけを書き、変換には使いません。選択肢は CT の ValueSet を、版をつけて参照します。linkId は連番にして、意味を持たせません。"}, {"n": 9, "title": "固定値と AE", "start": 500, "text": "固定値の項目は、非表示にして、選択肢を1つだけ持たせ、初めから選んだ状態にします。値は CDISC の Dataset Specialization のとおりです。これで回答には SYSBP や mmHg が必ず入ります。\n\n有害事象も同じ形で、1件が group 1つ、AE の1行です。有害事象名は MedDRA の下層語を autocomplete で選び、基本語は用語サーバーで引きます。\n\nなお CT の code には提出値を使い、NCIt の C コードは CodeSystem の property に残しています。"}, {"n": 10, "title": "PoC の環境", "start": 565, "text": "検証環境です。すべてノートパソコンの Docker の中で動かしています。NLM Form Builder でテンプレートを作って表示し、HAPI FHIR の R4 サーバーに、テンプレート、回答、4層の用語を置きました。変換は group の回答1つを1行にするだけで、SDTM は Dataset-JSON で出します。\n\n下が入力の画面です。身長、収縮期血圧、拡張期血圧の、測定日と結果だけを入力しています。"}, {"n": 11, "title": "PoC の結果", "start": 615, "text": "変換の結果です。網掛けの3行が、今入力した値で、ほかの行は前に入力しておいたものです。枠で囲んだ検査の短縮名、検査名、単位の列は、入力していない固定値の項目から入っています。入力から SDTM のデータセットまでを、一続きで確かめることができました。"}, {"n": 12, "title": "OMOP", "start": 645, "text": "同じテンプレートから、OMOP も出せます。OMOP の置き場所も同じ形の extension に持たせ、concept_id は、group に付けた LOINC と、CT の単位から、ConceptMap で引いています。研究のために SDTM、疫学のために OMOP と、目的ごとに別々に集め直す必要がなくなります。\n\n下は有害事象で、AE の基本語とそのコードは、MedDRA の下層語から用語サーバーで引いた値です。"}, {"n": 13, "title": "薬剤", "start": 700, "text": "薬剤です。WHODrug には日本語版がありません。そこで、日本の医薬品マスタである IDF を日本語で検索して入力します。\n\nIDF の CodeSystem には、各コードに、UMC の WHODrug CRT Japan による WHODrug の Drug Code を property として持たせています。SDTM の CM を書き出すときに、ここから Drug Code を引きます。抄録では回答に両方を持つと書きましたが、施設が持つのは IDF のコードだけにし、WHODrug への変換はライセンスを持つ側が必要な時点で行う形に整理しました。"}, {"n": 14, "title": "識別子", "start": 765, "text": "もう1つの課題が、用語の識別子です。FHIR では、用語を system の URL で見分けます。ところが CDISC の CT と SDTM の変数には、まだ公式の URL がありません。\n\nそこで、今年5月から CDISC 本部と協議しています。9月に要件を文書で提出し、その際、C コードの層には NCIt の URI が既にあり、無いのは提出値の層の識別子だと整理し直しました。CDISC は、自らが統治する名前空間を作る意図を示しています。今は識別子の形を詰めているところで、SDTMIG の変数の識別子も依頼しました。\n\nそれまでは暫定の URL で実装し、版は URL に入れず version 要素に持たせます。公式の識別子ができたら付け替えます。"}, {"n": 15, "title": "現在地と今後", "start": 845, "text": "現在地です。4層のサンプルはベンダーに提供し、11月5日に作り直したサンプル一式は、HAPI FHIR の検証でエラーがありませんでした。テンプレートの形は11月11日に合意しました。\n\n次は、VS・AE・LB・CM の FHIR のサンプルと仕様の案を作り、11月30日の連絡会議に諮ります。実装ガイドには、autocomplete を任意の機能として加え、表現は各社に任せる方向です。ベンダーの実装は、まだ見積もりの段階で、各社の対応は様々です。\n\nまた、テンプレートそのものを共有していきたいと考えています。Ptosh が Bridgehead で公開しているレコード単位のテンプレートを JASPEHR の形にし、アカデミアで保守する場を作りたいと考えています。"}, {"n": 16, "title": "限界", "start": 930, "text": "限界です。仕様の拡張がまだ確定しておらず、実運用には至っていません。WHODrug のように、ライセンスの制約がある用語には個別の対応が要ります。ベンダーの実装の時期は、各社の判断によります。\n\nまた、CDISC の Dataset Specialization がすべての項目を覆っているわけではなく、派生変数は後段の導出に残ります。PoC は、薬剤がこれからで、OMOP も VS だけです。"}, {"n": 17, "title": "まとめ", "start": 980, "text": "まとめます。JASPEHR のテンプレートに、CDISC の4層のメタデータを組み込みました。SDTM の1レコードを group 1つにし、変数を extension に持たせる、という1つの規則で、入力した時点で SDTM になり、同じテンプレートから OMOP も出せます。\n\n標準化の判断を、収集した後から、テンプレートを作る時へ移すことで、日常診療のデータを、後からのマッピング無しに国際標準のエビデンスにつなげたいと考えています。\n\n本研究は AMED の支援を受けて実施しました。JASPEHR の基盤を提供いただいた美代先生に感謝します。ご清聴ありがとうございました。"}]・1080 を差し替える -->
+<style>
+:root { --bg:#111; --panel:#1a1c20; --fg:#eee; --dim:#9aa0a6; --line:#2c2f34;
+  --ok:#7fd67f; --warn:#f2c14e; --bad:#ff6b6b; --accent:#4a90d9; }
+* { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html, body { margin:0; height:100%; overflow:hidden; background:var(--bg); color:var(--fg);
+  font-family:-apple-system, "Hiragino Sans", sans-serif; }
+/* 原稿の欄が画面の残りをすべて使う。横置きでは時計・題・ボタンを左の列に縦に並べ、右は原稿だけにする */
+body { display:grid; height:100vh; height:100dvh; gap:10px 16px;
+  padding:max(8px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+  grid-template-columns:1fr; grid-template-rows:auto 1fr auto; grid-template-areas:"side" "body" "nav"; }
+#side { grid-area:side; display:flex; flex-direction:column; gap:8px; }
+#body { grid-area:body; overflow-y:auto; -webkit-overflow-scrolling:touch; min-height:0; }
+nav { grid-area:nav; display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+@media (orientation: landscape) {
+  body { grid-template-columns:210px 1fr; grid-template-rows:1fr auto; grid-template-areas:"side body" "nav body"; }
+}
+/* 全画面のとき、ブラウザが左上に出す「✕」を避ける */
+body.fs #side { padding-top:52px; }
+
+/* 時計 */
+.clock { background:var(--panel); border-radius:12px; padding:10px 12px 12px; }
+#remain { font-size:54px; font-weight:700; font-variant-numeric:tabular-nums; line-height:1; letter-spacing:-1px; }
+#remain.warn { color:var(--warn); } #remain.bad { color:var(--bad); }
+.bar { height:6px; background:#2c2f34; border-radius:3px; margin:10px 0 8px; overflow:hidden; }
+#barfill { height:100%; width:0; background:var(--accent); }
+#barfill.warn { background:var(--warn); } #barfill.bad { background:var(--bad); }
+.kv { display:flex; justify-content:space-between; align-items:baseline; font-size:18px; color:var(--dim); line-height:1.6; font-variant-numeric:tabular-nums; }
+.kv b { color:var(--fg); font-weight:600; }
+#pace { display:inline-block; margin-top:6px; font-size:17px; font-weight:700; padding:3px 10px; border-radius:999px; background:#26292e; color:var(--dim); }
+#pace:empty { display:none; }
+#pace.ahead { color:#0d1f0d; background:var(--ok); } #pace.behind { color:#2a0b0b; background:var(--bad); }
+
+/* スライド */
+.slide { padding:2px 2px 0; }
+#count { font-size:16px; color:var(--dim); font-variant-numeric:tabular-nums; }
+#ttl { font-size:21px; font-weight:700; line-height:1.35; margin-top:2px; }
+
+/* 原稿 */
+#body p { margin:0 0 .4em; line-height:1.5; }
+#body p:last-child { margin-bottom:0; }
+
+/* ボタン */
+nav button { font-size:18px; height:48px; border-radius:10px; border:1px solid #3a3d42; background:#24272c; color:var(--fg); }
+nav button:active { filter:brightness(1.3); }
+#full { grid-column:1 / span 2; height:40px; font-size:16px; color:var(--dim); }
+nav .big { height:72px; font-size:26px; font-weight:700; background:#1d3557; border-color:#2f5d8a; }
+#start.run { background:#3a2a10; border-color:#7a5a20; }
+@media (orientation: portrait) { nav { grid-template-columns:repeat(5, 1fr); } #full { grid-column:auto; height:48px; } nav .big { height:48px; } }
+</style>
+</head>
+<body>
+<div id="side">
+  <div class="clock">
+    <div id="remain">20:00</div>
+    <div class="bar"><div id="barfill"></div></div>
+    <div class="kv"><span>経過</span><span><b id="elapsed">0:00</b> / <span id="total"></span></span></div>
+    <div class="kv"><span>目安</span><b id="target"></b></div>
+    <span id="pace"></span>
+  </div>
+  <div class="slide">
+    <div id="count"></div>
+    <div id="ttl"></div>
+  </div>
+</div>
+<main id="body"></main>
+<nav>
+  <button id="start">開始</button>
+  <button id="reset">リセット</button>
+  <button id="full">全画面</button>
+  <button id="prev" class="big">◀</button>
+  <button id="fwd" class="big">▶</button>
+</nav>
+<script>
+const S = [{"n": 1, "title": "表紙", "start": 0, "text": "東京大学病院 臨床研究推進センターの齋藤です。JASPEHR の診療記録テンプレートに CDISC の標準を組み込み、カルテに入力した時点で国際標準のデータになる仕組みについて報告します。"}, {"n": 2, "title": "COI開示", "start": 20, "text": "開示すべき COI はありません。"}, {"n": 3, "title": "背景", "start": 30, "text": "私はこれまで、CDISC に準拠した臨床研究のシステム Ptosh を作り、運用してきました。2025年3月の時点で194試験を支援し、医師主導治験では5品目の薬事承認につながっています。\n\nただ、EDC は、カルテとは別に入力するものです。日常診療で生まれたデータを、そのまま標準の形で集めることはできません。カルテは施設やベンダーごとに形式が違い、研究に使うには、二重に入力するか、集めた後で変換するしかありませんでした。"}, {"n": 4, "title": "課題", "start": 85, "text": "標準化の判断を、いつ、何回するのか、という問題です。\n\n収集した後でマッピングする場合、試験ごとに、数千の項目と数十万件のレコードについて、どの値をどこへ写すかを判断することになります。判断の数は数十億件の規模になり得ます。\n\n一方、テンプレートを作る時点で標準化すれば、判断はテンプレートの項目1つにつき1回、数千件の規模で済みます。入力した時点で標準になっていれば、後段のマッピングそのものが要らなくなります。\n\n実際、ある白血病の臨床試験の帳票では、入力欄が1,335に対して、テンプレートが決める固定値が4,494ありました。SDTM の値の多くは、入力ではなくテンプレートで決まります。"}, {"n": 5, "title": "目的", "start": 160, "text": "そこで、前の演者の先生方が紹介されたベンダー非依存の記録テンプレート JASPEHR に、CDISC のメタデータをあらかじめ組み込みました。\n\n医師がテンプレートに入力すると、回答が QuestionnaireResponse として保存されます。その回答には、どの標準の、どの変数・用語かという情報が付いているので、SDTM への変換は機械的な写しだけになります。\n\nこの仕様を作り、検証環境での試験実装で、実現できることを確かめました。組み込んだ標準のサンプルは、参加する電子カルテベンダーに提供しています。"}, {"n": 6, "title": "4層のメタデータ", "start": 225, "text": "組み込んだのは4つの層です。\n\n1つ目は SDTM の変数で、SDTMIG 3.4 の1,523変数です。テンプレートの項目がどの変数を埋めるかを表します。2つ目は CDISC の統制用語、CT で、1,181のコードリスト、約4万5千語の選択肢です。コードリストごとに1つの CodeSystem にしました。3つ目は有害事象の MedDRA で、下層語が約9万件。4つ目は薬剤で、日本の医薬品マスタの IDF に、WHODrug のコードを併せて持たせています。\n\nいずれも FHIR の CodeSystem と ValueSet として持ち、テンプレートから参照します。なお、jaspehr.example で始まる識別子は仮のもので、CDISC の承認を得たものではありません。"}, {"n": 7, "title": "設計1", "start": 310, "text": "設計の要は、SDTM の1レコードを、テンプレートの group 1つに当てることです。\n\n収縮期血圧の例です。入力するのは測定日と結果の2項目だけです。検査の短縮名、検査名、単位は、画面に出ない固定値の項目として、同じ group の中に持たせます。\n\nこうすると、group の回答1つが、そのまま SDTM の1行になります。身長、収縮期血圧、拡張期血圧の3つの group から、右の3行ができます。規則はこの1つだけで、ドメインごとの変換規則も、後からのマッピングも要りません。\n\nなぜ CDISC の Biomedical Concept や CDASH ではなく、SDTM のレコードを単位にするのか。Biomedical Concept は、検査ではレコードに、有害事象では変数に対応するなど、SDTM との対応がドメインによって違います。CDASH を単位にすると、試験ごとに SDTM へのマッピングが残ります。SDTM のレコードを単位にすれば、どのドメインでも同じ1つの規則で済みます。Ptosh では2011年からこの形で、約50試験を運用してきました。\n\nこの形は、11月11日に PRiME-R の岡田先生と議論し、合意したものです。"}, {"n": 8, "title": "設計2", "start": 440, "text": "有害事象の「重篤」の項目を例に、JSON を見ます。SDTM の変数は extension で持たせます。文字列ではなく Coding で、system・version・code を書くので、SDTMIG 3.4 の AESER だということが、回答と一緒に残ります。\n\nitem.code には、概念の C コードや LOINC など、臨床的な意味だけを書き、変換には使いません。選択肢は CT の ValueSet を、版をつけて参照します。linkId は連番にして、意味を持たせません。"}, {"n": 9, "title": "固定値と AE", "start": 500, "text": "固定値の項目は、非表示にして、選択肢を1つだけ持たせ、初めから選んだ状態にします。値は CDISC の Dataset Specialization のとおりです。これで回答には SYSBP や mmHg が必ず入ります。\n\n有害事象も同じ形で、1件が group 1つ、AE の1行です。有害事象名は MedDRA の下層語を autocomplete で選び、基本語は用語サーバーで引きます。\n\nなお CT の code には提出値を使い、NCIt の C コードは CodeSystem の property に残しています。"}, {"n": 10, "title": "PoC の環境", "start": 565, "text": "検証環境です。すべてノートパソコンの Docker の中で動かしています。NLM Form Builder でテンプレートを作って表示し、HAPI FHIR の R4 サーバーに、テンプレート、回答、4層の用語を置きました。変換は group の回答1つを1行にするだけで、SDTM は Dataset-JSON で出します。\n\n下が入力の画面です。身長、収縮期血圧、拡張期血圧の、測定日と結果だけを入力しています。"}, {"n": 11, "title": "PoC の結果", "start": 615, "text": "変換の結果です。網掛けの3行が、今入力した値で、ほかの行は前に入力しておいたものです。枠で囲んだ検査の短縮名、検査名、単位の列は、入力していない固定値の項目から入っています。入力から SDTM のデータセットまでを、一続きで確かめることができました。"}, {"n": 12, "title": "OMOP", "start": 645, "text": "同じテンプレートから、OMOP も出せます。OMOP の置き場所も同じ形の extension に持たせ、concept_id は、group に付けた LOINC と、CT の単位から、ConceptMap で引いています。研究のために SDTM、疫学のために OMOP と、目的ごとに別々に集め直す必要がなくなります。\n\n下は有害事象で、AE の基本語とそのコードは、MedDRA の下層語から用語サーバーで引いた値です。"}, {"n": 13, "title": "薬剤", "start": 700, "text": "薬剤です。WHODrug には日本語版がありません。そこで、日本の医薬品マスタである IDF を日本語で検索して入力します。\n\nIDF の CodeSystem には、各コードに、UMC の WHODrug CRT Japan による WHODrug の Drug Code を property として持たせています。SDTM の CM を書き出すときに、ここから Drug Code を引きます。抄録では回答に両方を持つと書きましたが、施設が持つのは IDF のコードだけにし、WHODrug への変換はライセンスを持つ側が必要な時点で行う形に整理しました。"}, {"n": 14, "title": "識別子", "start": 765, "text": "もう1つの課題が、用語の識別子です。FHIR では、用語を system の URL で見分けます。ところが CDISC の CT と SDTM の変数には、まだ公式の URL がありません。\n\nそこで、今年5月から CDISC 本部と協議しています。9月に要件を文書で提出し、その際、C コードの層には NCIt の URI が既にあり、無いのは提出値の層の識別子だと整理し直しました。CDISC は、自らが統治する名前空間を作る意図を示しています。今は識別子の形を詰めているところで、SDTMIG の変数の識別子も依頼しました。\n\nそれまでは暫定の URL で実装し、版は URL に入れず version 要素に持たせます。公式の識別子ができたら付け替えます。"}, {"n": 15, "title": "現在地と今後", "start": 845, "text": "現在地です。4層のサンプルはベンダーに提供し、11月5日に作り直したサンプル一式は、HAPI FHIR の検証でエラーがありませんでした。テンプレートの形は11月11日に合意しました。\n\n次は、VS・AE・LB・CM の FHIR のサンプルと仕様の案を作り、11月30日の連絡会議に諮ります。実装ガイドには、autocomplete を任意の機能として加え、表現は各社に任せる方向です。ベンダーの実装は、まだ見積もりの段階で、各社の対応は様々です。\n\nまた、テンプレートそのものを共有していきたいと考えています。Ptosh が Bridgehead で公開しているレコード単位のテンプレートを JASPEHR の形にし、アカデミアで保守する場を作りたいと考えています。"}, {"n": 16, "title": "限界", "start": 930, "text": "限界です。仕様の拡張がまだ確定しておらず、実運用には至っていません。WHODrug のように、ライセンスの制約がある用語には個別の対応が要ります。ベンダーの実装の時期は、各社の判断によります。\n\nまた、CDISC の Dataset Specialization がすべての項目を覆っているわけではなく、派生変数は後段の導出に残ります。PoC は、薬剤がこれからで、OMOP も VS だけです。"}, {"n": 17, "title": "まとめ", "start": 980, "text": "まとめます。JASPEHR のテンプレートに、CDISC の4層のメタデータを組み込みました。SDTM の1レコードを group 1つにし、変数を extension に持たせる、という1つの規則で、入力した時点で SDTM になり、同じテンプレートから OMOP も出せます。\n\n標準化の判断を、収集した後から、テンプレートを作る時へ移すことで、日常診療のデータを、後からのマッピング無しに国際標準のエビデンスにつなげたいと考えています。\n\n本研究は AMED の支援を受けて実施しました。JASPEHR の基盤を提供いただいた美代先生に感謝します。ご清聴ありがとうございました。"}];          // [{n, title, start(秒), text}]
+const TOTAL = 1080;     // 秒
+const $ = id => document.getElementById(id);
+const store = {
+  get(k, d) { try { const v = localStorage.getItem('script:' + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem('script:' + k, JSON.stringify(v)); } catch (e) {} }
+};
+let i = store.get('i', 0), t0 = store.get('t0', null), paused = store.get('paused', 0);
+// 原稿が欄に収まるまで、上限 FS_MAX から文字を自動で小さくする
+const FS_MAX = 44, FS_MIN = 15;
+const fmt = s => { const a = Math.abs(Math.round(s)); return (s < 0 ? '−' : '') + Math.floor(a / 60) + ':' + String(a % 60).padStart(2, '0'); };
+const elapsed = () => t0 === null ? paused : paused + (Date.now() - t0) / 1000;
+$('total').textContent = fmt(TOTAL);
+
+function fit() {
+  const b = $('body');
+  let fs = FS_MAX;
+  b.style.fontSize = fs + 'px';
+  while (fs > FS_MIN && b.scrollHeight > b.clientHeight + 1) { fs -= 1; b.style.fontSize = fs + 'px'; }
+}
+function show() {
+  i = Math.max(0, Math.min(S.length - 1, i)); store.set('i', i);
+  const s = S[i];
+  $('count').textContent = s.n + ' / ' + S.length;
+  $('ttl').textContent = s.title;
+  $('body').innerHTML = '';
+  s.text.split(/\n\s*\n/).forEach(p => { const e = document.createElement('p'); e.textContent = p.trim(); $('body').append(e); });
+  $('body').scrollTop = 0;
+  $('target').textContent = fmt(s.start);
+  fit(); tick();
+}
+function tick() {
+  const e = elapsed(), r = TOTAL - e, s = S[i], nx = S[i + 1];
+  const level = r < 60 ? 'bad' : r < 180 ? 'warn' : '';
+  $('remain').textContent = fmt(r);
+  $('remain').className = level;
+  $('barfill').className = level;
+  $('barfill').style.width = Math.min(100, e / TOTAL * 100) + '%';
+  $('elapsed').textContent = fmt(e);
+  // 遅れ：次のスライドの開始の目安を過ぎてもまだこのスライドにいる／早い：このスライドの目安より前に来た
+  const pace = $('pace');
+  if (t0 === null && paused === 0) { pace.textContent = ''; pace.className = ''; }
+  else if (nx && e > nx.start) { pace.textContent = fmt(e - nx.start) + ' 遅れ'; pace.className = 'behind'; }
+  else if (e < s.start) { pace.textContent = fmt(s.start - e) + ' 早い'; pace.className = 'ahead'; }
+  else { pace.textContent = '予定どおり'; pace.className = 'ahead'; }
+  $('start').textContent = t0 === null ? (paused ? '再開' : '開始') : '一時停止';
+  $('start').className = t0 === null ? '' : 'run';
+}
+
+$('prev').onclick = () => { i--; show(); };
+$('fwd').onclick = () => { i++; show(); };
+$('start').onclick = () => {
+  if (t0 === null) { t0 = Date.now(); } else { paused = elapsed(); t0 = null; }
+  store.set('t0', t0); store.set('paused', paused); tick(); wake();
+};
+$('reset').onclick = () => {
+  if (!confirm('タイマーを0に戻し、1枚目に戻しますか？')) return;
+  t0 = null; paused = 0; i = 0; store.set('t0', t0); store.set('paused', 0); show();
+};
+// 全画面：使えるブラウザ（iPad の Safari・Chrome は要素の全画面に対応する版がある）だけで効く
+$('full').onclick = () => {
+  const d = document.documentElement, on = document.fullscreenElement || document.webkitFullscreenElement;
+  try {
+    if (on) (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+    else if (d.requestFullscreen) d.requestFullscreen();
+    else if (d.webkitRequestFullscreen) d.webkitRequestFullscreen();
+    else alert('このブラウザは全画面に対応していません。Safari の共有メニューから「ホーム画面に追加」して開いてください。');
+  } catch (e) {}
+};
+function onFs() {
+  const on = !!(document.fullscreenElement || document.webkitFullscreenElement);
+  document.body.classList.toggle('fs', on);
+  $('full').textContent = on ? '全画面を終える' : '全画面';
+  fit();
+}
+addEventListener('resize', fit);
+document.addEventListener('fullscreenchange', onFs);
+document.addEventListener('webkitfullscreenchange', onFs);
+
+// 画面が消えないようにする（Safari 16.4 以降）
+let lock = null;
+async function wake() { try { if ('wakeLock' in navigator && !lock) { lock = await navigator.wakeLock.request('screen'); lock.addEventListener('release', () => lock = null); } } catch (e) {} }
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') wake(); });
+
+show(); wake();
+setInterval(tick, 500);
+</script>
+</body>
+</html>
