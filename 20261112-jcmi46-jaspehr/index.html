@@ -610,14 +610,14 @@ FHIR は、診療情報をやり取りするための標準で、JSON などの�
 
 <section data-unit="aim" data-screen-label="05 aim">
   <div class="hd"><h2 class="slide-title">目的：入力した時点で SDTM になる</h2><div class="rule"></div>
-    <p class="sub">ベンダー非依存の記録テンプレート JASPEHR に、CDISC のメタデータをあらかじめ組み込む</p></div>
+    <p class="sub">ベンダー非依存の記録テンプレート JASPEHR に、世界標準のメタデータをあらかじめ組み込む</p></div>
   <div class="body">
     <div class="flow">
       <div class="fbox"><p class="lab">医師がカルテに入力</p><p class="txt">JASPEHR のテンプレート<br>（FHIR Questionnaire）</p></div>
       <div class="arr">➜</div>
       <div class="fbox"><p class="lab">回答が保存される</p><p class="txt">QuestionnaireResponse<br>標準の変数・用語の情報つき</p></div>
       <div class="arr">➜</div>
-      <div class="fbox dark"><p class="lab">SDTM のデータセット</p><p class="txt">変換は機械的な写しだけ<br>試験ごとのマッピングは無い</p></div>
+      <div class="fbox dark"><p class="lab">世界標準のデータセット</p><p class="txt">変換は機械的な写しだけ<br>試験ごとのマッピングは無い</p></div>
     </div>
     <div class="bl">
       <div class="i1">仕様を策定し、検証環境での試験実装（PoC）で実現可能性を確かめた</div>
@@ -625,7 +625,7 @@ FHIR は、診療情報をやり取りするための標準で、JSON などの�
     </div>
   </div>
   <aside class="notes">
-（3:00）そこで、前の演者の先生方が紹介されたベンダー非依存の記録テンプレート JASPEHR に、CDISC のメタデータをあらかじめ組み込みました。
+（3:00）そこで、前の演者の先生方が紹介されたベンダー非依存の記録テンプレート JASPEHR に、世界標準のメタデータをあらかじめ組み込みました。
 
 医師がテンプレートに入力すると、回答が QuestionnaireResponse として保存されます。その回答には、どの標準の、どの変数・用語かという情報が付いているので、SDTM への変換は機械的な写しだけになります。
 
