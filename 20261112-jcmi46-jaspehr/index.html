@@ -708,7 +708,7 @@ section[data-unit="status-next"] .body { justify-content: center; }
   <div class="body">
     <table class="t std3">
       <colgroup><col style="width:300px"><col><col><col></colgroup>
-      <thead><tr><th></th><th>CDISC（SDTM・ADaM）</th><th>OMOP CDM</th><th>HL7 FHIR</th></tr></thead>
+      <thead><tr><th></th><th>CDISC</th><th>OMOP CDM</th><th>HL7 FHIR</th></tr></thead>
       <tbody>
         <tr><td class="rh">主な用途</td><td>治験・臨床試験の承認申請<br><span class="sm">観察研究・RWD にも広がる</span></td><td>観察研究・RWD の解析</td><td>診療情報のやり取り</td></tr>
         <tr><td class="rh">当局の要求</td><td><b>FDA・PMDA が申請で要求</b></td><td>なし</td><td>なし</td></tr>
@@ -820,7 +820,7 @@ FHIR は、診療情報をやり取りするための標準で、JSON などの�
       <colgroup><col style="width:150px"><col style="width:900px"><col></colgroup>
       <thead><tr><th></th><th>メタデータ</th><th>規模</th></tr></thead>
       <tbody>
-        <tr class="lv1"><td class="lvl">変数</td><td><b>1. SDTM のドメイン・変数名</b></td><td>63ドメイン・1,523変数</td></tr>
+        <tr class="lv1"><td class="lvl">変数</td><td><b>1. CDISC（SDTM）のドメイン・変数名</b></td><td>63ドメイン・1,523変数</td></tr>
         <tr class="lv2"><td class="lvl" rowspan="3">用語</td><td><b>2. Controlled Terminology（CT）</b><p class="ex">CDISC が定める選択肢の値（検査名・単位など）</p></td><td>1,181種類・44,830語</td></tr>
         <tr><td><b>3. MedDRA</b><p class="ex">病名・症状・副作用の、国際的な医学用語集</p></td><td>1種類・90,471語</td></tr>
         <tr><td><b>4. IDF・WHODrug</b><p class="ex">薬の名前の辞書（IDF は日本、WHODrug は世界）</p></td><td>1種類・19,415語</td></tr>
@@ -830,7 +830,7 @@ FHIR は、診療情報をやり取りするための標準で、JSON などの�
   <aside class="notes">
 （5:30）組み込んだメタデータは4つです。1つ目と、2つ目から4つ目とでは、役割の段が違います。
 
-1つ目は SDTM のドメインと変数名で、group がどのドメインか、項目が何の変数かを表し、group と各項目の extension に持たせます。2つ目から4つ目は、答えに使う用語の辞書です。2つ目は CT、3つ目は MedDRA、4つ目は IDF 経由の WHODrug です。
+1つ目は CDISC（SDTM）のドメインと変数名で、group がどのドメインか、項目が何の変数かを表し、group と各項目の extension に持たせます。2つ目から4つ目は、答えに使う用語の辞書です。2つ目は CT、3つ目は MedDRA、4つ目は IDF 経由の WHODrug です。
 
 WHODrug は、日本語の医薬品マスターである IDF で入力し、対応表で WHODrug に変わります。
   </aside>
@@ -929,7 +929,7 @@ WHODrug は、日本語の医薬品マスターである IDF で入力し、対�
     <p class="note">.../ ＝ https://jaspehr.example/fhir/（暫定）。... は省略</p>
   </div>
   <aside class="notes">
-（8:25）次に帳票です。group 1つが SDTM の1レコードで、ここでは収縮期血圧です。
+（8:30）次に帳票です。group 1つが SDTM の1レコードで、ここでは収縮期血圧です。
 
 医師が入力するのは、測定日と値の2つだけです。右側が医師に見えている画面です。
 
@@ -960,7 +960,7 @@ WHODrug は、日本語の医薬品マスターである IDF で入力し、対�
     </div>
   </div>
   <aside class="notes">
-（9:25）これが保存された回答です。どの帳票のどの版に答えたか、どの患者か、そして linkId ごとの答えがあります。
+（9:30）これが保存された回答です。どの帳票のどの版に答えたか、どの患者か、そして linkId ごとの答えがあります。
 
 入力した測定日と値の2つに加えて、画面に出ない固定値の3項目も、Submission Valueのまま回答の中に入って返ってきます。linkId から帳票の項目へ、項目からその SDTM 変数へとたどれます。
   </aside>
@@ -991,7 +991,7 @@ WHODrug は、日本語の医薬品マスターである IDF で入力し、対�
     <p class="note">列の並びとラベルも SDTMIG のコードシステムから取る。上の行は、例示のリソースに汎用のスクリプトを走らせて出したもの</p>
   </div>
   <aside class="notes">
-（10:05）この4つのリソースから、SDTM の1レコードが機械的に組み上がります。
+（10:10）この4つのリソースから、SDTM の1レコードが機械的に組み上がります。
 
 手順は4つです。まず、group が1レコードになり、ドメインは group の extension から VS と取ります。次に、変数名は各項目の extension から取ります。値は回答から取り、コードは ValueSet から CodeSystem をたどって確かめ、そのまま使います。最後に、帳票からは分からない STUDYID、USUBJID、VSSEQ だけを変換の側で足します。
 
@@ -1219,7 +1219,7 @@ MedDRA 9万語、WHODrug 3万語という規模でも、autocomplete の応答�
     <div class="ack"><b>謝辞</b>本研究は日本医療研究開発機構（AMED）医薬品等規制調和・評価研究事業「市販後安全対策のためのFHIR・CDISC・SS-MIX2連携による標準化RWD基盤構築と実装研究」（課題番号 26mk0121327h0002）の支援を受けて実施しました。JASPEHR 基盤の提供にあたり、東京大学大学院医学系研究科 医療AI・デジタルツイン開発学 美代賢吾特任教授に感謝します。</div>
   </div>
   <aside class="notes">
-（16:10）Take home message です。
+（16:15）Take home message です。
 
 1つ目、データの標準化は、入力した後ではなく、入力する前にすると楽です。後から直すのに比べて、手間はレコードの数の分だけ減ります。
 
