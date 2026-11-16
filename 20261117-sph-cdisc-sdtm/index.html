@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>データ形式の標準化の実例 - SDTM（2026-11-17）</title>
+<style>
+html,body{margin:0;height:100%;background:#111;overflow:hidden}
+section.sl{position:fixed;inset:0;display:none;align-items:center;justify-content:center}
+section.sl.on{display:flex}
+section.sl img{max-width:100vw;max-height:100vh;width:auto;height:auto;display:block}
+#nav{position:fixed;left:12px;top:8px;color:#888;font:14px sans-serif;z-index:9}
+#pdf{position:fixed;right:12px;top:8px;color:#888;font:14px sans-serif;z-index:9}
+@media print{#nav,#pdf{display:none}}
+</style></head><body>
+<section class="sl"><img src="img/s-001.jpg" alt="スライド 1" loading="eager"></section>
+<section class="sl"><img src="img/s-002.jpg" alt="スライド 2" loading="eager"></section>
+<section class="sl"><img src="img/s-003.jpg" alt="スライド 3" loading="eager"></section>
+<section class="sl"><img src="img/s-004.jpg" alt="スライド 4" loading="lazy"></section>
+<section class="sl"><img src="img/s-005.jpg" alt="スライド 5" loading="lazy"></section>
+<section class="sl"><img src="img/s-006.jpg" alt="スライド 6" loading="lazy"></section>
+<section class="sl"><img src="img/s-007.jpg" alt="スライド 7" loading="lazy"></section>
+<section class="sl"><img src="img/s-008.jpg" alt="スライド 8" loading="lazy"></section>
+<section class="sl"><img src="img/s-009.jpg" alt="スライド 9" loading="lazy"></section>
+<section class="sl"><img src="img/s-010.jpg" alt="スライド 10" loading="lazy"></section>
+<section class="sl"><img src="img/s-011.jpg" alt="スライド 11" loading="lazy"></section>
+<section class="sl"><img src="img/s-012.jpg" alt="スライド 12" loading="lazy"></section>
+<section class="sl"><img src="img/s-013.jpg" alt="スライド 13" loading="lazy"></section>
+<section class="sl"><img src="img/s-014.jpg" alt="スライド 14" loading="lazy"></section>
+<section class="sl"><img src="img/s-015.jpg" alt="スライド 15" loading="lazy"></section>
+<section class="sl"><img src="img/s-016.jpg" alt="スライド 16" loading="lazy"></section>
+<section class="sl"><img src="img/s-017.jpg" alt="スライド 17" loading="lazy"></section>
+<section class="sl"><img src="img/s-018.jpg" alt="スライド 18" loading="lazy"></section>
+<section class="sl"><img src="img/s-019.jpg" alt="スライド 19" loading="lazy"></section>
+<section class="sl"><img src="img/s-020.jpg" alt="スライド 20" loading="lazy"></section>
+<section class="sl"><img src="img/s-021.jpg" alt="スライド 21" loading="lazy"></section>
+<section class="sl"><img src="img/s-022.jpg" alt="スライド 22" loading="lazy"></section>
+<section class="sl"><img src="img/s-023.jpg" alt="スライド 23" loading="lazy"></section>
+<section class="sl"><img src="img/s-024.jpg" alt="スライド 24" loading="lazy"></section>
+<section class="sl"><img src="img/s-025.jpg" alt="スライド 25" loading="lazy"></section>
+<section class="sl"><img src="img/s-026.jpg" alt="スライド 26" loading="lazy"></section>
+<section class="sl"><img src="img/s-027.jpg" alt="スライド 27" loading="lazy"></section>
+<section class="sl"><img src="img/s-028.jpg" alt="スライド 28" loading="lazy"></section>
+<section class="sl"><img src="img/s-029.jpg" alt="スライド 29" loading="lazy"></section>
+<section class="sl"><img src="img/s-030.jpg" alt="スライド 30" loading="lazy"></section>
+<section class="sl"><img src="img/s-031.jpg" alt="スライド 31" loading="lazy"></section>
+<section class="sl"><img src="img/s-032.jpg" alt="スライド 32" loading="lazy"></section>
+<section class="sl"><img src="img/s-033.jpg" alt="スライド 33" loading="lazy"></section>
+<section class="sl"><img src="img/s-034.jpg" alt="スライド 34" loading="lazy"></section>
+<section class="sl"><img src="img/s-035.jpg" alt="スライド 35" loading="lazy"></section>
+<section class="sl"><img src="img/s-036.jpg" alt="スライド 36" loading="lazy"></section>
+<section class="sl"><img src="img/s-037.jpg" alt="スライド 37" loading="lazy"></section>
+<section class="sl"><img src="img/s-038.jpg" alt="スライド 38" loading="lazy"></section>
+<section class="sl"><img src="img/s-039.jpg" alt="スライド 39" loading="lazy"></section>
+<section class="sl"><img src="img/s-040.jpg" alt="スライド 40" loading="lazy"></section>
+<section class="sl"><img src="img/s-041.jpg" alt="スライド 41" loading="lazy"></section>
+<section class="sl"><img src="img/s-042.jpg" alt="スライド 42" loading="lazy"></section>
+<section class="sl"><img src="img/s-043.jpg" alt="スライド 43" loading="lazy"></section>
+<section class="sl"><img src="img/s-044.jpg" alt="スライド 44" loading="lazy"></section>
+<section class="sl"><img src="img/s-045.jpg" alt="スライド 45" loading="lazy"></section>
+<section class="sl"><img src="img/s-046.jpg" alt="スライド 46" loading="lazy"></section>
+<section class="sl"><img src="img/s-047.jpg" alt="スライド 47" loading="lazy"></section>
+<section class="sl"><img src="img/s-048.jpg" alt="スライド 48" loading="lazy"></section>
+<section class="sl"><img src="img/s-049.jpg" alt="スライド 49" loading="lazy"></section>
+<section class="sl"><img src="img/s-050.jpg" alt="スライド 50" loading="lazy"></section>
+<section class="sl"><img src="img/s-051.jpg" alt="スライド 51" loading="lazy"></section>
+<section class="sl"><img src="img/s-052.jpg" alt="スライド 52" loading="lazy"></section>
+<section class="sl"><img src="img/s-053.jpg" alt="スライド 53" loading="lazy"></section>
+<section class="sl"><img src="img/s-054.jpg" alt="スライド 54" loading="lazy"></section>
+<section class="sl"><img src="img/s-055.jpg" alt="スライド 55" loading="lazy"></section>
+<section class="sl"><img src="img/s-056.jpg" alt="スライド 56" loading="lazy"></section>
+<section class="sl"><img src="img/s-057.jpg" alt="スライド 57" loading="lazy"></section>
+<section class="sl"><img src="img/s-058.jpg" alt="スライド 58" loading="lazy"></section>
+<section class="sl"><img src="img/s-059.jpg" alt="スライド 59" loading="lazy"></section>
+<section class="sl"><img src="img/s-060.jpg" alt="スライド 60" loading="lazy"></section>
+<section class="sl"><img src="img/s-061.jpg" alt="スライド 61" loading="lazy"></section>
+<section class="sl"><img src="img/s-062.jpg" alt="スライド 62" loading="lazy"></section>
+<section class="sl"><img src="img/s-063.jpg" alt="スライド 63" loading="lazy"></section>
+<section class="sl"><img src="img/s-064.jpg" alt="スライド 64" loading="lazy"></section>
+<section class="sl"><img src="img/s-065.jpg" alt="スライド 65" loading="lazy"></section>
+<section class="sl"><img src="img/s-066.jpg" alt="スライド 66" loading="lazy"></section>
+<section class="sl"><img src="img/s-067.jpg" alt="スライド 67" loading="lazy"></section>
+<section class="sl"><img src="img/s-068.jpg" alt="スライド 68" loading="lazy"></section>
+<section class="sl"><img src="img/s-069.jpg" alt="スライド 69" loading="lazy"></section>
+<section class="sl"><img src="img/s-070.jpg" alt="スライド 70" loading="lazy"></section>
+<section class="sl"><img src="img/s-071.jpg" alt="スライド 71" loading="lazy"></section>
+<section class="sl"><img src="img/s-072.jpg" alt="スライド 72" loading="lazy"></section>
+<section class="sl"><img src="img/s-073.jpg" alt="スライド 73" loading="lazy"></section>
+<section class="sl"><img src="img/s-074.jpg" alt="スライド 74" loading="lazy"></section>
+<section class="sl"><img src="img/s-075.jpg" alt="スライド 75" loading="lazy"></section>
+<section class="sl"><img src="img/s-076.jpg" alt="スライド 76" loading="lazy"></section>
+<section class="sl"><img src="img/s-077.jpg" alt="スライド 77" loading="lazy"></section>
+<section class="sl"><img src="img/s-078.jpg" alt="スライド 78" loading="lazy"></section>
+<section class="sl"><img src="img/s-079.jpg" alt="スライド 79" loading="lazy"></section>
+<section class="sl"><img src="img/s-080.jpg" alt="スライド 80" loading="lazy"></section>
+<section class="sl"><img src="img/s-081.jpg" alt="スライド 81" loading="lazy"></section>
+<section class="sl"><img src="img/s-082.jpg" alt="スライド 82" loading="lazy"></section>
+<section class="sl"><img src="img/s-083.jpg" alt="スライド 83" loading="lazy"></section>
+<section class="sl"><img src="img/s-084.jpg" alt="スライド 84" loading="lazy"></section>
+<section class="sl"><img src="img/s-085.jpg" alt="スライド 85" loading="lazy"></section>
+<section class="sl"><img src="img/s-086.jpg" alt="スライド 86" loading="lazy"></section>
+<section class="sl"><img src="img/s-087.jpg" alt="スライド 87" loading="lazy"></section>
+<section class="sl"><img src="img/s-088.jpg" alt="スライド 88" loading="lazy"></section>
+<section class="sl"><img src="img/s-089.jpg" alt="スライド 89" loading="lazy"></section>
+<section class="sl"><img src="img/s-090.jpg" alt="スライド 90" loading="lazy"></section>
+<section class="sl"><img src="img/s-091.jpg" alt="スライド 91" loading="lazy"></section>
+<section class="sl"><img src="img/s-092.jpg" alt="スライド 92" loading="lazy"></section>
+<section class="sl"><img src="img/s-093.jpg" alt="スライド 93" loading="lazy"></section>
+<section class="sl"><img src="img/s-094.jpg" alt="スライド 94" loading="lazy"></section>
+<section class="sl"><img src="img/s-095.jpg" alt="スライド 95" loading="lazy"></section>
+<section class="sl"><img src="img/s-096.jpg" alt="スライド 96" loading="lazy"></section>
+<section class="sl"><img src="img/s-097.jpg" alt="スライド 97" loading="lazy"></section>
+<section class="sl"><img src="img/s-098.jpg" alt="スライド 98" loading="lazy"></section>
+<section class="sl"><img src="img/s-099.jpg" alt="スライド 99" loading="lazy"></section>
+<section class="sl"><img src="img/s-100.jpg" alt="スライド 100" loading="lazy"></section>
+<section class="sl"><img src="img/s-101.jpg" alt="スライド 101" loading="lazy"></section>
+<section class="sl"><img src="img/s-102.jpg" alt="スライド 102" loading="lazy"></section>
+<section class="sl"><img src="img/s-103.jpg" alt="スライド 103" loading="lazy"></section>
+<section class="sl"><img src="img/s-104.jpg" alt="スライド 104" loading="lazy"></section>
+<section class="sl"><img src="img/s-105.jpg" alt="スライド 105" loading="lazy"></section>
+<section class="sl"><img src="img/s-106.jpg" alt="スライド 106" loading="lazy"></section>
+<section class="sl"><img src="img/s-107.jpg" alt="スライド 107" loading="lazy"></section>
+<section class="sl"><img src="img/s-108.jpg" alt="スライド 108" loading="lazy"></section>
+<section class="sl"><img src="img/s-109.jpg" alt="スライド 109" loading="lazy"></section>
+<section class="sl"><img src="img/s-110.jpg" alt="スライド 110" loading="lazy"></section>
+<section class="sl"><img src="img/s-111.jpg" alt="スライド 111" loading="lazy"></section>
+<section class="sl"><img src="img/s-112.jpg" alt="スライド 112" loading="lazy"></section>
+<section class="sl"><img src="img/s-113.jpg" alt="スライド 113" loading="lazy"></section>
+<section class="sl"><img src="img/s-114.jpg" alt="スライド 114" loading="lazy"></section>
+<section class="sl"><img src="img/s-115.jpg" alt="スライド 115" loading="lazy"></section>
+<section class="sl"><img src="img/s-116.jpg" alt="スライド 116" loading="lazy"></section>
+<section class="sl"><img src="img/s-117.jpg" alt="スライド 117" loading="lazy"></section>
+<section class="sl"><img src="img/s-118.jpg" alt="スライド 118" loading="lazy"></section>
+<section class="sl"><img src="img/s-119.jpg" alt="スライド 119" loading="lazy"></section>
+<section class="sl"><img src="img/s-120.jpg" alt="スライド 120" loading="lazy"></section>
+<section class="sl"><img src="img/s-121.jpg" alt="スライド 121" loading="lazy"></section>
+<section class="sl"><img src="img/s-122.jpg" alt="スライド 122" loading="lazy"></section>
+<section class="sl"><img src="img/s-123.jpg" alt="スライド 123" loading="lazy"></section>
+<section class="sl"><img src="img/s-124.jpg" alt="スライド 124" loading="lazy"></section>
+<section class="sl"><img src="img/s-125.jpg" alt="スライド 125" loading="lazy"></section>
+<section class="sl"><img src="img/s-126.jpg" alt="スライド 126" loading="lazy"></section>
+<section class="sl"><img src="img/s-127.jpg" alt="スライド 127" loading="lazy"></section>
+<section class="sl"><img src="img/s-128.jpg" alt="スライド 128" loading="lazy"></section>
+<section class="sl"><img src="img/s-129.jpg" alt="スライド 129" loading="lazy"></section>
+<section class="sl"><img src="img/s-130.jpg" alt="スライド 130" loading="lazy"></section>
+<section class="sl"><img src="img/s-131.jpg" alt="スライド 131" loading="lazy"></section>
+<section class="sl"><img src="img/s-132.jpg" alt="スライド 132" loading="lazy"></section>
+<section class="sl"><img src="img/s-133.jpg" alt="スライド 133" loading="lazy"></section>
+<section class="sl"><img src="img/s-134.jpg" alt="スライド 134" loading="lazy"></section>
+<section class="sl"><img src="img/s-135.jpg" alt="スライド 135" loading="lazy"></section>
+<section class="sl"><img src="img/s-136.jpg" alt="スライド 136" loading="lazy"></section>
+<section class="sl"><img src="img/s-137.jpg" alt="スライド 137" loading="lazy"></section>
+<section class="sl"><img src="img/s-138.jpg" alt="スライド 138" loading="lazy"></section>
+<section class="sl"><img src="img/s-139.jpg" alt="スライド 139" loading="lazy"></section>
+<section class="sl"><img src="img/s-140.jpg" alt="スライド 140" loading="lazy"></section>
+<section class="sl"><img src="img/s-141.jpg" alt="スライド 141" loading="lazy"></section>
+<section class="sl"><img src="img/s-142.jpg" alt="スライド 142" loading="lazy"></section>
+<section class="sl"><img src="img/s-143.jpg" alt="スライド 143" loading="lazy"></section>
+<section class="sl"><img src="img/s-144.jpg" alt="スライド 144" loading="lazy"></section>
+<section class="sl"><img src="img/s-145.jpg" alt="スライド 145" loading="lazy"></section>
+<section class="sl"><img src="img/s-146.jpg" alt="スライド 146" loading="lazy"></section>
+<section class="sl"><img src="img/s-147.jpg" alt="スライド 147" loading="lazy"></section>
+<section class="sl"><img src="img/s-148.jpg" alt="スライド 148" loading="lazy"></section>
+<section class="sl"><img src="img/s-149.jpg" alt="スライド 149" loading="lazy"></section>
+<section class="sl"><img src="img/s-150.jpg" alt="スライド 150" loading="lazy"></section>
+<section class="sl"><img src="img/s-151.jpg" alt="スライド 151" loading="lazy"></section>
+<section class="sl"><img src="img/s-152.jpg" alt="スライド 152" loading="lazy"></section>
+<section class="sl"><img src="img/s-153.jpg" alt="スライド 153" loading="lazy"></section>
+<section class="sl"><img src="img/s-154.jpg" alt="スライド 154" loading="lazy"></section>
+<section class="sl"><img src="img/s-155.jpg" alt="スライド 155" loading="lazy"></section>
+<section class="sl"><img src="img/s-156.jpg" alt="スライド 156" loading="lazy"></section>
+<section class="sl"><img src="img/s-157.jpg" alt="スライド 157" loading="lazy"></section>
+<section class="sl"><img src="img/s-158.jpg" alt="スライド 158" loading="lazy"></section>
+<section class="sl"><img src="img/s-159.jpg" alt="スライド 159" loading="lazy"></section>
+<section class="sl"><img src="img/s-160.jpg" alt="スライド 160" loading="lazy"></section>
+<section class="sl"><img src="img/s-161.jpg" alt="スライド 161" loading="lazy"></section>
+<section class="sl"><img src="img/s-162.jpg" alt="スライド 162" loading="lazy"></section>
+<section class="sl"><img src="img/s-163.jpg" alt="スライド 163" loading="lazy"></section>
+<section class="sl"><img src="img/s-164.jpg" alt="スライド 164" loading="lazy"></section>
+<section class="sl"><img src="img/s-165.jpg" alt="スライド 165" loading="lazy"></section>
+<section class="sl"><img src="img/s-166.jpg" alt="スライド 166" loading="lazy"></section>
+<section class="sl"><img src="img/s-167.jpg" alt="スライド 167" loading="lazy"></section>
+<section class="sl"><img src="img/s-168.jpg" alt="スライド 168" loading="lazy"></section>
+<section class="sl"><img src="img/s-169.jpg" alt="スライド 169" loading="lazy"></section>
+<section class="sl"><img src="img/s-170.jpg" alt="スライド 170" loading="lazy"></section>
+<section class="sl"><img src="img/s-171.jpg" alt="スライド 171" loading="lazy"></section>
+<section class="sl"><img src="img/s-172.jpg" alt="スライド 172" loading="lazy"></section>
+<div id="nav"></div><a id="pdf" href="deck.pdf">PDF</a>
+<script>
+const S=[...document.querySelectorAll('section.sl')];let i=Math.max(0,Math.min(S.length-1,(parseInt(location.hash.slice(1))||1)-1));
+function show(){S.forEach((s,j)=>s.classList.toggle('on',j===i));document.getElementById('nav').textContent=(i+1)+' / '+S.length;history.replaceState(null,'','#'+(i+1));
+ for(const k of [i+1,i+2]){if(S[k])S[k].querySelector('img').loading='eager'}}
+addEventListener('keydown',e=>{if(['ArrowRight','ArrowDown','PageDown',' ','Enter'].includes(e.key)){i=Math.min(S.length-1,i+1);show()}else if(['ArrowLeft','ArrowUp','PageUp','Backspace'].includes(e.key)){i=Math.max(0,i-1);show()}else if(e.key==='f'){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()}else if(e.key==='Home'){i=0;show()}else if(e.key==='End'){i=S.length-1;show()}});
+addEventListener('click',e=>{if(e.target.closest('a'))return;i=e.clientX>innerWidth/3?Math.min(S.length-1,i+1):Math.max(0,i-1);show()});
+addEventListener('hashchange',()=>{const n=parseInt(location.hash.slice(1));if(n){i=Math.max(0,Math.min(S.length-1,n-1));show()}});
+show();
+</script></body></html>
