@@ -1,0 +1,731 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CRFからSDTMへ</title>
+<style>
+:root {
+  --ink: #212121; --sub: #424242; --mid: #616161;
+  --blue: #3F51B5; --tint: #E8EAF6; --pale: #F3F4FB; --rule: #DDE0EE;
+  --red: #E53935; --bg: #FAFAFA; --hl: #FFF3B0; --hlline: #F9A825;
+  --warnbg: #FDECEA; --warnink: #B71C1C;
+  --fs: 17px;
+}
+html { font-size: var(--fs); }
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic UI", "Meiryo", "Noto Sans JP", sans-serif;
+  line-height: 1.6;
+}
+.bar { height: 4px; background: linear-gradient(to right, #4285F4 0 25%, #34A853 25% 50%, #FBBC04 50% 75%, #EA4335 75% 100%); }
+header { background: #fff; border-bottom: 1px solid var(--rule); padding: 10px 16px; position: sticky; top: 0; z-index: 5; }
+.head-row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px; }
+h1 { font-size: 1.3rem; margin: 0; color: var(--blue); }
+.sub { color: var(--mid); font-size: .85rem; }
+.tools { margin-left: auto; display: flex; gap: 6px; }
+.tools button { font: inherit; font-size: .8rem; padding: 2px 10px; border: 1px solid var(--rule); background: #fff; border-radius: 4px; cursor: pointer; }
+nav { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+nav button {
+  font: inherit; font-size: .92rem; padding: 4px 14px; border-radius: 999px;
+  border: 1px solid var(--blue); background: #fff; color: var(--blue); cursor: pointer;
+}
+nav button[aria-selected="true"] { background: var(--blue); color: #fff; }
+main { padding: 16px; max-width: 1560px; margin: 0 auto; }
+section[data-tab] { display: none; }
+section[data-tab].on { display: block; }
+.lead { margin: 0 0 12px; color: var(--sub); }
+.top { display: grid; grid-template-columns: fit-content(68%) minmax(280px, 1fr); gap: 16px; align-items: start; }
+@media (max-width: 960px) { .top { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 600px) { main { padding: 12px; } .tools { margin-left: 0; } }
+.sdtmcard { margin-top: 16px; }
+.explain-line { font-size: .88rem; background: var(--pale); border-radius: 4px; padding: 4px 10px; margin-bottom: 8px; }
+.explain-line .var { font-family: "SF Mono", Menlo, Consolas, monospace; font-weight: bold; color: var(--blue); margin-right: 10px; }
+.explain-line .lab { color: var(--mid); margin-right: 10px; }
+.card { background: #fff; border: 1px solid var(--rule); border-radius: 8px; padding: 12px 14px; min-width: 0; }
+.card h2 { font-size: 1.02rem; margin: 0 0 8px; display: flex; gap: 8px; align-items: baseline; }
+.tag { font-size: .72rem; font-weight: normal; padding: 0 8px; border-radius: 4px; background: var(--tint); color: var(--blue); }
+.tag.crf { background: #E8F5E9; color: #2E7D32; }
+.crf-form { display: grid; grid-template-columns: auto 1fr; gap: 6px 10px; align-items: center; }
+.crf-form label { color: var(--sub); font-size: .9rem; }
+input, select { font: inherit; font-size: .95rem; padding: 3px 6px; border: 1px solid #B0B0B0; border-radius: 4px; background: #fff; min-width: 0; }
+input:focus, select:focus { outline: 2px solid var(--blue); outline-offset: 0; }
+.crf-grid { border-collapse: collapse; width: 100%; }
+.crf-grid th, .crf-grid td { border: 1px solid var(--rule); padding: 4px 6px; font-size: .88rem; }
+.crf-grid th { background: #F1F8E9; font-weight: normal; color: var(--sub); }
+.crf-grid input { width: 100%; min-width: 4.2em; }
+.crf-grid input[data-date] { min-width: 8.8em; }
+.crf-grid input[list] { min-width: 7.5em; }
+.crf-grid tr > th:first-child { white-space: nowrap; }
+.crf-grid input.n { text-align: right; }
+.hint { font-size: .78rem; color: var(--mid); margin: 6px 0 0; max-width: 42em; }
+.tw { overflow-x: auto; }
+table.sdtm { border-collapse: collapse; font-family: "SF Mono", Menlo, Consolas, monospace; font-size: .8rem; white-space: nowrap; }
+table.sdtm th, table.sdtm td { border: 1px solid var(--rule); padding: 2px 6px; }
+table.sdtm td { white-space: normal; }
+table.sdtm td.nw { white-space: nowrap; }
+table.sdtm th { background: var(--tint); color: var(--blue); cursor: pointer; position: sticky; top: 0; }
+table.sdtm th:hover { text-decoration: underline; }
+table.sdtm td.empty { color: #BDBDBD; }
+.hl, input.hl, select.hl { background: var(--hl) !important; outline: 2px solid var(--hlline); }
+td.warn { background: var(--warnbg); color: var(--warnink); }
+input.bad { border-color: var(--red); background: var(--warnbg); }
+.flash { animation: fl 1.4s ease-out; }
+@keyframes fl { from { background: #FFD54F; } to { background: transparent; } }
+.count { font-size: .85rem; color: var(--mid); font-weight: normal; }
+.points h3 { font-size: .95rem; margin: 0 0 6px; color: var(--blue); }
+.points ol { margin: 0; padding-left: 1.4em; }
+.points li { margin: 2px 0; }
+.points b { color: var(--red); font-weight: bold; }
+.msgs { margin: 8px 0 0; padding: 0; list-style: none; font-size: .85rem; }
+.msgs li { color: var(--warnink); }
+.msgs li::before { content: "⚠ "; }
+.sum { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 16px; }
+.sum .card { text-align: center; }
+.sum .big { font-size: 2.2rem; color: var(--blue); line-height: 1.2; }
+.sum button { font: inherit; font-size: .8rem; margin-top: 6px; padding: 2px 10px; border: 1px solid var(--blue); color: var(--blue); background: #fff; border-radius: 4px; cursor: pointer; }
+.flow { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: center; margin: 8px 0 16px; font-size: .95rem; }
+.flow span { background: #fff; border: 1px solid var(--rule); border-radius: 6px; padding: 6px 12px; }
+.flow i { color: var(--mid); font-style: normal; }
+footer { color: var(--mid); font-size: .78rem; padding: 8px 16px 24px; max-width: 1560px; margin: 0 auto; }
+</style>
+</head>
+<body>
+<div class="bar"></div>
+<header>
+  <div class="head-row">
+    <h1>CRF から SDTM へ</h1>
+    <span class="sub">1人の架空の患者で見る、データの標準化（入力を変えると右の表がその場で変わります）</span>
+    <span class="tools">
+      <button type="button" id="fsDown" title="文字を小さく">A−</button>
+      <button type="button" id="fsUp" title="文字を大きく">A＋</button>
+      <button type="button" id="reset" title="入力を初期値に戻す">初期値に戻す</button>
+    </span>
+  </div>
+  <nav role="tablist">
+    <button role="tab" data-go="dm">① 患者背景 → DM</button>
+    <button role="tab" data-go="vs">② バイタル → VS</button>
+    <button role="tab" data-go="ae">③ 有害事象 → AE</button>
+    <button role="tab" data-go="lb">④ 臨床検査 → LB</button>
+    <button role="tab" data-go="sum">⑤ まとめ</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- ① DM -->
+<section data-tab="dm">
+  <p class="lead">架空の試験 SPH2026（Drug X とプラセボの比較）に参加した1人の患者です。左が施設で記録する画面（CRF）、右が提出用の表（SDTM の DM ドメイン）です。</p>
+  <div class="top">
+    <div class="card">
+      <h2><span class="tag crf">CRF</span>患者背景</h2>
+      <div class="crf-form">
+        <label for="dm-subjid">被験者番号</label><input id="dm-subjid" data-k="dm.subjid">
+        <label for="dm-brth">生年月日</label><input id="dm-brth" data-k="dm.brth" data-date>
+        <label for="dm-sex">性別</label>
+        <select id="dm-sex" data-k="dm.sex"><option>男性</option><option>女性</option><option>不明</option></select>
+        <label for="dm-ic">同意取得日</label><input id="dm-ic" data-k="dm.ic" data-date>
+        <label for="dm-arm">割付群</label>
+        <select id="dm-arm" data-k="dm.arm"><option>実薬群</option><option>プラセボ群</option></select>
+        <label for="dm-rfst">初回投与日</label><input id="dm-rfst" data-k="dm.rfst" data-date>
+        <label for="dm-rfen">最終投与日</label><input id="dm-rfen" data-k="dm.rfen" data-date>
+      </div>
+      <p class="hint">日付は「令和8年4月8日」「2026年4月8日」「2026/4/8」のどれで入れても構いません。生年月日を変えると年齢が、初回投与日を変えると全ドメインの試験日（--DY）が変わります。</p>
+    </div>
+    <div class="card points">
+      <h3>この画面のポイント</h3>
+      <ol>
+        <li>DM は<b>1人＝1行</b>。どの試験でも同じ変数名・同じ順番で並ぶ</li>
+        <li>和暦でも西暦でも、日付は <b>ISO 8601（YYYY-MM-DD）</b>に揃える（BRTHDTC・RFSTDTC など）</li>
+        <li>性別は「女性」ではなく、統制用語の <b>F</b>（M・F・U）</li>
+        <li>USUBJID は「試験-施設-被験者番号」で、<b>試験全体で一意</b>。ほかの全ドメインがこの値でつながる</li>
+        <li>年齢（AGE）は生年月日と基準日から計算する。ここでは初回投与日（RFSTDTC）時点</li>
+      </ol>
+    </div>
+  </div>
+  <div class="card sdtmcard">
+      <h2><span class="tag">SDTM</span>DM（Demographics）<span class="count" id="cnt-dm"></span></h2>
+      <div class="explain-line" data-explain>列名をクリックすると、ここに変数の意味が出ます。</div>
+      <div class="tw" id="tbl-dm"></div>
+      <ul class="msgs" id="msg-dm"></ul>
+    </div>
+</section>
+
+<!-- ② VS -->
+<section data-tab="vs">
+  <p class="lead">CRF は「1回の来院＝1行、検査項目が横に並ぶ」形（横持ち）。SDTM は「1つの検査値＝1行」の形（縦持ち）にします。</p>
+  <div class="top">
+    <div class="card">
+      <h2><span class="tag crf">CRF</span>バイタルサイン</h2>
+      <div class="tw"><table class="crf-grid" id="crf-vs"></table></div>
+      <p class="hint">数値を消すとその行が消え、「測定不能」などの文字を入れると数値の列（VSSTRESN）が空になります。</p>
+    </div>
+    <div class="card points">
+      <h3>この画面のポイント</h3>
+      <ol>
+        <li>CRF の3行（来院）× 5列（項目）が、SDTM では <b>15行</b>になる（横持ち → 縦持ち）</li>
+        <li>検査の名前は、施設の言葉ではなく統制用語の <b>VSTESTCD・VSTEST</b>（SYSBP・Systolic Blood Pressure など）</li>
+        <li><b>ORRES は記録どおりの文字</b>、<b>STRESN は計算に使う数値</b>。「36.50」は STRESC で「36.5」になる</li>
+        <li>単位も統制用語（脈拍は「回/分」ではなく <b>beats/min</b>、体温は <b>C</b>）</li>
+        <li>試験日（VSDY）は初回投与日が <b>1日目</b>。前日は −1 日目で、<b>0日目は無い</b></li>
+      </ol>
+    </div>
+  </div>
+  <div class="card sdtmcard">
+      <h2><span class="tag">SDTM</span>VS（Vital Signs）<span class="count" id="cnt-vs"></span></h2>
+      <div class="explain-line" data-explain>列名をクリックすると、ここに変数の意味が出ます。</div>
+      <div class="tw" id="tbl-vs"></div>
+      <ul class="msgs" id="msg-vs"></ul>
+    </div>
+</section>
+
+<!-- ③ AE -->
+<section data-tab="ae">
+  <p class="lead">施設が書いた言葉（逐語）と、辞書（MedDRA）で引いた用語は別の変数に入れます。日付が一部しか分からないときは、分かるところまでを書きます。</p>
+  <div class="top">
+    <div class="card">
+      <h2><span class="tag crf">CRF</span>有害事象</h2>
+      <div class="tw"><table class="crf-grid" id="crf-ae"></table></div>
+      <datalist id="ae-terms"><option value="頭痛"><option value="悪心"><option value="吐き気"><option value="発疹"><option value="発熱"><option value="肝機能異常"></datalist>
+      <p class="hint">事象名を「めまい」など一覧に無い言葉に変えると、辞書で引けない状態を再現できます。発現日の「2026年5月」は日が分からない例です。</p>
+    </div>
+    <div class="card points">
+      <h3>この画面のポイント</h3>
+      <ol>
+        <li><b>AETERM</b> は報告された言葉、<b>AEDECOD</b> は MedDRA の基本語（PT）、<b>AEBODSYS</b> は器官別大分類（SOC）</li>
+        <li>「発熱」は報告どおり FEVER、辞書では <b>Pyrexia</b>。言葉と辞書の用語は一致しなくてよい</li>
+        <li>提出用のデータは<b>英語</b>で作る。日本語が残ると赤く表示される</li>
+        <li>発現日が「2026年5月」なら AESTDTC は <b>2026-05</b>。日を勝手に補わず、試験日（AESTDY）も計算しない</li>
+        <li>重症度・重篤・転帰は統制用語（MILD・Y/N・RECOVERED/RESOLVED など）</li>
+      </ol>
+    </div>
+  </div>
+  <div class="card sdtmcard">
+      <h2><span class="tag">SDTM</span>AE（Adverse Events）<span class="count" id="cnt-ae"></span></h2>
+      <div class="explain-line" data-explain>列名をクリックすると、ここに変数の意味が出ます。</div>
+      <div class="tw" id="tbl-ae"></div>
+      <ul class="msgs" id="msg-ae"></ul>
+    </div>
+</section>
+
+<!-- ④ LB -->
+<section data-tab="lb">
+  <p class="lead">記録された単位のままの値（ORRES）と、試験で決めた標準の単位に換算した値（STRESN）を並べて持ちます。</p>
+  <div class="top">
+    <div class="card">
+      <h2><span class="tag crf">CRF</span>臨床検査</h2>
+      <div class="tw"><table class="crf-grid" id="crf-lb"></table></div>
+      <p class="hint">基準範囲（デモ用の値）：血糖 70〜109 mg/dL、ALT 10〜40 U/L。この試験では、血糖の標準単位を mmol/L と決めたことにしています。</p>
+    </div>
+    <div class="card points">
+      <h3>この画面のポイント</h3>
+      <ol>
+        <li>血糖は記録どおり <b>mg/dL</b>（LBORRES）と、換算した <b>mmol/L</b>（LBSTRESN）の両方を持つ</li>
+        <li>ALT のように単位が同じなら、ORRES と STRESC は同じ値になる</li>
+        <li>基準範囲と比べた結果（<b>LBNRIND</b>：LOW・NORMAL・HIGH）も1つの変数として持つ</li>
+        <li>4週後の ALT の高値は、③ の有害事象「肝機能異常」と、USUBJID と日付で突き合わせられる</li>
+      </ol>
+    </div>
+  </div>
+  <div class="card sdtmcard">
+      <h2><span class="tag">SDTM</span>LB（Laboratory Test Results）<span class="count" id="cnt-lb"></span></h2>
+      <div class="explain-line" data-explain>列名をクリックすると、ここに変数の意味が出ます。</div>
+      <div class="tw" id="tbl-lb"></div>
+      <ul class="msgs" id="msg-lb"></ul>
+    </div>
+</section>
+
+<!-- ⑤ まとめ -->
+<section data-tab="sum">
+  <div class="flow">
+    <span>CRF（施設ごと・試験ごとの画面）</span><i>→ 変数名・値の書き方・表の形を揃える →</i><span>SDTM（どの試験でも同じ形）</span><i>→</i><span>ADaM（解析用）</span>
+  </div>
+  <div class="sum" id="sum"></div>
+  <div class="card points">
+    <h3>まとめ</h3>
+    <ol>
+      <li>CRF の画面の数と、SDTM の表の数・行の数は一致しない（この例では、バイタルの1画面が VS の15行になる）</li>
+      <li>揃えるのは3つ：<b>変数名</b>（VSTESTCD など）、<b>値の書き方</b>（ISO 8601、統制用語、英語）、<b>表の形</b>（1行に何を置くか）</li>
+      <li>形が決まっているから、誰が作ったデータでも同じプログラム・同じ審査の手順で読める</li>
+      <li>日本の試験で特に引っかかるのは、和暦・日本語の記録・施設ごとの単位と基準範囲</li>
+    </ol>
+  </div>
+</section>
+
+</main>
+
+<footer>
+架空の試験・架空の患者のデータです。説明のため SDTM の変数は一部に絞っています（実際の提出データには、ほかにも必要な変数があります）。MedDRA の用語と基準範囲は例示です。このページは通信をせず、入力はブラウザの中だけで処理します。
+</footer>
+
+<script>
+(() => {
+'use strict';
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const STUDYID = 'SPH2026';
+const SITEID = '01';
+
+// ---- 定義 ----
+const VISITS = [
+  { num: 1, visit: 'SCREENING', ja: 'スクリーニング' },
+  { num: 2, visit: 'DAY 1', ja: '投与開始日' },
+  { num: 3, visit: 'WEEK 4', ja: '4週後' },
+];
+const VS_TESTS = [
+  { cd: 'SYSBP', test: 'Systolic Blood Pressure', ja: '収縮期血圧', u: 'mmHg', uja: 'mmHg' },
+  { cd: 'DIABP', test: 'Diastolic Blood Pressure', ja: '拡張期血圧', u: 'mmHg', uja: 'mmHg' },
+  { cd: 'PULSE', test: 'Pulse Rate', ja: '脈拍数', u: 'beats/min', uja: '回/分' },
+  { cd: 'TEMP', test: 'Temperature', ja: '体温', u: 'C', uja: '℃' },
+  { cd: 'WEIGHT', test: 'Weight', ja: '体重', u: 'kg', uja: 'kg' },
+];
+const LB_VISITS = [
+  { num: 1, visit: 'SCREENING', ja: 'スクリーニング' },
+  { num: 3, visit: 'WEEK 4', ja: '4週後' },
+];
+const LB_TESTS = [
+  { cd: 'GLUC', test: 'Glucose', ja: '血糖', u: 'mg/dL', su: 'mmol/L', conv: v => Math.round(v / 18.016 * 100) / 100, lo: 70, hi: 109 },
+  { cd: 'ALT', test: 'Alanine Aminotransferase', ja: 'ALT', u: 'U/L', su: 'U/L', conv: v => v, lo: 10, hi: 40 },
+];
+const MEDDRA = {
+  '頭痛': ['HEADACHE', 'Headache', 'Nervous system disorders'],
+  '悪心': ['NAUSEA', 'Nausea', 'Gastrointestinal disorders'],
+  '吐き気': ['NAUSEA', 'Nausea', 'Gastrointestinal disorders'],
+  '発疹': ['RASH', 'Rash', 'Skin and subcutaneous tissue disorders'],
+  '発熱': ['FEVER', 'Pyrexia', 'General disorders and administration site conditions'],
+  '肝機能異常': ['LIVER FUNCTION ABNORMAL', 'Hepatic function abnormal', 'Hepatobiliary disorders'],
+};
+const SEV = { '軽度': 'MILD', '中等度': 'MODERATE', '高度': 'SEVERE' };
+const SER = { 'いいえ': 'N', 'はい': 'Y' };
+const REL = { '関連なし': 'NOT RELATED', '関連あり': 'RELATED' };
+const OUT = { '回復': 'RECOVERED/RESOLVED', '軽快': 'RECOVERING/RESOLVING', '未回復': 'NOT RECOVERED/NOT RESOLVED', '後遺症あり': 'RECOVERED/RESOLVED WITH SEQUELAE' };
+const AE_ROWS = 3;
+
+const DEFAULTS = {
+  'dm.subjid': '001', 'dm.brth': '昭和35年4月15日', 'dm.sex': '女性', 'dm.ic': '2026/03/25',
+  'dm.arm': '実薬群', 'dm.rfst': '2026/04/08', 'dm.rfen': '2026/05/06',
+  'vs.d1': '2026/04/01', 'vs.d2': '2026/04/08', 'vs.d3': '2026/05/06',
+  'vs.1.SYSBP': '128', 'vs.1.DIABP': '82', 'vs.1.PULSE': '72', 'vs.1.TEMP': '36.5', 'vs.1.WEIGHT': '58.2',
+  'vs.2.SYSBP': '124', 'vs.2.DIABP': '80', 'vs.2.PULSE': '70', 'vs.2.TEMP': '36.50', 'vs.2.WEIGHT': '58.0',
+  'vs.3.SYSBP': '132', 'vs.3.DIABP': '84', 'vs.3.PULSE': '76', 'vs.3.TEMP': '36.8', 'vs.3.WEIGHT': '57.6',
+  'ae.1.term': '頭痛', 'ae.1.st': '2026年4月10日', 'ae.1.en': '2026年4月12日', 'ae.1.sev': '軽度', 'ae.1.ser': 'いいえ', 'ae.1.rel': '関連なし', 'ae.1.out': '回復',
+  'ae.2.term': '発熱', 'ae.2.st': '2026年4月20日', 'ae.2.en': '', 'ae.2.sev': '中等度', 'ae.2.ser': 'いいえ', 'ae.2.rel': '関連あり', 'ae.2.out': '未回復',
+  'ae.3.term': '肝機能異常', 'ae.3.st': '2026年5月', 'ae.3.en': '', 'ae.3.sev': '軽度', 'ae.3.ser': 'いいえ', 'ae.3.rel': '関連あり', 'ae.3.out': '未回復',
+  'lb.d1': '2026/04/01', 'lb.d3': '2026/05/06',
+  'lb.1.GLUC': '102', 'lb.1.ALT': '22', 'lb.3.GLUC': '118', 'lb.3.ALT': '58',
+};
+
+// ---- CRF の表を組み立てる ----
+function el(tag, attrs = {}, text) {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+  if (text !== undefined) e.textContent = text;
+  return e;
+}
+function buildCrfVS() {
+  const t = $('#crf-vs');
+  const hr = el('tr');
+  hr.append(el('th', {}, '来院'), el('th', {}, '来院日'));
+  VS_TESTS.forEach(x => hr.append(el('th', {}, `${x.ja}（${x.uja}）`)));
+  t.append(hr);
+  VISITS.forEach(v => {
+    const tr = el('tr');
+    tr.append(el('th', {}, v.ja));
+    const td = el('td'); td.append(el('input', { 'data-k': `vs.d${v.num}`, 'data-date': '', 'aria-label': `${v.ja}の来院日`, size: 10 })); tr.append(td);
+    VS_TESTS.forEach(x => {
+      const c = el('td'); c.append(el('input', { 'data-k': `vs.${v.num}.${x.cd}`, class: 'n', 'aria-label': `${v.ja}の${x.ja}`, size: 5 })); tr.append(c);
+    });
+    t.append(tr);
+  });
+}
+function buildCrfAE() {
+  const t = $('#crf-ae');
+  const hr = el('tr');
+  ['', '事象名', '発現日', '回復日', '程度', '重篤', '因果関係', '転帰'].forEach(h => hr.append(el('th', {}, h)));
+  t.append(hr);
+  const sel = (k, opts, label) => { const s = el('select', { 'data-k': k, 'aria-label': label }); Object.keys(opts).forEach(o => s.append(el('option', {}, o))); return s; };
+  for (let i = 1; i <= AE_ROWS; i++) {
+    const tr = el('tr');
+    tr.append(el('th', {}, String(i)));
+    const add = node => { const td = el('td'); td.append(node); tr.append(td); };
+    add(el('input', { 'data-k': `ae.${i}.term`, list: 'ae-terms', 'aria-label': `事象${i}の事象名`, size: 9 }));
+    add(el('input', { 'data-k': `ae.${i}.st`, 'data-date': '', 'aria-label': `事象${i}の発現日`, size: 11 }));
+    add(el('input', { 'data-k': `ae.${i}.en`, 'data-date': '', 'aria-label': `事象${i}の回復日`, size: 11 }));
+    add(sel(`ae.${i}.sev`, SEV, `事象${i}の程度`));
+    add(sel(`ae.${i}.ser`, SER, `事象${i}の重篤`));
+    add(sel(`ae.${i}.rel`, REL, `事象${i}の因果関係`));
+    add(sel(`ae.${i}.out`, OUT, `事象${i}の転帰`));
+    t.append(tr);
+  }
+}
+function buildCrfLB() {
+  const t = $('#crf-lb');
+  const hr = el('tr');
+  hr.append(el('th', {}, '時点'), el('th', {}, '採取日'));
+  LB_TESTS.forEach(x => hr.append(el('th', {}, `${x.ja}（${x.u}）`)));
+  t.append(hr);
+  LB_VISITS.forEach(v => {
+    const tr = el('tr');
+    tr.append(el('th', {}, v.ja));
+    const td = el('td'); td.append(el('input', { 'data-k': `lb.d${v.num}`, 'data-date': '', 'aria-label': `${v.ja}の採取日`, size: 10 })); tr.append(td);
+    LB_TESTS.forEach(x => {
+      const c = el('td'); c.append(el('input', { 'data-k': `lb.${v.num}.${x.cd}`, class: 'n', 'aria-label': `${v.ja}の${x.ja}`, size: 5 })); tr.append(c);
+    });
+    t.append(tr);
+  });
+}
+
+// ---- 値の変換 ----
+const field = k => $(`[data-k="${k}"]:is(input,select)`);
+const val = k => { const f = field(k); return f ? f.value : ''; };
+
+function parseDate(raw) {
+  let s = (raw || '').normalize('NFKC').replace(/\s+/g, '');
+  s = s.replace(/\(?日不明\)?/, '').replace(/\(?不明\)?/, '');
+  if (!s) return { iso: '', empty: true };
+  let y, m, d, mm;
+  if ((mm = s.match(/^(令和|平成|昭和)(元|\d{1,2})年(?:(\d{1,2})月(?:(\d{1,2})日)?)?$/))) {
+    const base = { '令和': 2018, '平成': 1988, '昭和': 1925 }[mm[1]];
+    y = base + (mm[2] === '元' ? 1 : Number(mm[2])); m = mm[3]; d = mm[4];
+  } else if ((mm = s.match(/^(\d{4})年(?:(\d{1,2})月(?:(\d{1,2})日)?)?$/))) {
+    y = Number(mm[1]); m = mm[2]; d = mm[3];
+  } else if ((mm = s.match(/^(\d{4})[-/.](\d{1,2})(?:[-/.](\d{1,2}))?$/))) {
+    y = Number(mm[1]); m = mm[2]; d = mm[3];
+  } else {
+    return { iso: '', err: `「${raw}」は日付として読めません` };
+  }
+  if (m !== undefined) { m = Number(m); if (m < 1 || m > 12) return { iso: '', err: `「${raw}」の月が正しくありません` }; }
+  if (d !== undefined) {
+    d = Number(d);
+    const dt = new Date(Date.UTC(y, m - 1, d));
+    if (dt.getUTCMonth() !== m - 1 || dt.getUTCDate() !== d) return { iso: '', err: `「${raw}」の日が正しくありません` };
+  }
+  const p = n => String(n).padStart(2, '0');
+  const iso = d !== undefined ? `${y}-${p(m)}-${p(d)}` : (m !== undefined ? `${y}-${p(m)}` : `${y}`);
+  return { iso, partial: d === undefined };
+}
+function utc(iso) { const [y, m, d] = iso.split('-').map(Number); return Date.UTC(y, m - 1, d); }
+function studyDay(iso, ref) {
+  if (!iso || !ref || iso.length < 10 || ref.length < 10) return '';
+  const diff = Math.round((utc(iso) - utc(ref)) / 864e5);
+  return diff >= 0 ? diff + 1 : diff;
+}
+function ageAt(b, r) {
+  if (!b || !r || b.length < 10 || r.length < 10) return '';
+  const [by, bm, bd] = b.split('-').map(Number);
+  const [ry, rm, rd] = r.split('-').map(Number);
+  let a = ry - by;
+  if (rm < bm || (rm === bm && rd < bd)) a--;
+  return a;
+}
+function num(raw) {
+  const s = (raw || '').normalize('NFKC').trim();
+  if (s === '') return { empty: true };
+  if (!/^[-+]?\d+(\.\d+)?$/.test(s)) return { orres: s, n: null };
+  const n = parseFloat(s);
+  return { orres: s, n, c: String(n) };
+}
+const c = (v, k, w) => ({ v: v === undefined || v === null ? '' : String(v), k: k || '', w: w || '' });
+
+// ---- ドメインを組み立てる ----
+function buildDM() {
+  const msgs = [];
+  const sub = val('dm.subjid').normalize('NFKC').trim();
+  const b = parseDate(val('dm.brth')), ic = parseDate(val('dm.ic')), st = parseDate(val('dm.rfst')), en = parseDate(val('dm.rfen'));
+  [b, ic, st, en].forEach(x => x.err && msgs.push(x.err));
+  const sex = { '男性': 'M', '女性': 'F', '不明': 'U' }[val('dm.sex')];
+  const arm = { '実薬群': ['DRUGX', 'Drug X 10 mg'], 'プラセボ群': ['PBO', 'Placebo'] }[val('dm.arm')];
+  const usub = `${STUDYID}-${SITEID}-${sub}`;
+  const age = ageAt(b.iso, st.iso);
+  const cols = ['STUDYID', 'DOMAIN', 'USUBJID', 'SUBJID', 'RFSTDTC', 'RFENDTC', 'RFICDTC', 'SITEID', 'BRTHDTC', 'AGE', 'AGEU', 'SEX', 'ARMCD', 'ARM', 'COUNTRY'];
+  const row = [
+    c(STUDYID), c('DM'), c(usub, 'dm.subjid'), c(sub, 'dm.subjid'),
+    c(st.iso, 'dm.rfst', st.err), c(en.iso, 'dm.rfen', en.err), c(ic.iso, 'dm.ic', ic.err), c(SITEID),
+    c(b.iso, 'dm.brth', b.err), c(age, 'dm.brth dm.rfst'), c(age === '' ? '' : 'YEARS', 'dm.brth'), c(sex, 'dm.sex'),
+    c(arm[0], 'dm.arm'), c(arm[1], 'dm.arm'), c('JPN'),
+  ];
+  return { cols, rows: [row], msgs, usub, rfst: st.iso };
+}
+function buildVS(dm) {
+  const msgs = [];
+  const cols = ['STUDYID', 'DOMAIN', 'USUBJID', 'VSSEQ', 'VSTESTCD', 'VSTEST', 'VSORRES', 'VSORRESU', 'VSSTRESC', 'VSSTRESN', 'VSSTRESU', 'VISITNUM', 'VISIT', 'VSDTC', 'VSDY'];
+  const rows = [];
+  let seq = 0;
+  VISITS.forEach(v => {
+    const dk = `vs.d${v.num}`;
+    const dt = parseDate(val(dk));
+    if (dt.err) msgs.push(dt.err);
+    VS_TESTS.forEach(x => {
+      const k = `vs.${v.num}.${x.cd}`;
+      const r = num(val(k));
+      if (r.empty) return;
+      seq++;
+      const w = r.n === null ? '数値ではないので VSSTRESN は空。提出用には英語にする（未実施なら VSSTAT=NOT DONE と理由を別の変数に書く）' : '';
+      if (w) msgs.push(`${v.ja}の${x.ja}「${r.orres}」：${w}`);
+      rows.push([
+        c(STUDYID), c('VS'), c(dm.usub, 'dm.subjid'), c(seq), c(x.cd, k), c(x.test, k),
+        c(r.orres, k, w), c(x.u, k), c(r.n === null ? '' : r.c, k), c(r.n === null ? '' : r.n, k), c(r.n === null ? '' : x.u, k),
+        c(v.num, dk), c(v.visit, dk), c(dt.iso, dk, dt.err), c(studyDay(dt.iso, dm.rfst), `${dk} dm.rfst`),
+      ]);
+    });
+  });
+  return { cols, rows, msgs };
+}
+function buildAE(dm) {
+  const msgs = [];
+  const cols = ['STUDYID', 'DOMAIN', 'USUBJID', 'AESEQ', 'AETERM', 'AEDECOD', 'AEBODSYS', 'AESEV', 'AESER', 'AEREL', 'AEOUT', 'AESTDTC', 'AEENDTC', 'AESTDY', 'AEENDY'];
+  const rows = [];
+  let seq = 0;
+  for (let i = 1; i <= AE_ROWS; i++) {
+    const tk = `ae.${i}.term`;
+    const term = val(tk).normalize('NFKC').trim();
+    if (!term) continue;
+    seq++;
+    const hit = MEDDRA[term];
+    const st = parseDate(val(`ae.${i}.st`)), en = parseDate(val(`ae.${i}.en`));
+    [st, en].forEach(x => x.err && msgs.push(`事象${i}：${x.err}`));
+    const outJa = val(`ae.${i}.out`);
+    let wEn = en.err || '';
+    if (outJa === '未回復' && en.iso) wEn = '転帰が未回復なのに回復日がある';
+    if ((outJa === '回復' || outJa === '後遺症あり') && en.empty) wEn = '転帰が回復なのに回復日が無い';
+    if (wEn && !en.err) msgs.push(`事象${i}：${wEn}（データの確認が要る）`);
+    const wTerm = hit ? '' : '辞書で引けない言葉。日本語のままでは提出できないので、英訳とコーディングを確認する';
+    if (wTerm) msgs.push(`事象${i}「${term}」：${wTerm}`);
+    if (st.partial && !st.empty) msgs.push(`事象${i}：発現日が「${st.iso}」までしか分からないので、AESTDY は計算しない`);
+    rows.push([
+      c(STUDYID), c('AE'), c(dm.usub, 'dm.subjid'), c(seq),
+      c(hit ? hit[0] : term, tk, wTerm), c(hit ? hit[1] : '', tk, hit ? '' : '未コーディング'), c(hit ? hit[2] : '', tk, hit ? '' : '未コーディング'),
+      c(SEV[val(`ae.${i}.sev`)], `ae.${i}.sev`), c(SER[val(`ae.${i}.ser`)], `ae.${i}.ser`),
+      c(REL[val(`ae.${i}.rel`)], `ae.${i}.rel`), c(OUT[outJa], `ae.${i}.out`),
+      c(st.iso, `ae.${i}.st`, st.err), c(en.iso, `ae.${i}.en`, wEn),
+      c(studyDay(st.iso, dm.rfst), `ae.${i}.st dm.rfst`), c(studyDay(en.iso, dm.rfst), `ae.${i}.en dm.rfst`),
+    ]);
+  }
+  return { cols, rows, msgs };
+}
+function buildLB(dm) {
+  const msgs = [];
+  const cols = ['STUDYID', 'DOMAIN', 'USUBJID', 'LBSEQ', 'LBTESTCD', 'LBTEST', 'LBCAT', 'LBORRES', 'LBORRESU', 'LBORNRLO', 'LBORNRHI', 'LBSTRESC', 'LBSTRESN', 'LBSTRESU', 'LBNRIND', 'VISITNUM', 'VISIT', 'LBDTC', 'LBDY'];
+  const rows = [];
+  let seq = 0;
+  LB_VISITS.forEach(v => {
+    const dk = `lb.d${v.num}`;
+    const dt = parseDate(val(dk));
+    if (dt.err) msgs.push(dt.err);
+    LB_TESTS.forEach(x => {
+      const k = `lb.${v.num}.${x.cd}`;
+      const r = num(val(k));
+      if (r.empty) return;
+      seq++;
+      let sn = '', sc = '', ind = '';
+      if (r.n !== null) {
+        sn = x.conv(r.n); sc = String(sn);
+        ind = r.n < x.lo ? 'LOW' : (r.n > x.hi ? 'HIGH' : 'NORMAL');
+      } else {
+        msgs.push(`${v.ja}の${x.ja}「${r.orres}」：数値ではないので換算できない`);
+      }
+      rows.push([
+        c(STUDYID), c('LB'), c(dm.usub, 'dm.subjid'), c(seq), c(x.cd, k), c(x.test, k), c('CHEMISTRY'),
+        c(r.orres, k, r.n === null ? '数値ではない' : ''), c(x.u, k), c(x.lo), c(x.hi),
+        c(sc, k), c(sn, k), c(r.n === null ? '' : x.su, k), c(ind, k),
+        c(v.num, dk), c(v.visit, dk), c(dt.iso, dk, dt.err), c(studyDay(dt.iso, dm.rfst), `${dk} dm.rfst`),
+      ]);
+    });
+  });
+  return { cols, rows, msgs };
+}
+
+// ---- 変数の説明 ----
+const EX = {
+  STUDYID: ['Study Identifier', '試験の識別子。どの試験のデータかを示す'],
+  DOMAIN: ['Domain Abbreviation', 'ドメイン（表の種類）を表す2文字。DM・VS・AE・LB など'],
+  USUBJID: ['Unique Subject Identifier', '試験全体で一意の被験者ID。ここでは「試験-施設-被験者番号」。全ドメインをこの値でつなぐ'],
+  SUBJID: ['Subject Identifier for the Study', '施設で付けた被験者番号'],
+  RFSTDTC: ['Subject Reference Start Date/Time', '基準開始日。ここでは初回投与日。試験日（--DY）の起点になる'],
+  RFENDTC: ['Subject Reference End Date/Time', '基準終了日。ここでは最終投与日'],
+  RFICDTC: ['Date/Time of Informed Consent', '同意取得日'],
+  SITEID: ['Study Site Identifier', '施設の番号'],
+  BRTHDTC: ['Date/Time of Birth', '生年月日。和暦で記録されていても ISO 8601 の西暦にする'],
+  AGE: ['Age', '年齢。生年月日と基準日から計算する（ここでは初回投与日時点）'],
+  AGEU: ['Age Units', '年齢の単位。統制用語（YEARS など）'],
+  SEX: ['Sex', '性別。統制用語（M・F・U など）'],
+  ARMCD: ['Planned Arm Code', '割り付けられた群の短いコード'],
+  ARM: ['Description of Planned Arm', '割り付けられた群の名前'],
+  COUNTRY: ['Country', '国。ISO 3166 の3文字コード（日本は JPN）'],
+  SEQ: ['Sequence Number', '被験者ごと・ドメインごとの通し番号。行を一意に指す'],
+  VSTESTCD: ['Vital Signs Test Short Name', '検査の短い名前（8文字以内）。統制用語'],
+  VSTEST: ['Vital Signs Test Name', '検査の名前（40文字以内）。統制用語'],
+  LBTESTCD: ['Lab Test or Examination Short Name', '検査の短い名前（8文字以内）。統制用語'],
+  LBTEST: ['Lab Test or Examination Name', '検査の名前。統制用語'],
+  LBCAT: ['Category for Lab Test', '検査の分類（生化学・血液など）'],
+  ORRES: ['Result or Finding in Original Units', '記録された値そのもの（文字）。単位も記録のまま'],
+  ORRESU: ['Original Units', '記録された値の単位。統制用語'],
+  ORNRLO: ['Reference Range Lower Limit in Orig Unit', '基準範囲の下限（記録の単位）'],
+  ORNRHI: ['Reference Range Upper Limit in Orig Unit', '基準範囲の上限（記録の単位）'],
+  STRESC: ['Character Result/Finding in Std Format', '標準の単位・書き方に揃えた値（文字）'],
+  STRESN: ['Numeric Result/Finding in Standard Units', '標準の単位に揃えた値（数値）。集計・解析にはこれを使う'],
+  STRESU: ['Standard Units', '標準化した値の単位'],
+  NRIND: ['Reference Range Indicator', '基準範囲と比べた結果（LOW・NORMAL・HIGH）'],
+  VISITNUM: ['Visit Number', '来院の番号（並べ替えに使う数値）'],
+  VISIT: ['Visit Name', '来院の名前'],
+  DTC: ['Date/Time', '日付・時刻。ISO 8601 で書き、分からない部分は書かない（例：2026-05）'],
+  DY: ['Study Day', '試験日。基準開始日（RFSTDTC）を1日目とし、その前日は −1 日目。0日目は無い'],
+  AETERM: ['Reported Term for the Adverse Event', '報告された事象名（逐語）。提出用は英語'],
+  AEDECOD: ['Dictionary-Derived Term', 'MedDRA の基本語（PT）。辞書で引いた結果'],
+  AEBODSYS: ['Body System or Organ Class', 'MedDRA の器官別大分類（SOC）'],
+  AESEV: ['Severity/Intensity', '重症度。統制用語（MILD・MODERATE・SEVERE）'],
+  AESER: ['Serious Event', '重篤か。Y／N'],
+  AEREL: ['Causality', '治験薬との因果関係'],
+  AEOUT: ['Outcome of Adverse Event', '転帰。統制用語（RECOVERED/RESOLVED など）'],
+  STDTC: ['Start Date/Time', '開始日。ISO 8601。分からない部分は書かない'],
+  ENDTC: ['End Date/Time', '終了日。ISO 8601。続いているなら空'],
+  STDY: ['Study Day of Start', '開始日の試験日。日付が一部しか分からないときは計算しない'],
+  ENDY: ['Study Day of End', '終了日の試験日'],
+};
+function explainOf(col) {
+  if (EX[col]) return EX[col];
+  const tail = col.slice(2);
+  if (EX[tail]) return EX[tail];
+  for (const k of ['NRIND', 'STDTC', 'ENDTC', 'STDY', 'ENDY', 'DTC', 'DY', 'SEQ']) if (col.endsWith(k) && EX[k]) return EX[k];
+  return ['', ''];
+}
+
+// ---- 描画 ----
+const prev = {};
+const NON_ASCII = /[^\x00-\x7F]/;
+function renderTable(id, t) {
+  const box = $(`#tbl-${id}`);
+  const tbl = el('table', { class: 'sdtm' });
+  const hr = el('tr');
+  t.cols.forEach(col => { const th = el('th', { 'data-col': col, title: 'クリックで説明' }, col); hr.append(th); });
+  const thead = el('thead'); thead.append(hr); tbl.append(thead);
+  const tb = el('tbody');
+  t.rows.forEach((row, ri) => {
+    const tr = el('tr');
+    row.forEach((cell, ci) => {
+      const td = el('td', cell.k ? { 'data-k': cell.k } : {}, cell.v);
+      let w = cell.w;
+      if (!w && NON_ASCII.test(cell.v)) w = '日本語（ASCII 以外の文字）が残っている。提出用には英語にする';
+      if (w) { td.classList.add('warn'); td.title = w; }
+      if (cell.v === '') td.classList.add('empty');
+      if (!/\s/.test(cell.v)) td.classList.add('nw');
+      const key = `${id}|${ri}|${t.cols[ci]}`;
+      if (prev[key] !== undefined && prev[key] !== cell.v) td.classList.add('flash');
+      prev[key] = cell.v;
+      tr.append(td);
+    });
+    tb.append(tr);
+  });
+  tbl.append(tb);
+  box.replaceChildren(tbl);
+  $(`#cnt-${id}`).textContent = `${t.rows.length} 行 × ${t.cols.length} 列`;
+  const ul = $(`#msg-${id}`);
+  ul.replaceChildren(...[...new Set(t.msgs)].map(m => el('li', {}, m)));
+}
+let last = null;
+function update() {
+  const dm = buildDM();
+  const all = { dm, vs: buildVS(dm), ae: buildAE(dm), lb: buildLB(dm) };
+  for (const [id, t] of Object.entries(all)) renderTable(id, t);
+  // 日付の入力欄の検証
+  $$('input[data-date]').forEach(i => { const r = parseDate(i.value); i.classList.toggle('bad', !!r.err); i.title = r.err || (r.iso ? `→ ${r.iso}` : ''); });
+  renderSum(all);
+  last = all;
+}
+const NAMES = { dm: ['DM', '患者背景', '1画面'], vs: ['VS', 'バイタルサイン', '1画面（3来院）'], ae: ['AE', '有害事象', '1画面'], lb: ['LB', '臨床検査', '1画面（2時点）'] };
+function renderSum(all) {
+  const box = $('#sum');
+  const cards = Object.entries(all).map(([id, t]) => {
+    const d = el('div', { class: 'card' });
+    d.append(el('div', {}, `CRF：${NAMES[id][1]} ${NAMES[id][2]}`), el('div', { class: 'big' }, `${t.rows.length} 行`), el('div', {}, `SDTM の ${NAMES[id][0]}（${t.cols.length} 変数）`));
+    const b = el('button', { type: 'button', 'data-csv': id }, `${NAMES[id][0]} を CSV で保存`);
+    d.append(b);
+    return d;
+  });
+  box.replaceChildren(...cards);
+}
+function toCSV(t) {
+  const q = s => /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+  const lines = [t.cols.join(',')].concat(t.rows.map(r => r.map(x => q(x.v)).join(',')));
+  return '﻿' + lines.join('\r\n') + '\r\n';
+}
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-csv]');
+  if (b && last) {
+    const id = b.dataset.csv;
+    const blob = new Blob([toCSV(last[id])], { type: 'text/csv' });
+    const a = el('a', { href: URL.createObjectURL(blob), download: `${id}.csv` });
+    document.body.append(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    return;
+  }
+  const th = e.target.closest('table.sdtm th[data-col]');
+  if (th) {
+    const col = th.dataset.col;
+    const [lab, ja] = explainOf(col);
+    const sec = th.closest('section');
+    const body = $('[data-explain]', sec);
+    body.replaceChildren(el('span', { class: 'var' }, col), el('span', { class: 'lab' }, lab), el('span', {}, ja));
+  }
+});
+
+// ---- CRF と SDTM の対応を光らせる ----
+let pinned = '';
+function clearHl() { $$('.hl').forEach(x => x.classList.remove('hl')); }
+function hlKeys(keys) {
+  clearHl();
+  keys.forEach(k => $$(`[data-k~="${k}"]`).forEach(x => x.classList.add('hl')));
+}
+document.addEventListener('mouseover', e => {
+  const t = e.target.closest('[data-k]');
+  if (t) hlKeys(t.getAttribute('data-k').split(' '));
+  else if (pinned) hlKeys([pinned]);
+  else clearHl();
+});
+document.addEventListener('focusin', e => {
+  const t = e.target.closest('[data-k]');
+  if (t && t.matches('input,select')) { pinned = t.getAttribute('data-k'); hlKeys([pinned]); }
+});
+document.addEventListener('focusout', () => { pinned = ''; });
+document.addEventListener('input', e => { if (e.target.matches('[data-k]')) { update(); if (pinned) hlKeys([pinned]); } });
+document.addEventListener('change', e => { if (e.target.matches('select[data-k]')) { update(); if (pinned) hlKeys([pinned]); } });
+
+// ---- タブ ----
+const TABS = ['dm', 'vs', 'ae', 'lb', 'sum'];
+function go(id) {
+  if (!TABS.includes(id)) id = 'dm';
+  $$('section[data-tab]').forEach(s => s.classList.toggle('on', s.dataset.tab === id));
+  $$('nav button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.go === id)));
+  if (location.hash !== `#${id}`) history.replaceState(null, '', `#${id}`);
+}
+$$('nav button').forEach(b => b.addEventListener('click', () => go(b.dataset.go)));
+document.addEventListener('keydown', e => {
+  if (e.target.matches('input,select,textarea') || e.metaKey || e.ctrlKey || e.altKey) return;
+  const i = TABS.indexOf((location.hash || '#dm').slice(1));
+  if (e.key >= '1' && e.key <= '5') go(TABS[Number(e.key) - 1]);
+  else if (e.key === 'ArrowRight') go(TABS[Math.min(TABS.length - 1, i + 1)]);
+  else if (e.key === 'ArrowLeft') go(TABS[Math.max(0, i - 1)]);
+});
+window.addEventListener('hashchange', () => go(location.hash.slice(1)));
+
+// ---- 文字の大きさ・初期値 ----
+let fs = 17;
+try { const s = Number(localStorage.getItem('crf2sdtm-fs')); if (s >= 12 && s <= 30) fs = s; } catch (_) {}
+function setFs(n) { fs = Math.max(12, Math.min(30, n)); document.documentElement.style.setProperty('--fs', `${fs}px`); try { localStorage.setItem('crf2sdtm-fs', String(fs)); } catch (_) {} }
+$('#fsUp').addEventListener('click', () => setFs(fs + 1));
+$('#fsDown').addEventListener('click', () => setFs(fs - 1));
+function fillDefaults() {
+  for (const [k, v] of Object.entries(DEFAULTS)) { const f = field(k); if (f) f.value = v; }
+}
+$('#reset').addEventListener('click', () => { fillDefaults(); for (const k in prev) delete prev[k]; update(); });
+
+buildCrfVS(); buildCrfAE(); buildCrfLB();
+fillDefaults();
+setFs(fs);
+update();
+go((location.hash || '#dm').slice(1));
+})();
+</script>
+</body>
+</html>
